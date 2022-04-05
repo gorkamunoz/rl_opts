@@ -2,15 +2,18 @@
 
 __all__ = ["index", "modules", "custom_doc_links", "git_url"]
 
-index = {"lw_step": "single_LW_walker.ipynb",
-         "lw_trajs": "single_LW_walker.ipynb",
-         "get_distance": "single_LW_walker.ipynb",
-         "isBetween": "single_LW_walker.ipynb",
-         "isBetween_ab_Vec": "single_LW_walker.ipynb",
-         "isBetween_c_Vec": "single_LW_walker.ipynb",
-         "LW_search": "single_LW_walker.ipynb"}
+index = {"get_distance": "environment.ipynb",
+         "isBetween": "environment.ipynb",
+         "isBetween_ab_Vec": "environment.ipynb",
+         "isBetween_c_Vec": "environment.ipynb",
+         "target_env": "q_learning.ipynb",
+         "lw_step": "LW_walker.ipynb",
+         "lw_trajs": "LW_walker.ipynb",
+         "LW_search": "LW_walker.ipynb"}
 
-modules = ["single_LW_walker.py"]
+modules = ["environment.py",
+           "LW_walker.py",
+           "single_RL_walker.py"]
 
 doc_url = "https://gorkamunoz.github.io/rl_optimal_search/"
 
