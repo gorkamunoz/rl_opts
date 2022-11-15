@@ -12,7 +12,8 @@ index = {"lw_step": "diffusion_walks.ipynb",
          "isBetween_c_Vec": "environment.ipynb",
          "is_c_between_ab": "environment.ipynb",
          "target_env": "environment.ipynb",
-         "target_search": "environment.ipynb"}
+         "target_search": "environment.ipynb",
+         "target_search_onhit": "environment.ipynb"}
 
 modules = ["cluster_launch.py",
            "diffusion_walks.py",

@@ -7,5 +7,5 @@ import numpy as np
 from joblib import Parallel, delayed
 from tqdm.auto import tqdm
 
-from .environment import target_search, is_c_Between_ab_Vec, get_distance
+from .environment import target_search, is_c_between_ab, get_distance
 from .diffusion_walks import lw_step, discrete_multiexp_step
