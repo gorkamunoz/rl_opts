@@ -2,9 +2,10 @@
 
 # %% auto 0
 __all__ = ['prob_L', 'get_ps', 'pw_exp', 'ps_exp_cutoff', 'prob_L_composite', 'discrete_composite_sample', 'get_ps_composite',
-           'walk_from_policy', 'simul_ps', 'simul_2actions', 'discrete_pw_sample']
+           'prob_L_composite_cutoff', 'get_ps_composite_cutoff', 'walk_from_policy', 'simul_ps', 'simul_2actions',
+           'discrete_pw_sample']
 
-# %% ../nbs/theoretical_policy.ipynb 2
+# %% ../nbs/theoretical_policy.ipynb 3
 import numpy as np
 from tqdm.auto import tqdm
 from scipy.special import zeta
@@ -97,6 +98,33 @@ def get_ps_composite(L, lambdas = None, probs = None, ps_0 = 1):
     return ps
 
 # %% ../nbs/theoretical_policy.ipynb 40
+def prob_L_composite_cutoff(L, num_modes = 3, lambdas = None, probs = None):  
+    # if lambdas  is None:
+    #     probs = np.random.rand(num_modes)
+    #     probs/= np.sum(probs)
+    # if lambdas is None:
+    #     lambdas = 10*np.random.rand(num_modes)
+        
+    return np.sum((probs)*(np.exp(1/lambdas)-1)*np.exp(-L/lambdas))
+
+# %% ../nbs/theoretical_policy.ipynb 41
+def get_ps_composite_cutoff(L, lambdas = None, probs = None, ps_0 = 1, Lmax = None):
+    
+    ps = np.zeros(L)
+    ps[0] = ps_0    
+    
+    for l in range(2, L+1):
+                
+        # product
+        prod = np.prod(ps[:l-1])
+        # P(L-1)
+        p_lm1 = discrete_composite_sample(lambdas = lambdas, probs = probs, num_modes = 2, L_max=Lmax, num_samples = 1)
+        # all together
+        ps[l-1] = 1-p_lm1/prod
+        
+    return ps
+
+# %% ../nbs/theoretical_policy.ipynb 44
 def walk_from_policy(T, policy, return_steps = False):
     '''Inputs:
     :T (int): Number of steps
@@ -125,7 +153,7 @@ def walk_from_policy(T, policy, return_steps = False):
     else:
         return pos  
 
-# %% ../nbs/theoretical_policy.ipynb 50
+# %% ../nbs/theoretical_policy.ipynb 54
 class simul_ps():
     def __init__(self, num_states, eta, gamma):     
         
@@ -150,7 +178,7 @@ class simul_ps():
         
         
 
-# %% ../nbs/theoretical_policy.ipynb 51
+# %% ../nbs/theoretical_policy.ipynb 55
 class simul_2actions():
     def __init__(self, num_states, eta, gamma):     
         
@@ -212,7 +240,7 @@ class simul_2actions():
 
             self.h_matrix += self.g_matrix*reward
 
-# %% ../nbs/theoretical_policy.ipynb 52
+# %% ../nbs/theoretical_policy.ipynb 56
 def discrete_pw_sample(alpha, L_max=1000, num_samples = 1):
     probs = (1/zeta(alpha+1, q = 1))*(np.arange(1, L_max).astype(float)**(-alpha-1))
     # normalize to take into accont L_max not infinity
