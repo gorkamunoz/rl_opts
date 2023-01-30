@@ -142,3 +142,7 @@ checklink/cookies.txt
 .gitconfig
 
 *.pdf
+
+data_step_distr_plot/
+nbs/results_fpt/
+nbs/scalings_mfpt/
