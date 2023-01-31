@@ -1,4 +1,4 @@
-# Beyond L ́evy walks: optimal foraging strategies can be learned
+# Beyond Lévy walks: optimal foraging strategies can be learned
 ### G. Muñoz-Gil, A. López-Incera, L. J. Fiderer and H. J. Briegel
 
 [![DOI](https://zenodo.org/badge/DOI/DOI.svg)](https://blabla)
