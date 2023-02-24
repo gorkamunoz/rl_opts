@@ -24,11 +24,11 @@ def pdf_multimode(L_max: int, # Maximum L for which probability is calculated
 from scipy.special import zeta
 
 def pdf_powerlaw(L_max: int, # Maximum L for which probability is calculated
-                 alpha: float = 1, # Exponent of the power law
+                 beta: float = 1, # Exponent of the power law
                 )-> np.array : # Array with probability of each L
     ''' Computes the discrete PDF of a powerlaw of the form 
-    P(L) = L^(-alpha-1)'''
-    return (1/zeta(alpha+1, q = 1))*np.arange(1,L_max).astype(float)**(-1-alpha)
+    P(L) = L^(-beta-1)'''
+    return (1/zeta(beta+1, q = 1))*np.arange(1,L_max).astype(float)**(-1-beta)
 
 # %% ../nbs/analytics.ipynb 9
 def pdf_discrete_sample(pdf_func: object, # Function generating the pdf
@@ -37,11 +37,13 @@ def pdf_discrete_sample(pdf_func: object, # Function generating the pdf
                         )-> np.array: # Samples
     ''' Samples discrete values from a given PDF'''
     P_L = pdf_func(**args_func)
+    # Normalization check
+    P_L = P_L/np.sum(P_L)
     
     return np.random.choice(np.arange(1, len(P_L)+1), p = P_L, size = num_samples)
     
 
-# %% ../nbs/analytics.ipynb 13
+# %% ../nbs/analytics.ipynb 12
 from scipy.special import zeta
 
 def get_policy(n_max, # Maximum counter n_max for which the policy is calculated
@@ -56,7 +58,7 @@ def get_policy(n_max, # Maximum counter n_max for which the policy is calculated
     
     prob_L = func(L_max = n_max+1, **args_func)
     
-    for l, p_lm1 in zip(range(2, L+1), prob_L):
+    for l, p_lm1 in zip(range(2, n_max+1), prob_L):
         # l starts at 2 but prob_L starts at 1, because we want to divice by P(l-1)
                 
         # Product

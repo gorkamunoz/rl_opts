@@ -1,4 +1,4 @@
-# Beyond Lévy walks: optimal foraging strategies can be learned
+# Beyond Levy walks: optimal foraging strategies can be learned
 ### G. Muñoz-Gil, A. López-Incera, L. J. Fiderer and H. J. Briegel
 
 [![DOI](https://zenodo.org/badge/DOI/DOI.svg)](https://blabla)
@@ -14,7 +14,7 @@ The code is organized as follow:
 
 **Requirements:** the previous notebooks need some libraries to run. You can install all of them via the requirements file using 
 
-` pip install -r requirements.txt`
+`pip install -r requirements.txt`
 
 
 ### Cite
