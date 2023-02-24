@@ -3,7 +3,7 @@ project:
 
 website:
   title: "rl_opts"
-  site-url: "https://gorkamunoz.github.io/rl_opts"
-  description: "Reinforcement learning of optimal search strategies."
+  site-url: "https://gorkamunoz.github.io/rl_opts/"
+  description: "Reinforcement learning of optimal search"
   repo-branch: master
-  repo-url: "https://github.com/gorkamunoz/rl_opts"
+  repo-url: "https://github.com/gorkamunoz/rl_opts/tree/master/"

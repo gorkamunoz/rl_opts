@@ -1,4 +1,12 @@
 website:
   sidebar:
-    contents:
+    style: "docked"
+    contents:    
       - index.ipynb
+      - section: Documentation
+        contents:
+            - lib_nbs/analytics.ipynb
+            - lib_nbs/imitation_learning.ipynb
+      - section: Tutorials
+        contents:
+            - tutorials/tutorial_imitation.ipynb

@@ -4,6 +4,6 @@ project:
 website:
   title: "rl_opts"
   site-url: "https://gorkamunoz.github.io/rl_opts/"
-  description: "reinforcement learning for optimal searchs"
+  description: "Reinforcement learning of optimal search"
   repo-branch: master
   repo-url: "https://github.com/gorkamunoz/rl_opts/tree/master/"
