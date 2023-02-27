@@ -1,8 +1,7 @@
 website:
   sidebar:
     style: "docked"
-    contents:    
-      - index.ipynb
+    contents: 
       - section: Documentation
         contents:
             - lib_nbs/analytics.ipynb

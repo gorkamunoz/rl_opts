@@ -3,14 +3,15 @@ project:
 
 format:
   html:
-    theme: yeti
+    theme: solar
     toc: true
 
 website:
   twitter-card: true
   open-graph: true
   repo-actions: [issue]
-  navbar:   
+  navbar:  
+    logo: figs/logo.png
     background: primary
     search: true  
   sidebar:

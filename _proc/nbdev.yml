@@ -2,8 +2,8 @@ project:
   output-dir: docs
 
 website:
-  title: "rl_opts"
+  title: "RL OptS"
   site-url: "https://gorkamunoz.github.io/rl_opts/"
-  description: "Reinforcement learning of optimal search"
+  description: "Reinforcement learning of optimal search strategies"
   repo-branch: master
   repo-url: "https://github.com/gorkamunoz/rl_opts/tree/master/"
