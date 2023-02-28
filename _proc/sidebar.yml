@@ -1,7 +1,10 @@
 website:
   sidebar:
     style: "docked"
-    contents: 
+    collapse-level: 1
+    contents:
+      - text: Get started
+        href: index.ipynb
       - section: Documentation
         contents:
             - lib_nbs/analytics.ipynb

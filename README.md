@@ -1,9 +1,10 @@
-# Beyond Levy walks: optimal foraging strategies can be learned
-### G. Muñoz-Gil, A. López-Incera, L. J. Fiderer and H. J. Briegel
+# RL-OptS: Reinforcement Learning of Optimal Search strategies
 
 [![DOI](https://zenodo.org/badge/DOI/DOI.svg)](https://blabla)
 
-This repository contains the necessary tools to replicate most of the results of [our paper](https://). 
+This library builds the necessary tools needed to study, replicate and develop the results of the paper
+[### Beyond Levy walks: optimal foraging strategies can be learned](https://).
+#### G. Muñoz-Gil, A. López-Incera, L. J. Fiderer and H. J. Briegelour paper 
 
 ### Code
 
