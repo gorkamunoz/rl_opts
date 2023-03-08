@@ -1,10 +1,13 @@
 project:
   type: website
   output-dir: docs
+  preview:
+    port: 4200
+    browser: false
 
 format:
   html:
-    theme: flatly
+    theme: zephyr
     css: style.css
     toc: true
 
