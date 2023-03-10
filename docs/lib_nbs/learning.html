@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.335">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>RL-OptS: Reinforcement Learning of Optimal Search strategies - Learning and benchmarking</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../style.css">
+<meta property="og:title" content="RL-OptS: Reinforcement Learning of Optimal Search strategies - Learning and benchmarking">
+<meta property="og:description" content="This notebook gathers the functions needed to train agents to forage optimally, as well as tools to calculate their foraging efficiency as well as their comparison to benchmark foraging strategies.">
+<meta property="og:site-name" content="RL-OptS: Reinforcement Learning of Optimal Search strategies">
+<meta name="twitter:title" content="RL-OptS: Reinforcement Learning of Optimal Search strategies - Learning and benchmarking">
+<meta name="twitter:description" content="This notebook gathers the functions needed to train agents to forage optimally, as well as tools to calculate their foraging efficiency as well as their comparison to benchmark foraging strategies.">
+<meta name="twitter:card" content="summary">
+</head>
+
+<body class="nav-sidebar docked nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../figs/logo.png" alt="" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">RL-OptS: Reinforcement Learning of Optimal Search strategies</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/gorkamunoz/rl_opts/"><i class="bi bi-github" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com/gorka_mgm"><i class="bi bi-twitter" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+</ul>
+              <div id="quarto-search" class="" title="Search"></div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title">Learning and benchmarking</h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation docked overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">Get started</a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">Documentation</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../lib_nbs/rl_framework.html" class="sidebar-item-text sidebar-link">Reinforcement learning framework</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../lib_nbs/learning.html" class="sidebar-item-text sidebar-link active">Learning and benchmarking</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../lib_nbs/imitation_learning.html" class="sidebar-item-text sidebar-link">Imitation learning</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../lib_nbs/analytics.html" class="sidebar-item-text sidebar-link">Analytical functions</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../lib_nbs/utils.html" class="sidebar-item-text sidebar-link">Utils</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="false">Tutorials</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="false">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/tutorial_learning.html" class="sidebar-item-text sidebar-link">Reinforcement Learning</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/tutorial_benchmarks.html" class="sidebar-item-text sidebar-link">Benchmarks</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/tutorial_imitation.html" class="sidebar-item-text sidebar-link">Imitation learning</a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#learning" id="toc-learning" class="nav-link active" data-scroll-target="#learning">Learning</a>
+  <ul class="collapse">
+  <li><a href="#learning-1" id="toc-learning-1" class="nav-link" data-scroll-target="#learning-1">learning</a></li>
+  </ul></li>
+  <li><a href="#generate-walk-from-a-policy" id="toc-generate-walk-from-a-policy" class="nav-link" data-scroll-target="#generate-walk-from-a-policy">Generate walk from a policy</a>
+  <ul class="collapse">
+  <li><a href="#walk_from_policy" id="toc-walk_from_policy" class="nav-link" data-scroll-target="#walk_from_policy">walk_from_policy</a></li>
+  </ul></li>
+  <li><a href="#efficiency-computation" id="toc-efficiency-computation" class="nav-link" data-scroll-target="#efficiency-computation">Efficiency computation</a>
+  <ul class="collapse">
+  <li><a href="#agent_efficiency" id="toc-agent_efficiency" class="nav-link" data-scroll-target="#agent_efficiency">agent_efficiency</a></li>
+  </ul></li>
+  <li><a href="#benchmarks" id="toc-benchmarks" class="nav-link" data-scroll-target="#benchmarks">Benchmarks</a>
+  <ul class="collapse">
+  <li><a href="#average_search_efficiency" id="toc-average_search_efficiency" class="nav-link" data-scroll-target="#average_search_efficiency">average_search_efficiency</a></li>
+  <li><a href="#example" id="toc-example" class="nav-link" data-scroll-target="#example">Example</a></li>
+  </ul></li>
+  </ul>
+<div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/gorkamunoz/rl_opts/tree/master/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title d-none d-lg-block">Learning and benchmarking</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<!-- WARNING: THIS FILE WAS AUTOGENERATED! DO NOT EDIT! -->
+<p>This notebook gathers the functions needed to train agents to forage optimally, as well as tools to calculate their foraging efficiency as well as their comparison to benchmark foraging strategies.</p>
+<section id="learning" class="level1">
+<h1>Learning</h1>
+<hr>
+<section id="learning-1" class="level3">
+<h3 class="anchored" data-anchor-id="learning-1">learning</h3>
+<blockquote class="blockquote">
+<pre><code> learning (config, results_path, run)</code></pre>
+</blockquote>
+<p>Training of the RL agent</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th></th>
+<th><strong>Type</strong></th>
+<th><strong>Details</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>config</td>
+<td>dict</td>
+<td>Dictionary with all the parameters</td>
+</tr>
+<tr class="even">
+<td>results_path</td>
+<td>str</td>
+<td>Path to save the results</td>
+</tr>
+<tr class="odd">
+<td>run</td>
+<td>int</td>
+<td>Agent identifier</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="generate-walk-from-a-policy" class="level1">
+<h1>Generate walk from a policy</h1>
+<hr>
+<section id="walk_from_policy" class="level3">
+<h3 class="anchored" data-anchor-id="walk_from_policy">walk_from_policy</h3>
+<blockquote class="blockquote">
+<pre><code> walk_from_policy (policy, time_ep, n, L, Nt, r, lc, destructive=False,
+                   with_bound=False, bound=100)</code></pre>
+</blockquote>
+<p>Walk of foragers given a policy. Performance is evaluated as the number of targets found in a fixed time time_ep.</p>
+<table class="table">
+<colgroup>
+<col style="width: 6%">
+<col style="width: 25%">
+<col style="width: 34%">
+<col style="width: 34%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th><strong>Type</strong></th>
+<th><strong>Default</strong></th>
+<th><strong>Details</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>policy</td>
+<td>list</td>
+<td></td>
+<td>Starting from counter=1, prob of continuing for each counter value.</td>
+</tr>
+<tr class="even">
+<td>time_ep</td>
+<td>int</td>
+<td></td>
+<td>Number of steps (decisions).</td>
+</tr>
+<tr class="odd">
+<td>n</td>
+<td>int</td>
+<td></td>
+<td>Number of agents that walk in parallel (all with the same policy, they do not interact). This is “number of walks” in the paper.</td>
+</tr>
+<tr class="even">
+<td>L</td>
+<td>int</td>
+<td></td>
+<td>World size.</td>
+</tr>
+<tr class="odd">
+<td>Nt</td>
+<td>int</td>
+<td></td>
+<td>Number of targets.</td>
+</tr>
+<tr class="even">
+<td>r</td>
+<td>float</td>
+<td></td>
+<td>Target radius.</td>
+</tr>
+<tr class="odd">
+<td>lc</td>
+<td>float</td>
+<td></td>
+<td>Cutoff length. Agent is displaced a distance lc from the target when it finds it.</td>
+</tr>
+<tr class="even">
+<td>destructive</td>
+<td>bool</td>
+<td>False</td>
+<td>True if targets are destructive. The default is False.</td>
+</tr>
+<tr class="odd">
+<td>with_bound</td>
+<td>bool</td>
+<td>False</td>
+<td>True if policy is cut. The default is False.</td>
+</tr>
+<tr class="even">
+<td>bound</td>
+<td>int</td>
+<td>100</td>
+<td>Bound of the policy (maximum value for the counter). The default is 20.</td>
+</tr>
+<tr class="odd">
+<td><strong>Returns</strong></td>
+<td><strong>list, len(rewards)=n</strong></td>
+<td></td>
+<td><strong>Number of targets found by each agent in time_ep steps of d=1.</strong></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="efficiency-computation" class="level1">
+<h1>Efficiency computation</h1>
+<hr>
+<section id="agent_efficiency" class="level3">
+<h3 class="anchored" data-anchor-id="agent_efficiency">agent_efficiency</h3>
+<blockquote class="blockquote">
+<pre><code> agent_efficiency (results_path, config, run, num_walks, episode_interval)</code></pre>
+</blockquote>
+<p>Computes the agent’s average search efficiency over a number of walks where the agent follows a fixed policy. This is repeated with the policies at different stages of the training to analyze the evolution of its performance.</p>
+<table class="table">
+<colgroup>
+<col style="width: 9%">
+<col style="width: 38%">
+<col style="width: 52%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th><strong>Type</strong></th>
+<th><strong>Details</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>results_path</td>
+<td>str</td>
+<td>Path to the results folder, from which to extract the agent’s policies</td>
+</tr>
+<tr class="even">
+<td>config</td>
+<td>dict</td>
+<td>Dictionary with all the parameters. It needs to be the same configuration file as the one used to train the agent.</td>
+</tr>
+<tr class="odd">
+<td>run</td>
+<td>int</td>
+<td>Id of the agent</td>
+</tr>
+<tr class="even">
+<td>num_walks</td>
+<td>int</td>
+<td>Number of (independent) walks</td>
+</tr>
+<tr class="odd">
+<td>episode_interval</td>
+<td>int</td>
+<td>Every ‘episode_interval’ training episodes, the policy of the agent is taken and its performance is analyzed.</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="benchmarks" class="level1">
+<h1>Benchmarks</h1>
+<p>Code to get the search efficiency of the benchmark models. We consider Lévy and bi-exponential distributions and obtain the model parameters that achieve the highest search efficiency. We use the library <code>Tune</code> for the efficiency optimization within given parameter ranges.</p>
+<hr>
+<section id="average_search_efficiency" class="level3">
+<h3 class="anchored" data-anchor-id="average_search_efficiency">average_search_efficiency</h3>
+<blockquote class="blockquote">
+<pre><code> average_search_efficiency (config)</code></pre>
+</blockquote>
+<p>Get the average search efficiency, considering the benchmark model defined in config.</p>
+<table class="table">
+<colgroup>
+<col style="width: 9%">
+<col style="width: 38%">
+<col style="width: 52%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th><strong>Type</strong></th>
+<th><strong>Details</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>config</td>
+<td>dict</td>
+<td>Dictionary with the configuration of the benchmark model.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="example" class="level3">
+<h3 class="anchored" data-anchor-id="example">Example</h3>
+<p>Set up the configuration, run and type of search</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> rl_opts.learn_and_bench <span class="im">import</span> average_search_efficiency</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> ray <span class="im">import</span> tune</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> ray.tune.search.bayesopt <span class="im">import</span> BayesOptSearch</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> ray.tune.search <span class="im">import</span> ConcurrencyLimiter</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">#### Minimal example #####</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>run <span class="op">=</span> <span class="st">'0'</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>search_type <span class="op">=</span> <span class="st">'Bayesian'</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>config <span class="op">=</span> {<span class="st">'num_raytune_samples'</span>: <span class="dv">3</span>,</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>          <span class="st">'d_int'</span>: tune.uniform(<span class="fl">0.00001</span>, <span class="fl">20.0</span>),</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>          <span class="st">'d_ext'</span>: <span class="fl">100.0</span>,</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>          <span class="st">'p'</span>: tune.uniform(<span class="fl">0.0</span>, <span class="fl">1.0</span>),</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>          <span class="st">'beta'</span>: <span class="va">None</span>,</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>          <span class="st">'model'</span>: <span class="st">'double_exp'</span>,</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>          <span class="st">'time_ep'</span>: <span class="dv">20</span>,</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>          <span class="st">'n'</span>: <span class="dv">10</span>,</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>          <span class="st">'lc'</span>: <span class="fl">3.0</span>,</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>          <span class="st">'Nt'</span>: <span class="dv">100</span>,</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>          <span class="st">'L'</span>: <span class="dv">100</span>,</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>          <span class="st">'r'</span>: <span class="fl">0.5</span>,</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>          <span class="st">'destructive'</span>: <span class="va">False</span>,</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>         }</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Initialize <code>Tune</code></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> search_type <span class="op">==</span> <span class="st">'Bayesian'</span>: <span class="co">#Bayesian optimization</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    bayesopt <span class="op">=</span> BayesOptSearch(metric<span class="op">=</span><span class="st">"mean_eff"</span>, mode<span class="op">=</span><span class="st">"max"</span>)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    bayesopt <span class="op">=</span> ConcurrencyLimiter(bayesopt, max_concurrent<span class="op">=</span><span class="dv">3</span>)</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    tuner <span class="op">=</span> tune.Tuner(average_search_efficiency, </span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>                        tune_config<span class="op">=</span>tune.TuneConfig(search_alg<span class="op">=</span>bayesopt, num_samples<span class="op">=</span>config[<span class="st">'num_raytune_samples'</span>]), </span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>                        param_space<span class="op">=</span>config)</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="cf">elif</span> search_type <span class="op">==</span> <span class="st">'Grid'</span>:<span class="co">#Grid search</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    tuner <span class="op">=</span> tune.Tuner(average_search_efficiency,</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>                        tune_config<span class="op">=</span>tune.TuneConfig(num_samples<span class="op">=</span><span class="dv">1</span>),</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>                        param_space<span class="op">=</span>config)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Run the algorithm</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>result_grid <span class="op">=</span> tuner.fit()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Save the results and the configuration in the corresponding folders</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Results path</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>results_path <span class="op">=</span> <span class="st">'results/benchmark_models/'</span> <span class="op">+</span> config[<span class="st">'model'</span>] <span class="op">+</span> <span class="st">'/'</span><span class="op">+</span> <span class="bu">str</span>(config[<span class="st">'lc'</span>]) <span class="op">+</span> <span class="st">'/run_'</span><span class="op">+</span>run<span class="op">+</span><span class="st">'/'</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>pathlib.Path(results_path).mkdir(parents<span class="op">=</span><span class="va">True</span>, exist_ok<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Configuration path</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>config_path <span class="op">=</span> <span class="st">'configurations/benchmark_models/'</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>pathlib.Path(config_path).mkdir(parents<span class="op">=</span><span class="va">True</span>, exist_ok<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Save results</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>results_df <span class="op">=</span> result_grid.get_dataframe()</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>results_df.to_csv(results_path<span class="op">+</span><span class="st">'df'</span><span class="op">+</span>run<span class="op">+</span><span class="st">'_'</span><span class="op">+</span>config[<span class="st">'model'</span>]<span class="op">+</span><span class="st">'_lc_'</span><span class="op">+</span><span class="bu">str</span>(config[<span class="st">'lc'</span>])<span class="op">+</span><span class="st">'.csv'</span>)</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>np.save(config_path<span class="op">+</span><span class="st">'config_'</span><span class="op">+</span>config[<span class="st">'model'</span>]<span class="op">+</span><span class="st">'_lc_'</span><span class="op">+</span><span class="bu">str</span>(config[<span class="st">'lc'</span>])<span class="op">+</span><span class="st">'_run_'</span><span class="op">+</span>run<span class="op">+</span><span class="st">'.npy'</span>, config)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

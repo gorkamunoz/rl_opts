@@ -1,0 +1,36 @@
+project:
+  type: website
+  output-dir: docs
+  preview:
+    port: 4200
+    browser: false
+
+format:
+  html:
+    theme: zephyr
+    css: style.css
+    toc: true
+
+website:
+  title: "RL-OptS: Reinforcement Learning of Optimal Search strategies"
+  site-url: "https://gorkamunoz.github.io/rl_opts/"
+  description: "Reinforcement learning of optimal search"
+  repo-branch: master
+  repo-url: "https://github.com/gorkamunoz/rl_opts/tree/master/"
+  twitter-card: true
+  open-graph: true
+  repo-actions: [issue]
+  navbar:  
+    logo: figs/logo.png
+    background: primary
+    search: true      
+    right:
+      - icon: github
+        href: "https://github.com/gorkamunoz/rl_opts/"        
+      - icon: twitter
+        href: https://twitter.com/gorka_mgm
+  sidebar:
+    style: floating
+
+metadata-files: [sidebar.yml]
+
