@@ -40,7 +40,7 @@ This will install both the library and the necessary packages.
 
 ### Tutorials
 
-In the left sidebar you will a Tutorials tab, with notebooks that will
+In the left sidebar you will find a Tutorials tab, with notebooks that will
 help you navigate the package as well as reproducing the results of our
 paper via minimal examples. In particular, we have three tutorials:
 
@@ -53,8 +53,7 @@ paper via minimal examples. In particular, we have three tutorials:
   an expert equipped with a pre-trained policy. The latter is based on
   the benchmark strategies common in the literature.
 - <a href="tutorials/tutorial_benchmarks.ipynb" style="text-decoration:none">Benchmarks
-  </a> : shows how launch various benchmark strategies with which to
-  compare the trained RL agents.
+  </a> : shows how to obtain and launch the strategies used to benchmark the performance of the RL agents.
 
 ### Package structure
 
