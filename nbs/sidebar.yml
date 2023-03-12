@@ -8,7 +8,7 @@ website:
       - section: Documentation
         contents:
             - lib_nbs/01_rl_framework.ipynb
-            - lib_nbs/02_learning.ipynb
+            - lib_nbs/02_learning_and_benchmark.ipynb
             - lib_nbs/04_imitation_learning.ipynb
             - lib_nbs/03_analytics.ipynb            
             - lib_nbs/00_utils.ipynb
