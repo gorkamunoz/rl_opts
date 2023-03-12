@@ -25,7 +25,7 @@ def isBetween_c_Vec(a, b, c, r):
     
     Returns
     -------
-    mask : torch.tensor of boolean values
+    mask : array of boolean values
         True at the indices of found targets.
 
     """
@@ -53,9 +53,9 @@ def coord_mod(coord1, coord2, mod):
 
     Parameters
     ----------
-    coord1 : value, np.array, torch.tensor (can be shape=(n,1))
+    coord1 : value, np.array, tensor (can be shape=(n,1))
         First coordinate.
-    coord2 : np.array, torch.tensor -- shape=(1,1)
+    coord2 : np.array, tensor -- shape=(1,1)
         Second coordinate, substracted from coord1.
     mod : int
         World size.
@@ -186,13 +186,13 @@ def get_config(config, config_path = 'configurations/learning/'):
         Dictionary with the parameters of the loaded configuration.
     """
     
-    path = config_path + config
+    path = config_path + config 
     with open(path, 'r') as f:
         config_dict = yaml.safe_load(f)
     return config_dict
 
 # %% ../nbs/lib_nbs/00_utils.ipynb 12
-def get_policy(results_path, config, agent, episode):
+def get_policy(results_path, agent, episode):
     """
     Gets the policy of an agent at a given episode.
 
@@ -200,8 +200,6 @@ def get_policy(results_path, config, agent, episode):
     ----------
     results_path : str
         Path of the folder from which to extract the data.
-    config : str
-        Experiment number. E.g. "exp_0"
     agent : int
         Agent index.
     episode : int
@@ -213,7 +211,7 @@ def get_policy(results_path, config, agent, episode):
         Policy.
 
     """
-    memories = np.load(results_path + config + '/memory_agent_'+str(agent)+'_episode_'+str(episode)+'.npy')
+    memories = np.load(results_path + 'memory_agent_'+str(agent)+'_episode_'+str(episode)+'.npy')
     num_states = len(memories[0,0,:])
     
     y = []
@@ -224,7 +222,7 @@ def get_policy(results_path, config, agent, episode):
 
 
 # %% ../nbs/lib_nbs/00_utils.ipynb 13
-def get_performance(results_path, config, agent_list, episode_list):
+def get_performance(results_path, agent_list, episode_list):
     """
     Extract data with the efficiencies obtained in the postlearning analysis.
 
@@ -232,8 +230,6 @@ def get_performance(results_path, config, agent_list, episode_list):
     ----------
     results_path : str
         Path of the folder from which to extract the data.
-    config : str
-        Experiment number. E.g. "exp_0"
     agent_list : list
         List with the agent indices.
     episode_list : list
@@ -252,53 +248,46 @@ def get_performance(results_path, config, agent_list, episode_list):
     
     for ind, ag in enumerate(agent_list):
         for e_index, episode in enumerate(episode_list):
-            perf = np.load(results_path + config + '/performance_post_training_agent_'+str(ag)+'_episode_'+str(episode)+'.npy')
+            perf = np.load(results_path + 'performance_post_training_agent_'+str(ag)+'_episode_'+str(episode)+'.npy')
             post_training_performance[ind, e_index] = np.mean(perf)
             sem[ind, e_index] = np.std(perf) / np.sqrt(len(perf))
             
     return post_training_performance, sem
 
 # %% ../nbs/lib_nbs/00_utils.ipynb 14
-def get_opt(main_path, lc, model='powerlaw', run='0'):
+def get_opt(path, df):
     """
     Get the highest efficiency obtained by the benchmark models and the corresponding parameters.
 
     Parameters
     ----------
-    main_path : str
+    path : str
         Path from which to get the data.
-    lc : float
-        Cutoff length.
-    model : str, optional
-        Benchmark model. The default is 'powerlaw'.
-    run : str, optional
-        Run index. The default is '0'.
+    df : panda dataframe
+        Dataframe with the results from the optimization with Tune.
 
     Returns
     -------
-    float
-        Mean efficiency.
-    float
-        Standard deviation of the mean.
-    float/list
+    list
+        Efficiency of each walk.
+    list
         Parameters of the benchmark model that achieved the highest efficiency.
+        Levy - list of the form [beta]
+        Bi-exp. - list of the form [d_int, d_ext, p]
 
     """
-    path = main_path + model + '/' + str(lc) + '/run_'+run+'/'
     
-    df = pd.read_csv(path+'df'+run+'_'+model+'_lc_'+str(lc)+'.csv')
     filter_ = df['mean_eff'] == max(df['mean_eff'])
     
     if model == 'powerlaw':
-        
-        beta = df[filter_]['config/beta'].values[0]
-        effs = np.load(path+'efficiencies_'+str(np.round(beta,10))+'.npy')
-        
-        return np.mean(effs), np.std(effs)/np.sqrt(len(effs)), beta 
+        par = [df[filter_]['config/beta'].values[0]]
     
     elif model == 'double_exp':
-        
         par = [df[filter_]['config/d_int'].values[0], df[filter_]['config/d_ext'].values[0], df[filter_]['config/p'].values[0]]
-        effs = np.load(path+'efficiencies_'+str([np.round(p, 10) for p in par])+'.npy')
         
-        return np.mean(effs), np.std(effs)/np.sqrt(len(effs)), par 
+    if path:
+        effs = np.load(path+'efficiencies_'+str([np.round(p, 10) for p in par])+'.npy')
+    else:
+        effs = max(df['mean_eff'])
+
+    return effs, par 
