@@ -3,7 +3,7 @@
 d = { 'settings': { 'branch': 'master',
                 'doc_baseurl': '/rl_opts/',
                 'doc_host': 'https://gorkamunoz.github.io',
-                'git_url': 'https://github.com/gorkamunoz/rl_opts/tree/master/',
+                'git_url': 'https://github.com/gorkamunoz/rl_opts/',
                 'lib_path': 'rl_opts'},
   'syms': { 'rl_opts.analytics': { 'rl_opts.analytics.get_policy_from_dist': ( 'lib_nbs/analytics.html#get_policy_from_dist',
                                                                                'rl_opts/analytics.py'),
