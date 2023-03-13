@@ -206,7 +206,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../lib_nbs/learning.html" class="sidebar-item-text sidebar-link">Learning and benchmarking</a>
+  <a href="../lib_nbs/learning_and_benchmark.html" class="sidebar-item-text sidebar-link">Learning and benchmarking</a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -292,29 +292,29 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> tqdm.notebook <span class="im">import</span> tqdm</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> tqdm <span class="im">import</span> tqdm</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> rl_opts.imitation <span class="im">import</span> PS_imitation</span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> rl_opts.analytics <span class="im">import</span> pdf_powerlaw, pdf_multimode, pdf_discrete_sample, get_policy_from_dist</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <section id="lévy-distributions-fig.-6a" class="level2">
 <h2 class="anchored" data-anchor-id="lévy-distributions-fig.-6a">Lévy distributions (Fig. 6a)</h2>
-<p>We consider distribution of the type <span class="math inline">\(P(L)=L^{-1-\beta}\)</span>, with various <span class="math inline">\(\beta\)</span>. To understand how the following code works, you can check the example shown in the documentation of <code>PS_imitation</code>. Here we just do the same but looping over various <span class="math inline">\(\beta\)</span>.</p>
+<p>We consider distribution of the type <span class="math inline">\(P(L)=L^{-1-\beta}\)</span>, with various <span class="math inline">\(\beta\)</span>. To understand how the following code works, you can check the example shown in the documentation of <a href="https://gorkamunoz.github.io/rl_opts/lib_nbs/imitation_learning.html#ps_imitation"><code>PS_imitation</code></a>. Here we just do the same but looping over various <span class="math inline">\(\beta\)</span>.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>NUM_STATES <span class="op">=</span> <span class="dv">100</span> <span class="co"># size of the state space</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>EPOCHS <span class="op">=</span> <span class="dv">100</span> <span class="co"># number of epochs</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>NUM_STEPS <span class="op">=</span> <span class="dv">1000</span> <span class="co"># number of learning steps per episode</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>EPOCHS <span class="op">=</span> <span class="dv">1000</span> <span class="co"># number of epochs</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>NUM_STEPS <span class="op">=</span> <span class="dv">10000</span> <span class="co"># number of learning steps per episode</span></span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>betas <span class="op">=</span> [<span class="fl">0.5</span>, <span class="dv">1</span>, <span class="fl">1.5</span>, <span class="dv">2</span>]</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>hmatrix_pw <span class="op">=</span> np.zeros(tqdm(<span class="bu">len</span>(betas), NUM_STATES))</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>hmatrix_pw <span class="op">=</span> np.zeros((<span class="bu">len</span>(betas), NUM_STATES))</span>
 <span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> idxb, beta <span class="kw">in</span> <span class="bu">enumerate</span>((betas)):</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> idxb, beta <span class="kw">in</span> <span class="bu">enumerate</span>(tqdm(betas)):</span>
 <span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    </span>
 <span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    <span class="co"># For every beta, we sample steps from the corresponding powerlaw (Levy dist.)    </span></span>
 <span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    steps <span class="op">=</span> pdf_discrete_sample(beta <span class="op">=</span> beta,</span>
 <span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>                                pdf_func <span class="op">=</span> pdf_powerlaw,                                </span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>                                L_max <span class="op">=</span> NUM_STATES,  </span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>                                L <span class="op">=</span> np.arange(<span class="dv">1</span>, NUM_STATES),  </span>
 <span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>                                num_samples <span class="op">=</span> (EPOCHS, NUM_STEPS))</span>
 <span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>    </span>
 <span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>    <span class="co"># We define the imitator and train it</span></span>
@@ -328,37 +328,74 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>            </span>
 <span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>    <span class="co"># We only save the turn probability</span></span>
 <span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>    hmatrix_pw[idxb] <span class="op">=</span> imitator.h_matrix[<span class="dv">1</span>]<span class="op">/</span>imitator.h_matrix.<span class="bu">sum</span>(<span class="dv">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>  0%|          | 0/4 [01:50&lt;?, ?it/s]</code></pre>
 </div>
-<p>Now <code>hmatrix_pw</code> contains the turn probability of an imitator agent for every <span class="math inline">\(\beta\)</span>. We can now plot this and compare it with the theoretical prediction, calculated by means of the <code>get_policy_from_dist</code> function.</p>
+<div class="cell-output cell-output-error">
+<pre><code>KeyboardInterrupt: </code></pre>
+</div>
+</div>
+<p>Now <code>hmatrix_pw</code> contains the turn probability of an imitator agent for every <span class="math inline">\(\beta\)</span>. We can now plot this and compare it with the theoretical prediction, calculated by means of the <a href="https://gorkamunoz.github.io/rl_opts/lib_nbs/analytics.html#get_policy_from_dist"><code>get_policy_from_dist</code></a> function.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>fig, ax_pw <span class="op">=</span> plt.subplots(figsize <span class="op">=</span> (<span class="dv">3</span>,<span class="dv">3</span>))</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>color <span class="op">=</span> plt.cm.plasma(np.linspace(<span class="dv">0</span>,<span class="dv">1</span>,<span class="bu">len</span>(betas)<span class="op">+</span><span class="dv">1</span>))</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> idx, (h, beta) <span class="kw">in</span> <span class="bu">enumerate</span>(<span class="bu">zip</span>(hmatrix_pw, betas)):</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="co">#---- Analytical solution ----#</span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    theory <span class="op">=</span> get_policy_from_dist(n_max <span class="op">=</span> NUM_STATES, </span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>                                  func <span class="op">=</span> pdf_powerlaw,</span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>                                  beta <span class="op">=</span> beta)</span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    ax_pw.plot(np.arange(<span class="dv">2</span>, NUM_STATES<span class="op">+</span><span class="dv">1</span>), <span class="dv">1</span><span class="op">-</span>theory[<span class="dv">1</span>:], c <span class="op">=</span> color[idx])</span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    <span class="co">#---- Numerical solution ----#</span></span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    ax_pw.plot(np.arange(<span class="dv">2</span>, NUM_STATES<span class="op">+</span><span class="dv">2</span>), h, <span class="st">'o'</span>, </span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>               c <span class="op">=</span> color[idx],  label <span class="op">=</span> <span class="vs">fr'$\beta$ = </span><span class="sc">{</span>beta<span class="sc">}</span><span class="vs">'</span>, alpha <span class="op">=</span> <span class="fl">0.8</span>, markeredgecolor<span class="op">=</span><span class="st">'None'</span>, lw <span class="op">=</span> <span class="fl">0.05</span>)</span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="co">#---- Plot features ----#</span></span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>plt.setp(ax_pw, xlim <span class="op">=</span> (<span class="fl">1.8</span>, <span class="dv">30</span>), ylim <span class="op">=</span> (<span class="fl">0.0</span>, <span class="fl">1.01</span>),</span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>         xlabel <span class="op">=</span><span class="vs">r'$n$'</span>, ylabel <span class="op">=</span> <span class="vs">r'$\pi_s(\Rsh|n)$'</span>, </span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>         yticks <span class="op">=</span> np.<span class="bu">round</span>(np.arange(<span class="fl">0.2</span>, <span class="fl">1.01</span>, <span class="fl">0.2</span>),<span class="dv">1</span>),</span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>         yticklabels <span class="op">=</span> np.<span class="bu">round</span>(np.arange(<span class="fl">0.2</span>, <span class="fl">1.01</span>, <span class="fl">0.2</span>),<span class="dv">1</span>).astype(<span class="bu">str</span>),</span>
-<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>         xscale <span class="op">=</span> <span class="st">'log'</span>)</span>
-<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>ax_pw.plot(<span class="dv">10</span>, <span class="dv">10</span>, label <span class="op">=</span> <span class="st">'Theory'</span>, c <span class="op">=</span> <span class="st">'k'</span>)   </span>
-<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>ax_pw.legend()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>fig, ax_pw <span class="op">=</span> plt.subplots(figsize <span class="op">=</span> (<span class="dv">3</span>,<span class="dv">3</span>))</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>color <span class="op">=</span> plt.cm.plasma(np.linspace(<span class="dv">0</span>,<span class="dv">1</span>,<span class="bu">len</span>(betas)<span class="op">+</span><span class="dv">1</span>))</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> idx, (h, beta) <span class="kw">in</span> <span class="bu">enumerate</span>(<span class="bu">zip</span>(hmatrix_pw, betas)):</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="co">#---- Analytical solution ----#</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    theory <span class="op">=</span> get_policy_from_dist(n_max <span class="op">=</span> NUM_STATES, </span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>                                  func <span class="op">=</span> pdf_powerlaw,</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>                                  beta <span class="op">=</span> beta)</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    ax_pw.plot(np.arange(<span class="dv">2</span>, NUM_STATES<span class="op">+</span><span class="dv">1</span>), <span class="dv">1</span><span class="op">-</span>np.array(theory[<span class="dv">1</span>:]), c <span class="op">=</span> color[idx])</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    <span class="co">#---- Numerical solution ----#</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>    ax_pw.plot(np.arange(<span class="dv">2</span>, NUM_STATES<span class="op">+</span><span class="dv">2</span>), h, <span class="st">'o'</span>, </span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>               c <span class="op">=</span> color[idx],  label <span class="op">=</span> <span class="vs">fr'$\beta$ = </span><span class="sc">{</span>beta<span class="sc">}</span><span class="vs">'</span>, alpha <span class="op">=</span> <span class="fl">0.8</span>, markeredgecolor<span class="op">=</span><span class="st">'None'</span>, lw <span class="op">=</span> <span class="fl">0.05</span>)</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="co">#---- Plot features ----#</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>plt.setp(ax_pw, xlim <span class="op">=</span> (<span class="fl">1.8</span>, <span class="dv">30</span>), ylim <span class="op">=</span> (<span class="fl">0.0</span>, <span class="fl">1.01</span>),</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>         xlabel <span class="op">=</span><span class="vs">r'$n$'</span>, ylabel <span class="op">=</span> <span class="vs">r'$\pi_s(\Rsh|n)$'</span>, </span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>         yticks <span class="op">=</span> np.<span class="bu">round</span>(np.arange(<span class="fl">0.2</span>, <span class="fl">1.01</span>, <span class="fl">0.2</span>),<span class="dv">1</span>),</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>         yticklabels <span class="op">=</span> np.<span class="bu">round</span>(np.arange(<span class="fl">0.2</span>, <span class="fl">1.01</span>, <span class="fl">0.2</span>),<span class="dv">1</span>).astype(<span class="bu">str</span>),</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>         xscale <span class="op">=</span> <span class="st">'log'</span>)</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>ax_pw.plot(<span class="dv">10</span>, <span class="dv">10</span>, label <span class="op">=</span> <span class="st">'Theory'</span>, c <span class="op">=</span> <span class="st">'k'</span>)   </span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>ax_pw.legend()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <pre><code>&lt;matplotlib.legend.Legend&gt;</code></pre>
 </div>
 <div class="cell-output cell-output-display">
 <p><img src="tutorial_imitation_files/figure-html/cell-4-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>fig, ax_pw <span class="op">=</span> plt.subplots(figsize <span class="op">=</span> (<span class="dv">3</span>,<span class="dv">3</span>))</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>color <span class="op">=</span> plt.cm.plasma(np.linspace(<span class="dv">0</span>,<span class="dv">1</span>,<span class="bu">len</span>(betas)<span class="op">+</span><span class="dv">1</span>))</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> idx, (h, beta) <span class="kw">in</span> <span class="bu">enumerate</span>(<span class="bu">zip</span>(hmatrix_pw, betas)):</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    <span class="co">#---- Analytical solution ----#</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    theory <span class="op">=</span> get_policy_from_dist(n_max <span class="op">=</span> NUM_STATES, </span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>                                  func <span class="op">=</span> pdf_powerlaw,</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>                                  beta <span class="op">=</span> beta)</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    ax_pw.plot(np.arange(<span class="dv">2</span>, NUM_STATES<span class="op">+</span><span class="dv">1</span>), <span class="dv">1</span><span class="op">-</span>theory[<span class="dv">1</span>:], c <span class="op">=</span> color[idx])</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>    <span class="co">#---- Numerical solution ----#</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>    ax_pw.plot(np.arange(<span class="dv">2</span>, NUM_STATES<span class="op">+</span><span class="dv">2</span>), h, <span class="st">'o'</span>, </span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>               c <span class="op">=</span> color[idx],  label <span class="op">=</span> <span class="vs">fr'$\beta$ = </span><span class="sc">{</span>beta<span class="sc">}</span><span class="vs">'</span>, alpha <span class="op">=</span> <span class="fl">0.8</span>, markeredgecolor<span class="op">=</span><span class="st">'None'</span>, lw <span class="op">=</span> <span class="fl">0.05</span>)</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a><span class="co">#---- Plot features ----#</span></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>plt.setp(ax_pw, xlim <span class="op">=</span> (<span class="fl">1.8</span>, <span class="dv">30</span>), ylim <span class="op">=</span> (<span class="fl">0.0</span>, <span class="fl">1.01</span>),</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>         xlabel <span class="op">=</span><span class="vs">r'$n$'</span>, ylabel <span class="op">=</span> <span class="vs">r'$\pi_s(\Rsh|n)$'</span>, </span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>         yticks <span class="op">=</span> np.<span class="bu">round</span>(np.arange(<span class="fl">0.2</span>, <span class="fl">1.01</span>, <span class="fl">0.2</span>),<span class="dv">1</span>),</span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>         yticklabels <span class="op">=</span> np.<span class="bu">round</span>(np.arange(<span class="fl">0.2</span>, <span class="fl">1.01</span>, <span class="fl">0.2</span>),<span class="dv">1</span>).astype(<span class="bu">str</span>),</span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>         xscale <span class="op">=</span> <span class="st">'log'</span>)</span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>ax_pw.plot(<span class="dv">10</span>, <span class="dv">10</span>, label <span class="op">=</span> <span class="st">'Theory'</span>, c <span class="op">=</span> <span class="st">'k'</span>)   </span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>ax_pw.legend()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>&lt;matplotlib.legend.Legend&gt;</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="tutorial_imitation_files/figure-html/cell-5-output-2.png" class="img-fluid"></p>
 </div>
 </div>
 </section>
@@ -368,79 +405,119 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 \Pr(L) = \sum_{i=1,2} \omega_i (1-e^{-1/\lambda_i}) e^{-(L-1)/\lambda_i} \, ,
 \]</span> with <span class="math inline">\(\omega = [0.94, 0.06]\)</span>, <span class="math inline">\(\lambda_2 = 5000\)</span> and varying <span class="math inline">\(\lambda_1\)</span>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>NUM_STATES <span class="op">=</span> <span class="dv">100</span> <span class="co"># size of the state space</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>EPOCHS <span class="op">=</span> <span class="dv">100</span> <span class="co"># number of epochs</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>NUM_STEPS <span class="op">=</span> <span class="dv">1000</span> <span class="co"># number of learning steps per episode</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Bi-exponential parameters (lambda_1 will vary)</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>omegas <span class="op">=</span> np.array([<span class="fl">0.94</span>, <span class="fl">0.06</span>])</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>lambdas <span class="op">=</span> np.array([<span class="dv">0</span>, <span class="dv">5000</span>]).astype(<span class="bu">float</span>)</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>lambdas_1 <span class="op">=</span> [<span class="fl">0.6</span>, <span class="fl">0.6</span><span class="op">*</span><span class="dv">2</span>, <span class="fl">0.6</span><span class="op">*</span><span class="dv">8</span>, <span class="fl">0.6</span><span class="op">*</span><span class="dv">16</span>]</span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Array saving the results</span></span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>hmatrix_bi <span class="op">=</span> np.zeros((<span class="bu">len</span>(lambdas_1), NUM_STATES))</span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> idx_l, lambda_1 <span class="kw">in</span> <span class="bu">enumerate</span>(tqdm(lambdas_1)):</span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>    lambdas[<span class="dv">0</span>] <span class="op">=</span> lambda_1</span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>    steps <span class="op">=</span> pdf_discrete_sample(pdf_func <span class="op">=</span> pdf_multimode,</span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>                                lambdas <span class="op">=</span> lambdas,</span>
-<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>                                probs <span class="op">=</span> omegas,</span>
-<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>                                L_max <span class="op">=</span> NUM_STATES,  </span>
-<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>                                num_samples <span class="op">=</span> (EPOCHS, NUM_STEPS))</span>
-<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>    imitator <span class="op">=</span> PS_imitation(num_states <span class="op">=</span> NUM_STATES,</span>
-<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>                            eta <span class="op">=</span> <span class="bu">int</span>(<span class="fl">1e-7</span>),</span>
-<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>                            gamma <span class="op">=</span> <span class="dv">0</span>)</span>
-<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> e <span class="kw">in</span> (<span class="bu">range</span>(EPOCHS)):</span>
-<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>        imitator.reset()</span>
-<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> s <span class="kw">in</span> steps[e]:    </span>
-<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>            imitator.update(length <span class="op">=</span> s)</span>
-<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>    <span class="co"># We only save the turn probability</span></span>
-<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>    hmatrix_bi[idx_l] <span class="op">=</span> imitator.h_matrix[<span class="dv">1</span>]<span class="op">/</span>imitator.h_matrix.<span class="bu">sum</span>(<span class="dv">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id":"f703ba039ecc49d1a5f12f364fb85108","version_major":2,"version_minor":0}
-</script>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>NUM_STATES <span class="op">=</span> <span class="dv">100</span> <span class="co"># size of the state space</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>EPOCHS <span class="op">=</span> <span class="dv">100</span> <span class="co"># number of epochs</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>NUM_STEPS <span class="op">=</span> <span class="dv">1000</span> <span class="co"># number of learning steps per episode</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Bi-exponential parameters (lambda_1 will vary)</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>omegas <span class="op">=</span> np.array([<span class="fl">0.94</span>, <span class="fl">0.06</span>])</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>lambdas <span class="op">=</span> np.array([<span class="dv">0</span>, <span class="dv">5000</span>]).astype(<span class="bu">float</span>)</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>lambdas_1 <span class="op">=</span> [<span class="fl">0.6</span>, <span class="fl">0.6</span><span class="op">*</span><span class="dv">2</span>, <span class="fl">0.6</span><span class="op">*</span><span class="dv">8</span>, <span class="fl">0.6</span><span class="op">*</span><span class="dv">16</span>]</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Array saving the results</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>hmatrix_bi <span class="op">=</span> np.zeros((<span class="bu">len</span>(lambdas_1), NUM_STATES))</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> idx_l, lambda_1 <span class="kw">in</span> <span class="bu">enumerate</span>(tqdm(lambdas_1)):</span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>    lambdas[<span class="dv">0</span>] <span class="op">=</span> lambda_1</span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>    steps <span class="op">=</span> pdf_discrete_sample(pdf_func <span class="op">=</span> pdf_multimode,</span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>                                lambdas <span class="op">=</span> lambdas,</span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>                                probs <span class="op">=</span> omegas,</span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>                                L <span class="op">=</span> np.arange(<span class="dv">1</span>, NUM_STATES),  </span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>                                num_samples <span class="op">=</span> (EPOCHS, NUM_STEPS))</span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>    imitator <span class="op">=</span> PS_imitation(num_states <span class="op">=</span> NUM_STATES,</span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>                            eta <span class="op">=</span> <span class="bu">int</span>(<span class="fl">1e-7</span>),</span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>                            gamma <span class="op">=</span> <span class="dv">0</span>)</span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> e <span class="kw">in</span> (<span class="bu">range</span>(EPOCHS)):</span>
+<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a>        imitator.reset()</span>
+<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> s <span class="kw">in</span> steps[e]:    </span>
+<span id="cb9-30"><a href="#cb9-30" aria-hidden="true" tabindex="-1"></a>            imitator.update(length <span class="op">=</span> s)</span>
+<span id="cb9-31"><a href="#cb9-31" aria-hidden="true" tabindex="-1"></a>    <span class="co"># We only save the turn probability</span></span>
+<span id="cb9-32"><a href="#cb9-32" aria-hidden="true" tabindex="-1"></a>    hmatrix_bi[idx_l] <span class="op">=</span> imitator.h_matrix[<span class="dv">1</span>]<span class="op">/</span>imitator.h_matrix.<span class="bu">sum</span>(<span class="dv">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+  0%|          | 0/4 [00:00&lt;?, ?it/s]
+ 25%|██▌       | 1/4 [00:01&lt;00:03,  1.14s/it]
+ 50%|█████     | 2/4 [00:02&lt;00:02,  1.16s/it]
+ 75%|███████▌  | 3/4 [00:03&lt;00:01,  1.17s/it]
+100%|██████████| 4/4 [00:04&lt;00:00,  1.17s/it]</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>fig, ax_bi <span class="op">=</span> plt.subplots(figsize <span class="op">=</span> (<span class="dv">4</span>,<span class="dv">4</span>))</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>color <span class="op">=</span> plt.cm.inferno(np.linspace(<span class="dv">0</span>,<span class="dv">1</span>,<span class="bu">len</span>(lambdas_1)<span class="op">+</span><span class="dv">1</span>))</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co">############# Powerlaw #################</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> idx, (lambda_1, h) <span class="kw">in</span> <span class="bu">enumerate</span>(<span class="bu">zip</span>(lambdas_1, hmatrix_bi)):  </span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    <span class="co">#---- Analytical solution ----#</span></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    lambdas[<span class="dv">0</span>] <span class="op">=</span> lambda_1     </span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    theory <span class="op">=</span> get_policy_from_dist(n_max <span class="op">=</span> NUM_STATES, </span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>                        func <span class="op">=</span> pdf_multimode,</span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>                        lambdas <span class="op">=</span> lambdas,</span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>                        probs <span class="op">=</span> omegas,)</span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    ax_bi.plot(np.arange(<span class="dv">2</span>, NUM_STATES<span class="op">+</span><span class="dv">1</span>), <span class="dv">1</span><span class="op">-</span>theory[<span class="dv">1</span>:], c <span class="op">=</span> color[idx])</span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>    <span class="co">#---- Numerical solution ----#</span></span>
-<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>    ax_bi.plot(np.arange(<span class="dv">2</span>, NUM_STATES<span class="op">+</span><span class="dv">2</span>), h, <span class="st">'o'</span>,               </span>
-<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>               c <span class="op">=</span> color[idx], </span>
-<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>               label <span class="op">=</span> <span class="vs">fr'$d_1$ = </span><span class="sc">{</span>np<span class="sc">.</span><span class="bu">round</span>(lambda_1,<span class="dv">1</span>)<span class="sc">}</span><span class="vs">'</span>,</span>
-<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>               alpha <span class="op">=</span> <span class="fl">0.8</span>, markeredgecolor<span class="op">=</span><span class="st">'None'</span>)</span>
-<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a><span class="co">#---- Plot features ----#</span></span>
-<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>plt.setp(ax_bi, xlim <span class="op">=</span> (<span class="fl">1.8</span>, <span class="dv">30</span>), ylim <span class="op">=</span> (<span class="fl">0.0</span>, <span class="fl">1.01</span>),</span>
-<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>         xlabel <span class="op">=</span><span class="vs">r'$n$'</span>, ylabel <span class="op">=</span> <span class="vs">r'$\pi_s(\Rsh|n)$'</span>, </span>
-<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>         yticks <span class="op">=</span> np.<span class="bu">round</span>(np.arange(<span class="fl">0.2</span>, <span class="fl">1.01</span>, <span class="fl">0.2</span>),<span class="dv">1</span>),</span>
-<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>         yticklabels <span class="op">=</span> np.<span class="bu">round</span>(np.arange(<span class="fl">0.2</span>, <span class="fl">1.01</span>, <span class="fl">0.2</span>),<span class="dv">1</span>).astype(<span class="bu">str</span>),</span>
-<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>         xscale <span class="op">=</span> <span class="st">'log'</span>)</span>
-<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>ax_bi.plot(<span class="dv">10</span>, <span class="dv">10</span>, label <span class="op">=</span> <span class="st">'Theory'</span>, c <span class="op">=</span> <span class="st">'k'</span>)   </span>
-<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a>ax_bi.legend()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>fig, ax_bi <span class="op">=</span> plt.subplots(figsize <span class="op">=</span> (<span class="dv">4</span>,<span class="dv">4</span>))</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>color <span class="op">=</span> plt.cm.inferno(np.linspace(<span class="dv">0</span>,<span class="dv">1</span>,<span class="bu">len</span>(lambdas_1)<span class="op">+</span><span class="dv">1</span>))</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="co">############# Powerlaw #################</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> idx, (lambda_1, h) <span class="kw">in</span> <span class="bu">enumerate</span>(<span class="bu">zip</span>(lambdas_1, hmatrix_bi)):  </span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    <span class="co">#---- Analytical solution ----#</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>    lambdas[<span class="dv">0</span>] <span class="op">=</span> lambda_1     </span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>    theory <span class="op">=</span> get_policy_from_dist(n_max <span class="op">=</span> NUM_STATES, </span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>                        func <span class="op">=</span> pdf_multimode,</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>                        lambdas <span class="op">=</span> lambdas,</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>                        probs <span class="op">=</span> omegas,)</span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>    ax_bi.plot(np.arange(<span class="dv">1</span>, NUM_STATES), <span class="dv">1</span><span class="op">-</span>np.array(theory[<span class="dv">1</span>:]), c <span class="op">=</span> color[idx])</span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>    <span class="co">#---- Numerical solution ----#</span></span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>    ax_bi.plot(np.arange(<span class="dv">2</span>, NUM_STATES<span class="op">+</span><span class="dv">2</span>), h, <span class="st">'o'</span>,               </span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>               c <span class="op">=</span> color[idx], </span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>               label <span class="op">=</span> <span class="vs">fr'$d_1$ = </span><span class="sc">{</span>np<span class="sc">.</span><span class="bu">round</span>(lambda_1,<span class="dv">1</span>)<span class="sc">}</span><span class="vs">'</span>,</span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>               alpha <span class="op">=</span> <span class="fl">0.8</span>, markeredgecolor<span class="op">=</span><span class="st">'None'</span>)</span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a><span class="co">#---- Plot features ----#</span></span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a>plt.setp(ax_bi, xlim <span class="op">=</span> (<span class="fl">1.8</span>, <span class="dv">30</span>), ylim <span class="op">=</span> (<span class="fl">0.0</span>, <span class="fl">1.01</span>),</span>
+<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a>         xlabel <span class="op">=</span><span class="vs">r'$n$'</span>, ylabel <span class="op">=</span> <span class="vs">r'$\pi_s(\Rsh|n)$'</span>, </span>
+<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a>         yticks <span class="op">=</span> np.<span class="bu">round</span>(np.arange(<span class="fl">0.2</span>, <span class="fl">1.01</span>, <span class="fl">0.2</span>),<span class="dv">1</span>),</span>
+<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a>         yticklabels <span class="op">=</span> np.<span class="bu">round</span>(np.arange(<span class="fl">0.2</span>, <span class="fl">1.01</span>, <span class="fl">0.2</span>),<span class="dv">1</span>).astype(<span class="bu">str</span>),</span>
+<span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a>         xscale <span class="op">=</span> <span class="st">'log'</span>)</span>
+<span id="cb11-28"><a href="#cb11-28" aria-hidden="true" tabindex="-1"></a>ax_bi.plot(<span class="dv">10</span>, <span class="dv">10</span>, label <span class="op">=</span> <span class="st">'Theory'</span>, c <span class="op">=</span> <span class="st">'k'</span>)   </span>
+<span id="cb11-29"><a href="#cb11-29" aria-hidden="true" tabindex="-1"></a>ax_bi.legend()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <pre><code>&lt;matplotlib.legend.Legend&gt;</code></pre>
 </div>
 <div class="cell-output cell-output-display">
-<p><img src="tutorial_imitation_files/figure-html/cell-6-output-2.png" class="img-fluid"></p>
+<p><img src="tutorial_imitation_files/figure-html/cell-7-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>fig, ax_bi <span class="op">=</span> plt.subplots(figsize <span class="op">=</span> (<span class="dv">4</span>,<span class="dv">4</span>))</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>color <span class="op">=</span> plt.cm.inferno(np.linspace(<span class="dv">0</span>,<span class="dv">1</span>,<span class="bu">len</span>(lambdas_1)<span class="op">+</span><span class="dv">1</span>))</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="co">############# Powerlaw #################</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> idx, (lambda_1, h) <span class="kw">in</span> <span class="bu">enumerate</span>(<span class="bu">zip</span>(lambdas_1, hmatrix_bi)):  </span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>    <span class="co">#---- Analytical solution ----#</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>    lambdas[<span class="dv">0</span>] <span class="op">=</span> lambda_1     </span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>    theory <span class="op">=</span> get_policy_from_dist(n_max <span class="op">=</span> NUM_STATES, </span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>                        func <span class="op">=</span> pdf_multimode,</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>                        lambdas <span class="op">=</span> lambdas,</span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>                        probs <span class="op">=</span> omegas,)</span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>    ax_bi.plot(np.arange(<span class="dv">2</span>, NUM_STATES<span class="op">+</span><span class="dv">1</span>), <span class="dv">1</span><span class="op">-</span>theory[<span class="dv">1</span>:], c <span class="op">=</span> color[idx])</span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>    <span class="co">#---- Numerical solution ----#</span></span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>    ax_bi.plot(np.arange(<span class="dv">2</span>, NUM_STATES<span class="op">+</span><span class="dv">2</span>), h, <span class="st">'o'</span>,               </span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>               c <span class="op">=</span> color[idx], </span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>               label <span class="op">=</span> <span class="vs">fr'$d_1$ = </span><span class="sc">{</span>np<span class="sc">.</span><span class="bu">round</span>(lambda_1,<span class="dv">1</span>)<span class="sc">}</span><span class="vs">'</span>,</span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a>               alpha <span class="op">=</span> <span class="fl">0.8</span>, markeredgecolor<span class="op">=</span><span class="st">'None'</span>)</span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a><span class="co">#---- Plot features ----#</span></span>
+<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a>plt.setp(ax_bi, xlim <span class="op">=</span> (<span class="fl">1.8</span>, <span class="dv">30</span>), ylim <span class="op">=</span> (<span class="fl">0.0</span>, <span class="fl">1.01</span>),</span>
+<span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a>         xlabel <span class="op">=</span><span class="vs">r'$n$'</span>, ylabel <span class="op">=</span> <span class="vs">r'$\pi_s(\Rsh|n)$'</span>, </span>
+<span id="cb13-25"><a href="#cb13-25" aria-hidden="true" tabindex="-1"></a>         yticks <span class="op">=</span> np.<span class="bu">round</span>(np.arange(<span class="fl">0.2</span>, <span class="fl">1.01</span>, <span class="fl">0.2</span>),<span class="dv">1</span>),</span>
+<span id="cb13-26"><a href="#cb13-26" aria-hidden="true" tabindex="-1"></a>         yticklabels <span class="op">=</span> np.<span class="bu">round</span>(np.arange(<span class="fl">0.2</span>, <span class="fl">1.01</span>, <span class="fl">0.2</span>),<span class="dv">1</span>).astype(<span class="bu">str</span>),</span>
+<span id="cb13-27"><a href="#cb13-27" aria-hidden="true" tabindex="-1"></a>         xscale <span class="op">=</span> <span class="st">'log'</span>)</span>
+<span id="cb13-28"><a href="#cb13-28" aria-hidden="true" tabindex="-1"></a>ax_bi.plot(<span class="dv">10</span>, <span class="dv">10</span>, label <span class="op">=</span> <span class="st">'Theory'</span>, c <span class="op">=</span> <span class="st">'k'</span>)   </span>
+<span id="cb13-29"><a href="#cb13-29" aria-hidden="true" tabindex="-1"></a>ax_bi.legend()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>&lt;matplotlib.legend.Legend&gt;</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="tutorial_imitation_files/figure-html/cell-8-output-2.png" class="img-fluid"></p>
 </div>
 </div>
 </section>
@@ -448,57 +525,57 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2 class="anchored" data-anchor-id="effect-of-a-cutoff-l_max-fig.-7c">Effect of a cutoff <span class="math inline">\(L_{max}\)</span> (Fig. 7c)</h2>
 <p>In our paper we explain that introducing a cutoff in the distribution used by the expert in the imitation scheme affects the resulting policy of the agent. Here we show this effect, using one of the previous bi-exponential policies as example:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Simulation parameters</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>NUM_STATES <span class="op">=</span> <span class="dv">1000</span> <span class="co"># size of the state space</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>EPOCHS <span class="op">=</span> <span class="dv">100</span> <span class="co"># number of epochs</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>NUM_STEPS <span class="op">=</span> <span class="dv">1000</span> <span class="co"># number of learning steps per episode</span></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Distribution paremeters</span></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>omegas <span class="op">=</span> np.array([<span class="fl">0.94</span>, <span class="fl">0.06</span>])</span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>lambdas <span class="op">=</span> np.array([<span class="fl">0.6</span>, <span class="dv">5000</span>])</span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Get theoretical policy (without cutoff)</span></span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>theory_nocutoff <span class="op">=</span>  get_policy_from_dist(n_max <span class="op">=</span> NUM_STATES, </span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>                              func <span class="op">=</span> pdf_multimode,</span>
-<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>                              lambdas <span class="op">=</span> lambdas,</span>
-<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>                              probs <span class="op">=</span> omegas,)</span>
-<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Setting a max step length</span></span>
-<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>L_cutoffs <span class="op">=</span> [<span class="dv">30</span>, <span class="dv">150</span>, <span class="dv">500</span>, <span class="dv">2000</span>, <span class="dv">10000</span>]</span>
-<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a><span class="co"># To make the loop more efficient, we sample now all steps,</span></span>
-<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a><span class="co"># which we will then cut if the are bigger than L_cutoff</span></span>
-<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>steps_og <span class="op">=</span> pdf_discrete_sample(pdf_func <span class="op">=</span> pdf_multimode,</span>
-<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>                                lambdas <span class="op">=</span> lambdas,</span>
-<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>                                probs <span class="op">=</span> omegas,</span>
-<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>                                L_max <span class="op">=</span> NUM_STATES,  </span>
-<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>                                num_samples <span class="op">=</span> EPOCHS<span class="op">*</span>NUM_STEPS)</span>
-<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>hmatrix_co <span class="op">=</span> np.zeros((<span class="bu">len</span>(L_cutoffs), NUM_STATES))</span>
-<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> idx_c, L_cutoff <span class="kw">in</span> <span class="bu">enumerate</span>(tqdm(L_cutoffs)):</span>
-<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Copy steps we sampled above and apply cutoff. </span></span>
-<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a>    <span class="co"># We re-generate the cutted steps</span></span>
-<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a>    steps <span class="op">=</span> steps_og.copy()</span>
-<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a>    <span class="cf">while</span> np.<span class="bu">max</span>(steps) <span class="op">&gt;</span> L_cutoff:</span>
-<span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a>        steps[steps <span class="op">&gt;</span> L_cutoff] <span class="op">=</span> pdf_discrete_sample(pdf_func <span class="op">=</span> pdf_multimode,</span>
-<span id="cb8-35"><a href="#cb8-35" aria-hidden="true" tabindex="-1"></a>                                                      lambdas <span class="op">=</span> lambdas,</span>
-<span id="cb8-36"><a href="#cb8-36" aria-hidden="true" tabindex="-1"></a>                                                      probs <span class="op">=</span> omegas,</span>
-<span id="cb8-37"><a href="#cb8-37" aria-hidden="true" tabindex="-1"></a>                                                      L_max <span class="op">=</span> NUM_STATES,</span>
-<span id="cb8-38"><a href="#cb8-38" aria-hidden="true" tabindex="-1"></a>                                                      num_samples <span class="op">=</span> <span class="bu">len</span>(steps[steps <span class="op">&gt;</span> L_cutoff]))</span>
-<span id="cb8-39"><a href="#cb8-39" aria-hidden="true" tabindex="-1"></a>    steps <span class="op">=</span> steps.reshape(EPOCHS, NUM_STEPS)</span>
-<span id="cb8-40"><a href="#cb8-40" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb8-41"><a href="#cb8-41" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Define PS imitator</span></span>
-<span id="cb8-42"><a href="#cb8-42" aria-hidden="true" tabindex="-1"></a>    imitator <span class="op">=</span> PS_imitation(num_states <span class="op">=</span> NUM_STATES,</span>
-<span id="cb8-43"><a href="#cb8-43" aria-hidden="true" tabindex="-1"></a>                            eta <span class="op">=</span> <span class="bu">int</span>(<span class="fl">1e-7</span>),</span>
-<span id="cb8-44"><a href="#cb8-44" aria-hidden="true" tabindex="-1"></a>                            gamma <span class="op">=</span> <span class="dv">0</span>)</span>
-<span id="cb8-45"><a href="#cb8-45" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Training</span></span>
-<span id="cb8-46"><a href="#cb8-46" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> e <span class="kw">in</span> (<span class="bu">range</span>(EPOCHS)):</span>
-<span id="cb8-47"><a href="#cb8-47" aria-hidden="true" tabindex="-1"></a>        imitator.reset()</span>
-<span id="cb8-48"><a href="#cb8-48" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> s <span class="kw">in</span> steps[e]:         </span>
-<span id="cb8-49"><a href="#cb8-49" aria-hidden="true" tabindex="-1"></a>            imitator.update(length <span class="op">=</span> s)</span>
-<span id="cb8-50"><a href="#cb8-50" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Saving</span></span>
-<span id="cb8-51"><a href="#cb8-51" aria-hidden="true" tabindex="-1"></a>    hmatrix_co[idx_c] <span class="op">=</span> imitator.h_matrix[<span class="dv">1</span>]<span class="op">/</span>imitator.h_matrix.<span class="bu">sum</span>(<span class="dv">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Simulation parameters</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>NUM_STATES <span class="op">=</span> <span class="dv">1000</span> <span class="co"># size of the state space</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>EPOCHS <span class="op">=</span> <span class="dv">100</span> <span class="co"># number of epochs</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>NUM_STEPS <span class="op">=</span> <span class="dv">1000</span> <span class="co"># number of learning steps per episode</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Distribution paremeters</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>omegas <span class="op">=</span> np.array([<span class="fl">0.94</span>, <span class="fl">0.06</span>])</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>lambdas <span class="op">=</span> np.array([<span class="fl">0.6</span>, <span class="dv">5000</span>])</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Get theoretical policy (without cutoff)</span></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>theory_nocutoff <span class="op">=</span>  get_policy_from_dist(n_max <span class="op">=</span> NUM_STATES, </span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>                              func <span class="op">=</span> pdf_multimode,</span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>                              lambdas <span class="op">=</span> lambdas,</span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>                              probs <span class="op">=</span> omegas,)</span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Setting a max step length</span></span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>L_cutoffs <span class="op">=</span> [<span class="dv">30</span>, <span class="dv">150</span>, <span class="dv">500</span>, <span class="dv">2000</span>, <span class="dv">10000</span>]</span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a><span class="co"># To make the loop more efficient, we sample now all steps,</span></span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a><span class="co"># which we will then cut if the are bigger than L_cutoff</span></span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a>steps_og <span class="op">=</span> pdf_discrete_sample(pdf_func <span class="op">=</span> pdf_multimode,</span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a>                                lambdas <span class="op">=</span> lambdas,</span>
+<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a>                                probs <span class="op">=</span> omegas,</span>
+<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a>                                L_max <span class="op">=</span> NUM_STATES,  </span>
+<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a>                                num_samples <span class="op">=</span> EPOCHS<span class="op">*</span>NUM_STEPS)</span>
+<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a>hmatrix_co <span class="op">=</span> np.zeros((<span class="bu">len</span>(L_cutoffs), NUM_STATES))</span>
+<span id="cb15-28"><a href="#cb15-28" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> idx_c, L_cutoff <span class="kw">in</span> <span class="bu">enumerate</span>(tqdm(L_cutoffs)):</span>
+<span id="cb15-29"><a href="#cb15-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-30"><a href="#cb15-30" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Copy steps we sampled above and apply cutoff. </span></span>
+<span id="cb15-31"><a href="#cb15-31" aria-hidden="true" tabindex="-1"></a>    <span class="co"># We re-generate the cutted steps</span></span>
+<span id="cb15-32"><a href="#cb15-32" aria-hidden="true" tabindex="-1"></a>    steps <span class="op">=</span> steps_og.copy()</span>
+<span id="cb15-33"><a href="#cb15-33" aria-hidden="true" tabindex="-1"></a>    <span class="cf">while</span> np.<span class="bu">max</span>(steps) <span class="op">&gt;</span> L_cutoff:</span>
+<span id="cb15-34"><a href="#cb15-34" aria-hidden="true" tabindex="-1"></a>        steps[steps <span class="op">&gt;</span> L_cutoff] <span class="op">=</span> pdf_discrete_sample(pdf_func <span class="op">=</span> pdf_multimode,</span>
+<span id="cb15-35"><a href="#cb15-35" aria-hidden="true" tabindex="-1"></a>                                                      lambdas <span class="op">=</span> lambdas,</span>
+<span id="cb15-36"><a href="#cb15-36" aria-hidden="true" tabindex="-1"></a>                                                      probs <span class="op">=</span> omegas,</span>
+<span id="cb15-37"><a href="#cb15-37" aria-hidden="true" tabindex="-1"></a>                                                      L_max <span class="op">=</span> NUM_STATES,</span>
+<span id="cb15-38"><a href="#cb15-38" aria-hidden="true" tabindex="-1"></a>                                                      num_samples <span class="op">=</span> <span class="bu">len</span>(steps[steps <span class="op">&gt;</span> L_cutoff]))</span>
+<span id="cb15-39"><a href="#cb15-39" aria-hidden="true" tabindex="-1"></a>    steps <span class="op">=</span> steps.reshape(EPOCHS, NUM_STEPS)</span>
+<span id="cb15-40"><a href="#cb15-40" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb15-41"><a href="#cb15-41" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Define PS imitator</span></span>
+<span id="cb15-42"><a href="#cb15-42" aria-hidden="true" tabindex="-1"></a>    imitator <span class="op">=</span> PS_imitation(num_states <span class="op">=</span> NUM_STATES,</span>
+<span id="cb15-43"><a href="#cb15-43" aria-hidden="true" tabindex="-1"></a>                            eta <span class="op">=</span> <span class="bu">int</span>(<span class="fl">1e-7</span>),</span>
+<span id="cb15-44"><a href="#cb15-44" aria-hidden="true" tabindex="-1"></a>                            gamma <span class="op">=</span> <span class="dv">0</span>)</span>
+<span id="cb15-45"><a href="#cb15-45" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Training</span></span>
+<span id="cb15-46"><a href="#cb15-46" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> e <span class="kw">in</span> (<span class="bu">range</span>(EPOCHS)):</span>
+<span id="cb15-47"><a href="#cb15-47" aria-hidden="true" tabindex="-1"></a>        imitator.reset()</span>
+<span id="cb15-48"><a href="#cb15-48" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> s <span class="kw">in</span> steps[e]:         </span>
+<span id="cb15-49"><a href="#cb15-49" aria-hidden="true" tabindex="-1"></a>            imitator.update(length <span class="op">=</span> s)</span>
+<span id="cb15-50"><a href="#cb15-50" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Saving</span></span>
+<span id="cb15-51"><a href="#cb15-51" aria-hidden="true" tabindex="-1"></a>    hmatrix_co[idx_c] <span class="op">=</span> imitator.h_matrix[<span class="dv">1</span>]<span class="op">/</span>imitator.h_matrix.<span class="bu">sum</span>(<span class="dv">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id":"a3c5247020e94082845cb3331131b827","version_major":2,"version_minor":0}
@@ -506,31 +583,31 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>fig, ax_co <span class="op">=</span> plt.subplots(figsize <span class="op">=</span> (<span class="dv">6</span>, <span class="dv">3</span>))</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>color <span class="op">=</span> plt.cm.cividis(np.linspace(<span class="dv">0</span>,<span class="dv">1</span>,<span class="bu">len</span>(L_cutoffs)<span class="op">+</span><span class="dv">1</span>))</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> idx, (h, L_cutoff) <span class="kw">in</span> <span class="bu">enumerate</span>(<span class="bu">zip</span>(hmatrix_co, L_cutoffs)):  </span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    <span class="co">#---- Numerical solutions ----#</span></span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    ax_co.plot(np.arange(<span class="dv">2</span>, NUM_STATES<span class="op">+</span><span class="dv">2</span>), h, <span class="st">'o'</span>,               </span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>               c <span class="op">=</span> color[idx],  label <span class="op">=</span> <span class="vs">r'$L_</span><span class="sc">{max}</span><span class="vs">$ = '</span><span class="op">+</span><span class="ss">f'</span><span class="sc">{</span>L_cutoff<span class="sc">}</span><span class="ss">'</span>, </span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>               alpha <span class="op">=</span> <span class="fl">0.8</span>, markeredgecolor<span class="op">=</span><span class="st">'None'</span>, rasterized<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>    ax_co.plot(np.arange(<span class="dv">2</span>, NUM_STATES<span class="op">+</span><span class="dv">2</span>), h,                </span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>               c <span class="op">=</span> color[idx],  alpha <span class="op">=</span> <span class="fl">0.2</span>)</span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="co">#---- Analytical solutions ----#</span></span>
-<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>ax_co.plot(np.arange(<span class="dv">2</span>, NUM_STATES<span class="op">+</span><span class="dv">1</span>), <span class="dv">1</span><span class="op">-</span>theory_nocutoff[<span class="dv">1</span>:], <span class="st">'-'</span>, </span>
-<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>           c <span class="op">=</span> <span class="st">'k'</span>, alpha <span class="op">=</span> <span class="fl">0.8</span>, label <span class="op">=</span> <span class="vs">r'$L_</span><span class="sc">{max}</span><span class="vs">\rightarrow \infty$'</span>) </span>
-<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a><span class="co">#---- Plot features ----#</span></span>
-<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>ax_co.axhline(<span class="fl">0.5</span>, c <span class="op">=</span> <span class="st">'k'</span>, ls <span class="op">=</span> <span class="st">'--'</span>, alpha <span class="op">=</span> <span class="fl">0.5</span>, zorder <span class="op">=</span> <span class="op">-</span><span class="dv">1</span>)</span>
-<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>ax_co.text(<span class="fl">1.5</span>, <span class="fl">0.52</span>, <span class="vs">r'$\pi_0$'</span>, alpha <span class="op">=</span> <span class="fl">0.5</span>)</span>
-<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>plt.legend(loc <span class="op">=</span> <span class="st">'upper right'</span>, fontsize <span class="op">=</span> <span class="dv">8</span>)    </span>
-<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>plt.setp(ax_co, xlabel <span class="op">=</span><span class="vs">r'$n$'</span>, ylabel <span class="op">=</span> <span class="vs">r'$\pi(\Rsh|n)$'</span>, xscale <span class="op">=</span> <span class="st">'log'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>fig, ax_co <span class="op">=</span> plt.subplots(figsize <span class="op">=</span> (<span class="dv">6</span>, <span class="dv">3</span>))</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>color <span class="op">=</span> plt.cm.cividis(np.linspace(<span class="dv">0</span>,<span class="dv">1</span>,<span class="bu">len</span>(L_cutoffs)<span class="op">+</span><span class="dv">1</span>))</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> idx, (h, L_cutoff) <span class="kw">in</span> <span class="bu">enumerate</span>(<span class="bu">zip</span>(hmatrix_co, L_cutoffs)):  </span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>    <span class="co">#---- Numerical solutions ----#</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>    ax_co.plot(np.arange(<span class="dv">2</span>, NUM_STATES<span class="op">+</span><span class="dv">2</span>), h, <span class="st">'o'</span>,               </span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>               c <span class="op">=</span> color[idx],  label <span class="op">=</span> <span class="vs">r'$L_</span><span class="sc">{max}</span><span class="vs">$ = '</span><span class="op">+</span><span class="ss">f'</span><span class="sc">{</span>L_cutoff<span class="sc">}</span><span class="ss">'</span>, </span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>               alpha <span class="op">=</span> <span class="fl">0.8</span>, markeredgecolor<span class="op">=</span><span class="st">'None'</span>, rasterized<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>    ax_co.plot(np.arange(<span class="dv">2</span>, NUM_STATES<span class="op">+</span><span class="dv">2</span>), h,                </span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>               c <span class="op">=</span> color[idx],  alpha <span class="op">=</span> <span class="fl">0.2</span>)</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a><span class="co">#---- Analytical solutions ----#</span></span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>ax_co.plot(np.arange(<span class="dv">2</span>, NUM_STATES<span class="op">+</span><span class="dv">1</span>), <span class="dv">1</span><span class="op">-</span>theory_nocutoff[<span class="dv">1</span>:], <span class="st">'-'</span>, </span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>           c <span class="op">=</span> <span class="st">'k'</span>, alpha <span class="op">=</span> <span class="fl">0.8</span>, label <span class="op">=</span> <span class="vs">r'$L_</span><span class="sc">{max}</span><span class="vs">\rightarrow \infty$'</span>) </span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a><span class="co">#---- Plot features ----#</span></span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>ax_co.axhline(<span class="fl">0.5</span>, c <span class="op">=</span> <span class="st">'k'</span>, ls <span class="op">=</span> <span class="st">'--'</span>, alpha <span class="op">=</span> <span class="fl">0.5</span>, zorder <span class="op">=</span> <span class="op">-</span><span class="dv">1</span>)</span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>ax_co.text(<span class="fl">1.5</span>, <span class="fl">0.52</span>, <span class="vs">r'$\pi_0$'</span>, alpha <span class="op">=</span> <span class="fl">0.5</span>)</span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>plt.legend(loc <span class="op">=</span> <span class="st">'upper right'</span>, fontsize <span class="op">=</span> <span class="dv">8</span>)    </span>
+<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a>plt.setp(ax_co, xlabel <span class="op">=</span><span class="vs">r'$n$'</span>, ylabel <span class="op">=</span> <span class="vs">r'$\pi(\Rsh|n)$'</span>, xscale <span class="op">=</span> <span class="st">'log'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <pre><code>[Text(0.5, 0, '$n$'), Text(0, 0.5, '$\\pi(\\Rsh|n)$'), None]</code></pre>
 </div>
 <div class="cell-output cell-output-display">
-<p><img src="tutorial_imitation_files/figure-html/cell-8-output-2.png" class="img-fluid"></p>
+<p><img src="tutorial_imitation_files/figure-html/cell-10-output-2.png" class="img-fluid"></p>
 </div>
 </div>
 

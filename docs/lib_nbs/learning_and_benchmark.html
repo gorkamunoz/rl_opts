@@ -201,7 +201,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../lib_nbs/learning.html" class="sidebar-item-text sidebar-link active">Learning and benchmarking</a>
+  <a href="../lib_nbs/learning_and_benchmark.html" class="sidebar-item-text sidebar-link active">Learning and benchmarking</a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -300,6 +300,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <section id="learning" class="level1">
 <h1>Learning</h1>
 <hr>
+<p><a href="https://github.com/gorkamunoz/rl_opts/tree/master/blob/master/rl_opts/learn_and_bench.py#L14" target="_blank" style="float:right; font-size:smaller">source</a></p>
 <section id="learning-1" class="level3">
 <h3 class="anchored" data-anchor-id="learning-1">learning</h3>
 <blockquote class="blockquote">
@@ -337,6 +338,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <section id="generate-walk-from-a-policy" class="level1">
 <h1>Generate walk from a policy</h1>
 <hr>
+<p><a href="https://github.com/gorkamunoz/rl_opts/tree/master/blob/master/rl_opts/learn_and_bench.py#L99" target="_blank" style="float:right; font-size:smaller">source</a></p>
 <section id="walk_from_policy" class="level3">
 <h3 class="anchored" data-anchor-id="walk_from_policy">walk_from_policy</h3>
 <blockquote class="blockquote">
@@ -433,6 +435,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <section id="efficiency-computation" class="level1">
 <h1>Efficiency computation</h1>
 <hr>
+<p><a href="https://github.com/gorkamunoz/rl_opts/tree/master/blob/master/rl_opts/learn_and_bench.py#L196" target="_blank" style="float:right; font-size:smaller">source</a></p>
 <section id="agent_efficiency" class="level3">
 <h3 class="anchored" data-anchor-id="agent_efficiency">agent_efficiency</h3>
 <blockquote class="blockquote">
@@ -486,6 +489,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h1>Benchmarks</h1>
 <p>Code to get the search efficiency of the benchmark models. We consider Lévy and bi-exponential distributions and obtain the model parameters that achieve the highest search efficiency. We use the library <code>Tune</code> for the efficiency optimization within given parameter ranges.</p>
 <hr>
+<p><a href="https://github.com/gorkamunoz/rl_opts/tree/master/blob/master/rl_opts/learn_and_bench.py#L255" target="_blank" style="float:right; font-size:smaller">source</a></p>
 <section id="average_search_efficiency" class="level3">
 <h3 class="anchored" data-anchor-id="average_search_efficiency">average_search_efficiency</h3>
 <blockquote class="blockquote">
@@ -528,20 +532,21 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">#### Minimal example #####</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>run <span class="op">=</span> <span class="st">'0'</span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>search_type <span class="op">=</span> <span class="st">'Bayesian'</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>config <span class="op">=</span> {<span class="st">'num_raytune_samples'</span>: <span class="dv">3</span>,</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>          <span class="st">'d_int'</span>: tune.uniform(<span class="fl">0.00001</span>, <span class="fl">20.0</span>),</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>          <span class="st">'d_ext'</span>: <span class="fl">100.0</span>,</span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>          <span class="st">'p'</span>: tune.uniform(<span class="fl">0.0</span>, <span class="fl">1.0</span>),</span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>          <span class="st">'beta'</span>: <span class="va">None</span>,</span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>          <span class="st">'model'</span>: <span class="st">'double_exp'</span>,</span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>          <span class="st">'time_ep'</span>: <span class="dv">20</span>,</span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>          <span class="st">'n'</span>: <span class="dv">10</span>,</span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>          <span class="st">'lc'</span>: <span class="fl">3.0</span>,</span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>          <span class="st">'Nt'</span>: <span class="dv">100</span>,</span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>          <span class="st">'L'</span>: <span class="dv">100</span>,</span>
-<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>          <span class="st">'r'</span>: <span class="fl">0.5</span>,</span>
-<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>          <span class="st">'destructive'</span>: <span class="va">False</span>,</span>
-<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>         }</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>config <span class="op">=</span> {<span class="st">'d_int'</span>: tune.uniform(<span class="fl">0.00001</span>, <span class="fl">20.0</span>),</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>          <span class="st">'d_ext'</span>: <span class="fl">100.0</span>,</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>          <span class="st">'p'</span>: tune.uniform(<span class="fl">0.0</span>, <span class="fl">1.0</span>),</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>          <span class="st">'beta'</span>: <span class="va">None</span>,</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>          <span class="st">'model'</span>: <span class="st">'double_exp'</span>,</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>          <span class="st">'time_ep'</span>: <span class="dv">20</span>,</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>          <span class="st">'n'</span>: <span class="dv">10</span>,</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>          <span class="st">'lc'</span>: <span class="fl">3.0</span>,</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>          <span class="st">'Nt'</span>: <span class="dv">100</span>,</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>          <span class="st">'L'</span>: <span class="dv">100</span>,</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>          <span class="st">'r'</span>: <span class="fl">0.5</span>,</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>          <span class="st">'destructive'</span>: <span class="va">False</span>,</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>          <span class="st">'results_path'</span>: <span class="va">None</span>,</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>          <span class="st">'num_raytune_samples'</span>:<span class="dv">10</span></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>         }</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Initialize <code>Tune</code></p>
 <div class="cell">
@@ -553,7 +558,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>                        tune_config<span class="op">=</span>tune.TuneConfig(search_alg<span class="op">=</span>bayesopt, num_samples<span class="op">=</span>config[<span class="st">'num_raytune_samples'</span>]), </span>
 <span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>                        param_space<span class="op">=</span>config)</span>
 <span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="cf">elif</span> search_type <span class="op">==</span> <span class="st">'Grid'</span>:<span class="co">#Grid search</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="cf">elif</span> search_type <span class="op">==</span> <span class="st">'Grid'</span>: <span class="co">#Grid search</span></span>
 <span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    tuner <span class="op">=</span> tune.Tuner(average_search_efficiency,</span>
 <span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>                        tune_config<span class="op">=</span>tune.TuneConfig(num_samples<span class="op">=</span><span class="dv">1</span>),</span>
@@ -562,21 +567,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>Run the algorithm</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>result_grid <span class="op">=</span> tuner.fit()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>Save the results and the configuration in the corresponding folders</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Results path</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>results_path <span class="op">=</span> <span class="st">'results/benchmark_models/'</span> <span class="op">+</span> config[<span class="st">'model'</span>] <span class="op">+</span> <span class="st">'/'</span><span class="op">+</span> <span class="bu">str</span>(config[<span class="st">'lc'</span>]) <span class="op">+</span> <span class="st">'/run_'</span><span class="op">+</span>run<span class="op">+</span><span class="st">'/'</span></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>pathlib.Path(results_path).mkdir(parents<span class="op">=</span><span class="va">True</span>, exist_ok<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Configuration path</span></span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>config_path <span class="op">=</span> <span class="st">'configurations/benchmark_models/'</span></span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>pathlib.Path(config_path).mkdir(parents<span class="op">=</span><span class="va">True</span>, exist_ok<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Save results</span></span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>results_df <span class="op">=</span> result_grid.get_dataframe()</span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>results_df.to_csv(results_path<span class="op">+</span><span class="st">'df'</span><span class="op">+</span>run<span class="op">+</span><span class="st">'_'</span><span class="op">+</span>config[<span class="st">'model'</span>]<span class="op">+</span><span class="st">'_lc_'</span><span class="op">+</span><span class="bu">str</span>(config[<span class="st">'lc'</span>])<span class="op">+</span><span class="st">'.csv'</span>)</span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>np.save(config_path<span class="op">+</span><span class="st">'config_'</span><span class="op">+</span>config[<span class="st">'model'</span>]<span class="op">+</span><span class="st">'_lc_'</span><span class="op">+</span><span class="bu">str</span>(config[<span class="st">'lc'</span>])<span class="op">+</span><span class="st">'_run_'</span><span class="op">+</span>run<span class="op">+</span><span class="st">'.npy'</span>, config)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 
 

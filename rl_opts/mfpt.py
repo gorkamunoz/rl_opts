@@ -4,7 +4,7 @@
 __all__ = ['constant_velocity_generator', 'mfpt_rw', 'mfpt_informed_rw', 'rw_generator', 'exp_time_generator', 'Biexp',
            'biexp_time_generator', 'constant_velocity_generator_2D', 'mfpt_rw_2D', 'mfpt_informed_rw_2D']
 
-# %% ../nbs/lib_nbs/05_mfpt.ipynb 2
+# %% ../nbs/lib_nbs/05_mfpt.ipynb 3
 import numpy as np
 from tqdm.notebook import tqdm, trange
 from tqdm import tqdm as tqdm_term

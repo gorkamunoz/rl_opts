@@ -126,8 +126,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <link rel="stylesheet" href="../style.css">
 <meta property="og:title" content="RL-OptS: Reinforcement Learning of Optimal Search strategies - Analytical functions">
+<meta property="og:description" content="source">
 <meta property="og:site-name" content="RL-OptS: Reinforcement Learning of Optimal Search strategies">
 <meta name="twitter:title" content="RL-OptS: Reinforcement Learning of Optimal Search strategies - Analytical functions">
+<meta name="twitter:description" content="source">
 <meta name="twitter:card" content="summary">
 </head>
 
@@ -200,7 +202,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../lib_nbs/learning.html" class="sidebar-item-text sidebar-link">Learning and benchmarking</a>
+  <a href="../lib_nbs/learning_and_benchmark.html" class="sidebar-item-text sidebar-link">Learning and benchmarking</a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -263,7 +265,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <li><a href="#calculation-of-policy-from-step-length-pdf" id="toc-calculation-of-policy-from-step-length-pdf" class="nav-link" data-scroll-target="#calculation-of-policy-from-step-length-pdf">Calculation of policy from step length PDF</a>
   <ul class="collapse">
   <li><a href="#get_policy_from_dist" id="toc-get_policy_from_dist" class="nav-link" data-scroll-target="#get_policy_from_dist">get_policy_from_dist</a></li>
-  <li><a href="#get_policy" id="toc-get_policy" class="nav-link" data-scroll-target="#get_policy">get_policy</a></li>
   </ul></li>
   </ul>
 <div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/gorkamunoz/rl_opts/tree/master/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
@@ -292,6 +293,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <section id="step-length-distribution-generators" class="level2">
 <h2 class="anchored" data-anchor-id="step-length-distribution-generators">Step length distribution generators</h2>
 <hr>
+<p><a href="https://github.com/gorkamunoz/rl_opts/tree/master/blob/master/rl_opts/analytics.py#L10" target="_blank" style="float:right; font-size:smaller">source</a></p>
 <section id="pdf_multimode" class="level3">
 <h3 class="anchored" data-anchor-id="pdf_multimode">pdf_multimode</h3>
 <blockquote class="blockquote">
@@ -348,6 +350,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </div>
 <hr>
+<p><a href="https://github.com/gorkamunoz/rl_opts/tree/master/blob/master/rl_opts/analytics.py#L31" target="_blank" style="float:right; font-size:smaller">source</a></p>
 </section>
 <section id="pdf_powerlaw" class="level3">
 <h3 class="anchored" data-anchor-id="pdf_powerlaw">pdf_powerlaw</h3>
@@ -400,6 +403,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </div>
 <hr>
+<p><a href="https://github.com/gorkamunoz/rl_opts/tree/master/blob/master/rl_opts/analytics.py#L44" target="_blank" style="float:right; font-size:smaller">source</a></p>
 </section>
 <section id="pdf_discrete_sample" class="level3">
 <h3 class="anchored" data-anchor-id="pdf_discrete_sample">pdf_discrete_sample</h3>
@@ -441,7 +445,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="cell">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>samples <span class="op">=</span> pdf_discrete_sample(pdf_func <span class="op">=</span> pdf_multimode, </span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>                              num_samples<span class="op">=</span><span class="dv">10000</span>, </span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>                              L_max <span class="op">=</span> L_max, lambdas<span class="op">=</span>lambdas, probs<span class="op">=</span>probs)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>                              L <span class="op">=</span> np.arange(<span class="dv">1</span>, L_max), lambdas<span class="op">=</span>lambdas, probs<span class="op">=</span>probs)</span>
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>counts <span class="op">=</span> np.bincount(samples)[<span class="dv">1</span>:]</span>
 <span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
@@ -450,7 +454,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>           label <span class="op">=</span> <span class="st">'Histogram samples'</span>)</span>
 <span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>plt.loglog(np.arange(<span class="dv">1</span>, L_max),</span>
-<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>           pdf_multimode(L_max <span class="op">=</span> L_max, lambdas<span class="op">=</span>lambdas, probs<span class="op">=</span>probs),</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>           pdf_multimode(L <span class="op">=</span> np.arange(<span class="dv">1</span>, L_max), lambdas<span class="op">=</span>lambdas, probs<span class="op">=</span>probs),</span>
 <span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>           label <span class="op">=</span> <span class="st">'Theory'</span></span>
 <span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>          )</span>
 <span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'L'</span>)<span class="op">;</span> plt.ylabel(<span class="st">'P(L)'</span>)<span class="op">;</span> plt.legend()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -466,6 +470,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <section id="calculation-of-policy-from-step-length-pdf" class="level2">
 <h2 class="anchored" data-anchor-id="calculation-of-policy-from-step-length-pdf">Calculation of policy from step length PDF</h2>
 <hr>
+<p><a href="https://github.com/gorkamunoz/rl_opts/tree/master/blob/master/rl_opts/analytics.py#L57" target="_blank" style="float:right; font-size:smaller">source</a></p>
 <section id="get_policy_from_dist" class="level3">
 <h3 class="anchored" data-anchor-id="get_policy_from_dist">get_policy_from_dist</h3>
 <blockquote class="blockquote">
@@ -520,85 +525,29 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </tr>
 </tbody>
 </table>
-<hr>
-</section>
-<section id="get_policy" class="level3">
-<h3 class="anchored" data-anchor-id="get_policy">get_policy</h3>
-<blockquote class="blockquote">
-<pre><code> get_policy (n_max, func, ps_0:int=1, **args_func)</code></pre>
-</blockquote>
-<p>Given a PDF of step lengths, calculates the corresponding policy</p>
-<table class="table">
-<colgroup>
-<col style="width: 6%">
-<col style="width: 25%">
-<col style="width: 34%">
-<col style="width: 34%">
-</colgroup>
-<thead>
-<tr class="header">
-<th></th>
-<th><strong>Type</strong></th>
-<th><strong>Default</strong></th>
-<th><strong>Details</strong></th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>n_max</td>
-<td></td>
-<td></td>
-<td>Maximum counter n_max for which the policy is calculated</td>
-</tr>
-<tr class="even">
-<td>func</td>
-<td></td>
-<td></td>
-<td>Function generating the pdf</td>
-</tr>
-<tr class="odd">
-<td>ps_0</td>
-<td>int</td>
-<td>1</td>
-<td>Value of the policy at L = 0 (should be one)</td>
-</tr>
-<tr class="even">
-<td>args_func</td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-<tr class="odd">
-<td><strong>Returns</strong></td>
-<td><strong>array</strong></td>
-<td></td>
-<td><strong>Policy at each counter value</strong></td>
-</tr>
-</tbody>
-</table>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>L <span class="op">=</span> <span class="dv">100</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>betas <span class="op">=</span> np.linspace(<span class="fl">0.1</span>, <span class="dv">2</span>, <span class="dv">10</span>)</span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>colors <span class="op">=</span> plt.cm.plasma(np.linspace(<span class="dv">0</span>,<span class="dv">1</span>,<span class="bu">len</span>(betas)<span class="op">+</span><span class="dv">2</span>))</span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots()</span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> beta, color <span class="kw">in</span> <span class="bu">zip</span>(betas, colors):</span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>    policy <span class="op">=</span> get_policy(n_max <span class="op">=</span> L,</span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>                        func <span class="op">=</span> pdf_powerlaw,</span>
-<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>                        beta <span class="op">=</span> beta)</span>
-<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>    ax.plot(np.arange(<span class="dv">2</span>, L<span class="op">+</span><span class="dv">1</span>), policy[<span class="dv">1</span>:], c <span class="op">=</span> color)</span>
-<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot features    </span></span>
-<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>plt.setp(ax, xlabel <span class="op">=</span><span class="vs">r'$l$'</span>, ylabel <span class="op">=</span> <span class="vs">r'$P_s(l)$'</span>, xscale <span class="op">=</span> <span class="st">'log'</span>)</span>
-<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>cbar <span class="op">=</span> fig.colorbar(plt.cm.ScalarMappable(norm<span class="op">=</span> mcolors.Normalize(vmin<span class="op">=</span>betas.<span class="bu">min</span>(), </span>
-<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>                                                                  vmax<span class="op">=</span>betas.<span class="bu">max</span>()),</span>
-<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>                                          cmap<span class="op">=</span>plt.cm.plasma),</span>
-<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>                    ax <span class="op">=</span> ax)</span>
-<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>cbar.set_label(<span class="vs">r'$\beta$'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>L <span class="op">=</span> <span class="dv">100</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>betas <span class="op">=</span> np.linspace(<span class="fl">0.1</span>, <span class="dv">2</span>, <span class="dv">10</span>)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>colors <span class="op">=</span> plt.cm.plasma(np.linspace(<span class="dv">0</span>,<span class="dv">1</span>,<span class="bu">len</span>(betas)<span class="op">+</span><span class="dv">2</span>))</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots()</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> beta, color <span class="kw">in</span> <span class="bu">zip</span>(betas, colors):</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>    policy <span class="op">=</span> get_policy_from_dist(n_max <span class="op">=</span> L, </span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>                                  func <span class="op">=</span> pdf_powerlaw,</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>                                  beta <span class="op">=</span> beta)</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>    ax.plot(np.arange(<span class="dv">2</span>, L<span class="op">+</span><span class="dv">1</span>), policy[<span class="dv">1</span>:], c <span class="op">=</span> color)</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot features    </span></span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>plt.setp(ax, xlabel <span class="op">=</span><span class="vs">r'$n$'</span>, ylabel <span class="op">=</span> <span class="vs">r'$\pi(\uparrow|n)$'</span>, xscale <span class="op">=</span> <span class="st">'log'</span>)</span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>cbar <span class="op">=</span> fig.colorbar(plt.cm.ScalarMappable(norm<span class="op">=</span> mcolors.Normalize(vmin<span class="op">=</span>betas.<span class="bu">min</span>(), </span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>                                                                  vmax<span class="op">=</span>betas.<span class="bu">max</span>()),</span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>                                          cmap<span class="op">=</span>plt.cm.plasma),</span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>                    ax <span class="op">=</span> ax)</span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>cbar.set_label(<span class="vs">r'$\beta$'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
-<p><img src="03_analytics_files/figure-html/cell-10-output-1.png" class="img-fluid"></p>
+<p><img src="03_analytics_files/figure-html/cell-9-output-1.png" class="img-fluid"></p>
 </div>
 </div>
 

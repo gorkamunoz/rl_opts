@@ -16,19 +16,19 @@ Reinforcement Learning of Optimal Search strategies
 
 This library builds the necessary tools needed to study, replicate and
 develop the results of the paper: [“Optimal foraging strategies can be
-learned and outperform Lévy walks”](https://arxiv.org/abs/2303.06050) by *G. Muñoz-Gil, A.
-López-Incera, L. J. Fiderer* and *H. J. Briegel*.
+learned and outperform Lévy walks”](https://arxiv.org/abs/2303.06050) by
+*G. Muñoz-Gil, A. López-Incera, L. J. Fiderer* and *H. J. Briegel*.
 
 ### Installation
 
-(soon) You can access all these tools installing the python package `rl_opts`
+You can access all these tools installing the python package `rl_opts`
 via Pypi:
 
 ``` python
 pip install rl-opts
 ```
 
-(In the meanwhile) You can also opt for cloning the [source
+You can also opt for cloning the [source
 repository](https://github.com/gorkamunoz/rl_opts) and executing the
 following on the parent folder you just cloned the repo:
 
@@ -40,9 +40,14 @@ This will install both the library and the necessary packages.
 
 ### Tutorials
 
-In the left sidebar you will find a Tutorials tab, with notebooks that will
-help you navigate the package as well as reproducing the results of our
-paper via minimal examples. In particular, we have three tutorials:
+We have prepared a series of tutorials to guide you through the most
+important functionalities of the package. You can find them in the
+[Tutorials
+folder](https://github.com/gorkamunoz/rl_opts/tree/master/nbs/tutorials)
+of the Github repository or in the Tutorials tab of our
+[webpage](https://gorkamunoz.github.io/rl_opts/), with notebooks that
+will help you navigate the package as well as reproducing the results of
+our paper via minimal examples. In particular, we have three tutorials:
 
 - <a href="tutorials/tutorial_learning.ipynb" style="text-decoration:none">Reinforcement
   learning </a> : shows how to train a RL agent based on Projective
@@ -53,7 +58,8 @@ paper via minimal examples. In particular, we have three tutorials:
   an expert equipped with a pre-trained policy. The latter is based on
   the benchmark strategies common in the literature.
 - <a href="tutorials/tutorial_benchmarks.ipynb" style="text-decoration:none">Benchmarks
-  </a> : shows how to obtain and launch the strategies used to benchmark the performance of the RL agents.
+  </a> : shows how launch various benchmark strategies with which to
+  compare the trained RL agents.
 
 ### Package structure
 
@@ -62,13 +68,13 @@ The package contains a set of modules for:
 - <a href="lib_nbs/01_rl_framework.ipynb" style="text-decoration:none">Reinforcement
   learning framework (`rl_opts.rl_framework`)</a> : building foraging
   environments as well as the RL agents moving on them.
-- <a href="lib_nbs/02_learning.ipynb" style="text-decoration:none">Learning
+- <a href="lib_nbs/02_learning_and_benchmark.ipynb" style="text-decoration:none">Learning
   and benchmarking (`rl_opts.learn_and_bench`)</a> : training RL agents
   as well as benchmarking them w.r.t. to known foraging strategies.
 - <a href="lib_nbs/04_imitation_learning.ipynb" style="text-decoration:none">Imitation
   learning (`rl_opts.imitation`)</a>: training RL agents in imitation
   schemes via foraging experts.
-- <a href="lib_nbs/04_imitation_learning.ipynb" style="text-decoration:none">Analytical
+- <a href="lib_nbs/03_analytics.ipynb" style="text-decoration:none">Analytical
   functions (`rl_opts.analytics)`</a>: builiding analytical functions
   for step length distributions as well as tranforming these to foraging
   policies.
@@ -81,5 +87,15 @@ We kindly ask you to cite our paper if any of the previous material was
 useful for your work, here is the bibtex info:
 
 ``` latex
-soon
+@article{munoz2023optimal,
+  doi = {10.48550/ARXIV.2303.06050},  
+  url = {https://arxiv.org/abs/2303.06050},  
+  author = {Muñoz-Gil, Gorka and López-Incera, Andrea and Fiderer, Lukas J. and Briegel, Hans J.},  
+  title = {Optimal foraging strategies can be learned and outperform Lévy walks},  
+  publisher = {arXiv},  
+  archivePrefix = {arXiv},
+  eprint = {2303.06050},
+  primaryClass = {cond-mat.stat-mech},  
+  year = {2023},
+}
 ```

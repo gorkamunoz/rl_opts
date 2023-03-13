@@ -126,8 +126,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <link rel="stylesheet" href="../style.css">
 <meta property="og:title" content="RL-OptS: Reinforcement Learning of Optimal Search strategies - Mean First Passage Times in 1D and 2D environments">
+<meta property="og:description" content="source">
 <meta property="og:site-name" content="RL-OptS: Reinforcement Learning of Optimal Search strategies">
 <meta name="twitter:title" content="RL-OptS: Reinforcement Learning of Optimal Search strategies - Mean First Passage Times in 1D and 2D environments">
+<meta name="twitter:description" content="source">
 <meta name="twitter:card" content="summary">
 </head>
 
@@ -200,7 +202,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../lib_nbs/learning.html" class="sidebar-item-text sidebar-link">Learning and benchmarking</a>
+  <a href="../lib_nbs/learning_and_benchmark.html" class="sidebar-item-text sidebar-link">Learning and benchmarking</a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -307,6 +309,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <section id="d" class="level2">
 <h2 class="anchored" data-anchor-id="d">1D</h2>
 <hr>
+<p><a href="https://github.com/gorkamunoz/rl_opts/tree/master/blob/master/rl_opts/mfpt.py#L20" target="_blank" style="float:right; font-size:smaller">source</a></p>
 <section id="constant_velocity_generator" class="level3">
 <h3 class="anchored" data-anchor-id="constant_velocity_generator">constant_velocity_generator</h3>
 <blockquote class="blockquote">
@@ -363,7 +366,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>                                       T, </span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>                                       time_sampler <span class="op">=</span> pdf_discrete_sample, </span>
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>                                       pdf_func<span class="op">=</span>pdf_powerlaw,</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>                                       L_max <span class="op">=</span> T,                                       </span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>                                       L <span class="op">=</span> np.arange(<span class="dv">1</span>, T),                                       </span>
 <span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>                                       beta <span class="op">=</span> <span class="dv">1</span>)</span>
 <span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> single_steps(num_samples):</span>
@@ -378,7 +381,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">1</span>].plot(trajs_rw.transpose())</span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">1</span>].set_title(<span class="st">'RW'</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
-<p><img src="05_mfpt_files/figure-html/cell-5-output-1.png" class="img-fluid"></p>
+<p><img src="05_mfpt_files/figure-html/cell-4-output-1.png" class="img-fluid"></p>
 </div>
 </div>
 </section>
@@ -387,6 +390,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <section id="uniformed" class="level4">
 <h4 class="anchored" data-anchor-id="uniformed">Uniformed</h4>
 <hr>
+<p><a href="https://github.com/gorkamunoz/rl_opts/tree/master/blob/master/rl_opts/mfpt.py#L58" target="_blank" style="float:right; font-size:smaller">source</a></p>
 </section>
 </section>
 <section id="mfpt_rw" class="level3">
@@ -465,6 +469,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <section id="informed" class="level4">
 <h4 class="anchored" data-anchor-id="informed">Informed</h4>
 <hr>
+<p><a href="https://github.com/gorkamunoz/rl_opts/tree/master/blob/master/rl_opts/mfpt.py#L118" target="_blank" style="float:right; font-size:smaller">source</a></p>
 </section>
 </section>
 <section id="mfpt_informed_rw" class="level3">
@@ -554,6 +559,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h4 class="anchored" data-anchor-id="discrete-walking">Discrete walking</h4>
 <p>In this case we are already doing constant velocities, hence we can use the generator below:</p>
 <hr>
+<p><a href="https://github.com/gorkamunoz/rl_opts/tree/master/blob/master/rl_opts/mfpt.py#L179" target="_blank" style="float:right; font-size:smaller">source</a></p>
 </section>
 </section>
 <section id="rw_generator" class="level3">
@@ -583,12 +589,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <pre><code>&lt;matplotlib.legend.Legend&gt;</code></pre>
 </div>
 <div class="cell-output cell-output-display">
-<p><img src="05_mfpt_files/figure-html/cell-10-output-2.png" class="img-fluid"></p>
+<p><img src="05_mfpt_files/figure-html/cell-9-output-2.png" class="img-fluid"></p>
 </div>
 </div>
 <section id="exponential" class="level4">
 <h4 class="anchored" data-anchor-id="exponential">Exponential</h4>
 <hr>
+<p><a href="https://github.com/gorkamunoz/rl_opts/tree/master/blob/master/rl_opts/mfpt.py#L186" target="_blank" style="float:right; font-size:smaller">source</a></p>
 </section>
 </section>
 <section id="exp_time_generator" class="level3">
@@ -622,12 +629,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <pre><code>(23.655963721815578, 500)</code></pre>
 </div>
 <div class="cell-output cell-output-display">
-<p><img src="05_mfpt_files/figure-html/cell-13-output-2.png" class="img-fluid"></p>
+<p><img src="05_mfpt_files/figure-html/cell-12-output-2.png" class="img-fluid"></p>
 </div>
 </div>
 <section id="biexponential" class="level4">
 <h4 class="anchored" data-anchor-id="biexponential">Biexponential</h4>
 <hr>
+<p><a href="https://github.com/gorkamunoz/rl_opts/tree/master/blob/master/rl_opts/mfpt.py#L192" target="_blank" style="float:right; font-size:smaller">source</a></p>
 </section>
 </section>
 <section id="biexp" class="level3">
@@ -637,6 +645,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </blockquote>
 <p>Initialize self. See help(type(self)) for accurate signature.</p>
 <hr>
+<p><a href="https://github.com/gorkamunoz/rl_opts/tree/master/blob/master/rl_opts/mfpt.py#L218" target="_blank" style="float:right; font-size:smaller">source</a></p>
 </section>
 <section id="biexp_time_generator" class="level3">
 <h3 class="anchored" data-anchor-id="biexp_time_generator">biexp_time_generator</h3>
@@ -651,7 +660,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>plt.loglog(e[:<span class="op">-</span><span class="dv">1</span>], h)</span>
 <span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>plt.plot(e, bi.pdf(e)<span class="op">*</span>(h[<span class="dv">0</span>]<span class="op">/</span>bi.pdf(e[<span class="dv">0</span>])), alpha <span class="op">=</span> <span class="fl">0.8</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
-<p><img src="05_mfpt_files/figure-html/cell-16-output-1.png" class="img-fluid"></p>
+<p><img src="05_mfpt_files/figure-html/cell-15-output-1.png" class="img-fluid"></p>
 </div>
 </div>
 <section id="uninformed" class="level5">
@@ -683,7 +692,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <pre><code>Text(0.5, 1.0, '$x_0 =$ 3')</code></pre>
 </div>
 <div class="cell-output cell-output-display">
-<p><img src="05_mfpt_files/figure-html/cell-18-output-2.png" class="img-fluid"></p>
+<p><img src="05_mfpt_files/figure-html/cell-17-output-2.png" class="img-fluid"></p>
 </div>
 </div>
 </section>
@@ -718,7 +727,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <pre><code>Text(0.5, 1.0, '$x_0 =$ 3')</code></pre>
 </div>
 <div class="cell-output cell-output-display">
-<p><img src="05_mfpt_files/figure-html/cell-20-output-2.png" class="img-fluid"></p>
+<p><img src="05_mfpt_files/figure-html/cell-19-output-2.png" class="img-fluid"></p>
 </div>
 </div>
 </section>
@@ -738,7 +747,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>                                                        traj_generator <span class="op">=</span> constant_velocity_generator,</span>
 <span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>                                                        time_sampler <span class="op">=</span> pdf_discrete_sample, </span>
 <span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>                                                        pdf_func<span class="op">=</span>pdf_powerlaw,</span>
-<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>                                                        L_max <span class="op">=</span> T,</span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>                                                        L <span class="op">=</span> np.arange(<span class="dv">1</span>, T),</span>
 <span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>                                                        beta <span class="op">=</span> beta)</span>
 <span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>                <span class="cf">for</span> _ <span class="kw">in</span> tqdm(<span class="bu">range</span>(reps))), dtype <span class="op">=</span> <span class="bu">object</span>)</span>
 <span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a></span>
@@ -758,7 +767,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>                                                                traj_generator <span class="op">=</span> constant_velocity_generator,</span>
 <span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>                                                                time_sampler <span class="op">=</span> pdf_discrete_sample, </span>
 <span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>                                                                pdf_func<span class="op">=</span>pdf_powerlaw,</span>
-<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>                                                                L_max <span class="op">=</span> T,</span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>                                                                L <span class="op">=</span> np.arange(<span class="dv">1</span>, T),</span>
 <span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>                                                                beta <span class="op">=</span> beta)</span>
 <span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a>                <span class="cf">for</span> beta <span class="kw">in</span> tqdm(betas)), dtype <span class="op">=</span> <span class="bu">object</span>)</span>
 <span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a></span>
@@ -788,7 +797,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <pre><code>[Text(0, 0.5, 'MFPT'), Text(0.5, 0, 'L'), Text(0.5, 1.0, '$x_0 =$ 3')]</code></pre>
 </div>
 <div class="cell-output cell-output-display">
-<p><img src="05_mfpt_files/figure-html/cell-23-output-2.png" class="img-fluid"></p>
+<p><img src="05_mfpt_files/figure-html/cell-22-output-2.png" class="img-fluid"></p>
 </div>
 </div>
 <div class="cell">
@@ -801,7 +810,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <pre><code>Text(0.5, 1.0, '$x_0 =$ 3')</code></pre>
 </div>
 <div class="cell-output cell-output-display">
-<p><img src="05_mfpt_files/figure-html/cell-24-output-2.png" class="img-fluid"></p>
+<p><img src="05_mfpt_files/figure-html/cell-23-output-2.png" class="img-fluid"></p>
 </div>
 </div>
 <p>Smaller <span class="math inline">\(\beta\)</span></p>
@@ -826,7 +835,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <pre><code>[Text(0, 0.5, 'MFPT'), Text(0.5, 0, 'L'), Text(0.5, 1.0, '$x_0 =$ 0.02')]</code></pre>
 </div>
 <div class="cell-output cell-output-display">
-<p><img src="05_mfpt_files/figure-html/cell-25-output-2.png" class="img-fluid"></p>
+<p><img src="05_mfpt_files/figure-html/cell-24-output-2.png" class="img-fluid"></p>
 </div>
 </div>
 <div class="cell">
@@ -838,7 +847,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <pre><code>Text(0.5, 1.0, '$x_0 =$ 0.02')</code></pre>
 </div>
 <div class="cell-output cell-output-display">
-<p><img src="05_mfpt_files/figure-html/cell-26-output-2.png" class="img-fluid"></p>
+<p><img src="05_mfpt_files/figure-html/cell-25-output-2.png" class="img-fluid"></p>
 </div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  0%|          | 0/100 [00:00&lt;?, ?it/s]
@@ -928,7 +937,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
  Text(0.5, 1.0, '$x_0 =$ 3')]</code></pre>
 </div>
 <div class="cell-output cell-output-display">
-<p><img src="05_mfpt_files/figure-html/cell-31-output-2.png" class="img-fluid"></p>
+<p><img src="05_mfpt_files/figure-html/cell-30-output-2.png" class="img-fluid"></p>
 </div>
 </div>
 <p>Reading results</p>
@@ -980,7 +989,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <pre><code>&lt;matplotlib.legend.Legend&gt;</code></pre>
 </div>
 <div class="cell-output cell-output-display">
-<p><img src="05_mfpt_files/figure-html/cell-33-output-2.png" class="img-fluid"></p>
+<p><img src="05_mfpt_files/figure-html/cell-32-output-2.png" class="img-fluid"></p>
 </div>
 </div>
 <div class="cell">
@@ -1026,7 +1035,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb46-20"><a href="#cb46-20" aria-hidden="true" tabindex="-1"></a>                    ax <span class="op">=</span> ax)</span>
 <span id="cb46-21"><a href="#cb46-21" aria-hidden="true" tabindex="-1"></a>cbar.set_label(<span class="vs">r'$\beta$'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
-<p><img src="05_mfpt_files/figure-html/cell-35-output-1.png" class="img-fluid"></p>
+<p><img src="05_mfpt_files/figure-html/cell-34-output-1.png" class="img-fluid"></p>
 </div>
 </div>
 <div class="cell">
@@ -1060,7 +1069,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <pre><code>[Text(0.5, 0, '$\\beta$'), Text(0, 0.5, 'Fit long time MFPT')]</code></pre>
 </div>
 <div class="cell-output cell-output-display">
-<p><img src="05_mfpt_files/figure-html/cell-37-output-2.png" class="img-fluid"></p>
+<p><img src="05_mfpt_files/figure-html/cell-36-output-2.png" class="img-fluid"></p>
 </div>
 </div>
 <div class="cell">
@@ -1070,7 +1079,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>plt.loglog(Lsplot, mean_inf<span class="op">/</span>mean_inf[<span class="dv">0</span>])</span>
 <span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>plt.loglog(Lsplot, (Lsplot<span class="op">/</span>Lsplot[<span class="dv">0</span>])<span class="op">**</span>(<span class="fl">0.6</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
-<p><img src="05_mfpt_files/figure-html/cell-38-output-1.png" class="img-fluid"></p>
+<p><img src="05_mfpt_files/figure-html/cell-37-output-1.png" class="img-fluid"></p>
 </div>
 </div>
 </section>
@@ -1078,6 +1087,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <section id="d-not-conclusive-results" class="level2">
 <h2 class="anchored" data-anchor-id="d-not-conclusive-results">2D (not conclusive results)</h2>
 <hr>
+<p><a href="https://github.com/gorkamunoz/rl_opts/tree/master/blob/master/rl_opts/mfpt.py#L223" target="_blank" style="float:right; font-size:smaller">source</a></p>
 <section id="constant_velocity_generator_2d" class="level3">
 <h3 class="anchored" data-anchor-id="constant_velocity_generator_2d">constant_velocity_generator_2D</h3>
 <blockquote class="blockquote">
@@ -1149,13 +1159,14 @@ Finished generating trajectories</code></pre>
 <span id="cb54-6"><a href="#cb54-6" aria-hidden="true" tabindex="-1"></a>    ax[<span class="dv">1</span>].plot(x, y)</span>
 <span id="cb54-7"><a href="#cb54-7" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">1</span>].set_title(<span class="st">'RW'</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
-<p><img src="05_mfpt_files/figure-html/cell-41-output-1.png" class="img-fluid"></p>
+<p><img src="05_mfpt_files/figure-html/cell-40-output-1.png" class="img-fluid"></p>
 </div>
 </div>
 </section>
 <section id="mfpt-calculator" class="level3">
 <h3 class="anchored" data-anchor-id="mfpt-calculator">MFPT calculator</h3>
 <hr>
+<p><a href="https://github.com/gorkamunoz/rl_opts/tree/master/blob/master/rl_opts/mfpt.py#L271" target="_blank" style="float:right; font-size:smaller">source</a></p>
 </section>
 <section id="mfpt_rw_2d" class="level3">
 <h3 class="anchored" data-anchor-id="mfpt_rw_2d">mfpt_rw_2D</h3>
@@ -1258,7 +1269,7 @@ Finished generating trajectories</code></pre>
 <pre><code>&lt;matplotlib.legend.Legend&gt;</code></pre>
 </div>
 <div class="cell-output cell-output-display">
-<p><img src="05_mfpt_files/figure-html/cell-44-output-2.png" class="img-fluid"></p>
+<p><img src="05_mfpt_files/figure-html/cell-43-output-2.png" class="img-fluid"></p>
 </div>
 </div>
 </section>
@@ -1290,7 +1301,7 @@ Finished generating trajectories</code></pre>
 <pre><code>Text(0.5, 1.0, '$x_0 =$ [0.5, 0.5]')</code></pre>
 </div>
 <div class="cell-output cell-output-display">
-<p><img src="05_mfpt_files/figure-html/cell-46-output-2.png" class="img-fluid"></p>
+<p><img src="05_mfpt_files/figure-html/cell-45-output-2.png" class="img-fluid"></p>
 </div>
 </div>
 </section>
@@ -1325,7 +1336,7 @@ Finished generating trajectories</code></pre>
 <pre><code>Text(0.5, 1.0, '$x_0 =$ [0.5, 0.5]')</code></pre>
 </div>
 <div class="cell-output cell-output-display">
-<p><img src="05_mfpt_files/figure-html/cell-48-output-2.png" class="img-fluid"></p>
+<p><img src="05_mfpt_files/figure-html/cell-47-output-2.png" class="img-fluid"></p>
 </div>
 </div>
 <div class="cell">
@@ -1338,13 +1349,14 @@ Finished generating trajectories</code></pre>
 <pre><code>Text(0.5, 1.0, '$x_0 =$ [0.5, 0.5]')</code></pre>
 </div>
 <div class="cell-output cell-output-display">
-<p><img src="05_mfpt_files/figure-html/cell-49-output-2.png" class="img-fluid"></p>
+<p><img src="05_mfpt_files/figure-html/cell-48-output-2.png" class="img-fluid"></p>
 </div>
 </div>
 </section>
 <section id="informed-2" class="level4">
 <h4 class="anchored" data-anchor-id="informed-2">Informed</h4>
 <hr>
+<p><a href="https://github.com/gorkamunoz/rl_opts/tree/master/blob/master/rl_opts/mfpt.py#L349" target="_blank" style="float:right; font-size:smaller">source</a></p>
 </section>
 </section>
 <section id="mfpt_informed_rw_2d" class="level3">
@@ -1457,7 +1469,7 @@ Finished generating trajectories</code></pre>
 <span id="cb70-10"><a href="#cb70-10" aria-hidden="true" tabindex="-1"></a>                                                        traj_generator <span class="op">=</span> constant_velocity_generator_2D,</span>
 <span id="cb70-11"><a href="#cb70-11" aria-hidden="true" tabindex="-1"></a>                                                        time_sampler <span class="op">=</span> pdf_discrete_sample, </span>
 <span id="cb70-12"><a href="#cb70-12" aria-hidden="true" tabindex="-1"></a>                                                           pdf_func<span class="op">=</span>pdf_powerlaw,</span>
-<span id="cb70-13"><a href="#cb70-13" aria-hidden="true" tabindex="-1"></a>                                                           L_max <span class="op">=</span> T, beta <span class="op">=</span> beta,)</span>
+<span id="cb70-13"><a href="#cb70-13" aria-hidden="true" tabindex="-1"></a>                                                           L <span class="op">=</span> np.arange(<span class="dv">1</span>, T), beta <span class="op">=</span> beta,)</span>
 <span id="cb70-14"><a href="#cb70-14" aria-hidden="true" tabindex="-1"></a>                <span class="cf">for</span> _ <span class="kw">in</span> tqdm(<span class="bu">range</span>(reps))), dtype <span class="op">=</span> <span class="bu">object</span>)</span>
 <span id="cb70-15"><a href="#cb70-15" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb70-16"><a href="#cb70-16" aria-hidden="true" tabindex="-1"></a>mean_pw <span class="op">=</span> results.mean(<span class="dv">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1496,7 +1508,7 @@ Finished generating trajectories</code></pre>
  Text(0.5, 1.0, '$x_0 =$ [0.5, 0.5]')]</code></pre>
 </div>
 <div class="cell-output cell-output-display">
-<p><img src="05_mfpt_files/figure-html/cell-54-output-2.png" class="img-fluid"></p>
+<p><img src="05_mfpt_files/figure-html/cell-53-output-2.png" class="img-fluid"></p>
 </div>
 </div>
 </section>
