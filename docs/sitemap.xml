@@ -2,42 +2,42 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://gorkamunoz.github.io/rl_opts/tutorials/tutorial_imitation.html</loc>
-    <lastmod>2023-03-13T09:06:31.572Z</lastmod>
+    <lastmod>2023-03-13T09:13:53.939Z</lastmod>
   </url>
   <url>
     <loc>https://gorkamunoz.github.io/rl_opts/tutorials/tutorial_learning.html</loc>
-    <lastmod>2023-03-13T09:06:31.828Z</lastmod>
+    <lastmod>2023-03-13T09:13:54.203Z</lastmod>
   </url>
   <url>
     <loc>https://gorkamunoz.github.io/rl_opts/tutorials/tutorial_benchmarks.html</loc>
-    <lastmod>2023-03-13T09:06:32.060Z</lastmod>
+    <lastmod>2023-03-13T09:13:54.443Z</lastmod>
   </url>
   <url>
     <loc>https://gorkamunoz.github.io/rl_opts/index.html</loc>
-    <lastmod>2023-03-13T09:06:32.244Z</lastmod>
+    <lastmod>2023-03-13T09:13:54.631Z</lastmod>
   </url>
   <url>
     <loc>https://gorkamunoz.github.io/rl_opts/lib_nbs/analytics.html</loc>
-    <lastmod>2023-03-13T09:06:32.448Z</lastmod>
+    <lastmod>2023-03-13T09:13:54.847Z</lastmod>
   </url>
   <url>
     <loc>https://gorkamunoz.github.io/rl_opts/lib_nbs/learning_and_benchmark.html</loc>
-    <lastmod>2023-03-13T09:06:32.652Z</lastmod>
+    <lastmod>2023-03-13T09:13:55.055Z</lastmod>
   </url>
   <url>
     <loc>https://gorkamunoz.github.io/rl_opts/lib_nbs/imitation_learning.html</loc>
-    <lastmod>2023-03-13T09:06:32.836Z</lastmod>
+    <lastmod>2023-03-13T09:13:55.239Z</lastmod>
   </url>
   <url>
     <loc>https://gorkamunoz.github.io/rl_opts/lib_nbs/mfpt.html</loc>
-    <lastmod>2023-03-13T09:06:33.312Z</lastmod>
+    <lastmod>2023-03-13T09:13:55.715Z</lastmod>
   </url>
   <url>
     <loc>https://gorkamunoz.github.io/rl_opts/lib_nbs/rl_framework.html</loc>
-    <lastmod>2023-03-13T09:06:33.492Z</lastmod>
+    <lastmod>2023-03-13T09:13:55.903Z</lastmod>
   </url>
   <url>
     <loc>https://gorkamunoz.github.io/rl_opts/lib_nbs/utils.html</loc>
-    <lastmod>2023-03-13T09:06:33.696Z</lastmod>
+    <lastmod>2023-03-13T09:13:56.111Z</lastmod>
   </url>
 </urlset>

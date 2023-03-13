@@ -9,7 +9,7 @@ RL-OptS
 Reinforcement Learning of Optimal Search strategies
 </h4>
 <p align="center">
-<a href="https://doi.org/10.5281/c"><img src="https://zenodo.org/badge/DOI/zzz/zenodo.xxx.svg" alt="DOI"></a>
+<a href="https://zenodo.org/badge/latestdoi/424986383"><img src="https://zenodo.org/badge/424986383.svg" alt="DOI"></a>
 <a href="https://badge.fury.io/py/a"><img src="https://badge.fury.io/py/xxx.svg" alt="PyPI version"></a>
 <a href="https://badge.fury.io/py/b"><img src="https://img.shields.io/badge/python-3.9-red" alt="Python version"></a>
 </p>
