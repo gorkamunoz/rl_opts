@@ -1,6 +1,5 @@
 website:
   sidebar:
-    style: "docked"
     collapse-level: 1
     contents:
       - text: Get started

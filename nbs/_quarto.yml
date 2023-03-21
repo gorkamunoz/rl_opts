@@ -4,12 +4,17 @@ project:
   preview:
     port: 4200
     browser: false
-
+    
 format:
   html:
     theme: zephyr
     css: style.css
     toc: true
+    linkcolor: "#15adc2ff"
+    monobackgroundcolor: "#f8f4dfff"
+    page-layout: article
+
+
 
 website:
   title: "RL-OptS: Reinforcement Learning of Optimal Search strategies"
@@ -22,14 +27,16 @@ website:
   repo-actions: [issue]
   navbar:  
     logo: figs/logo.png
-    background: primary
+    background: "#f8f6e4ff"
+    foreground: "#154c64ff"
     search: true      
     right:
       - icon: github
         href: "https://github.com/gorkamunoz/rl_opts/"        
       - icon: twitter
         href: https://twitter.com/gorka_mgm
-  sidebar:
+  sidebar: 
+    foreground: "#154c64ff"
     style: floating
 
 metadata-files: [sidebar.yml]
