@@ -12,12 +12,12 @@ format:
     toc: true
     linkcolor: "#15adc2ff"
     monobackgroundcolor: "#f8f4dfff"
-    page-layout: article
+    page-layout: full
 
 
 
 website:
-  title: "RL-OptS: Reinforcement Learning of Optimal Search strategies"
+  title: "RL-OptS"
   site-url: "https://gorkamunoz.github.io/rl_opts/"
   description: "Reinforcement learning of optimal search"
   repo-branch: master
