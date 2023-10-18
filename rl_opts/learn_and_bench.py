@@ -244,10 +244,8 @@ def agent_efficiency(results_path, config, run, num_walks, episode_interval):
 
 # %% ../nbs/lib_nbs/02_learning_and_benchmark.ipynb 12
 import pathlib
+import warnings
 
-from ray import tune
-from ray.tune.search.bayesopt import BayesOptSearch
-from ray.tune.search import ConcurrencyLimiter
 
 from .analytics import get_policy_from_dist, pdf_powerlaw, pdf_multimode
 
@@ -261,6 +259,14 @@ def average_search_efficiency(config):
     config : dict
         Dictionary with the configuration of the benchmark model.
     """
+    
+    try:
+        from ray import tune
+        from ray.tune.search.bayesopt import BayesOptSearch
+        from ray.tune.search import ConcurrencyLimiter
+    except:
+        warnings.warn('ray[tune] is currently not installed. If you intend to use the'
+                      '`average_search_efficiency` function, consider installing via pip install ray[tune].', stacklevel=2)
     
     #get parameters of the distributions depending on the chosen model
     if config['model'] == 'powerlaw':
