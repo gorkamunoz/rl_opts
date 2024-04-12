@@ -62,7 +62,11 @@ def isBetween_c_Vec_numba(a, b, c, r):
 
 # %% ../../nbs/lib_nbs/01_rl_framework_numba.ipynb 16
 @jit(nopython = NOPYTHON)
-def pareto_sample(alpha, xm, size=1):
+def pareto_sample(alpha : float, # Exponent of the power law
+                  xm : float, # Minimun value of the distribution
+                  size : int=1 # Number of samples
+                 )-> np.array : # Samples from the distribution
+    ''' Generates samples from a Pareto distribution of given parameters '''
     samples = np.zeros(size)
     for ii in range(size):
         u = random.random()  # Uniform random variable between 0 and 1
@@ -72,12 +76,9 @@ def pareto_sample(alpha, xm, size=1):
 
 # %% ../../nbs/lib_nbs/01_rl_framework_numba.ipynb 18
 @jit(nopython = NOPYTHON)
-def rand_choice_nb(arr, prob):
-    """
-    :param arr: A 1D numpy array of values to sample from.
-    :param prob: A 1D numpy array of probabilities for the given samples.
-    :return: A random sample from the given array with a given probability.
-    """
+def rand_choice_nb(arr : np.array, # 1D numpy array of values to sample from.
+                   prob : np.array # 1D numpy array of probabilities for the given samples.
+                  ): # Random sample from the given array with a given probability.    
     return arr[np.searchsorted(np.cumsum(prob), np.random.random(), side="right")]
 
 # %% ../../nbs/lib_nbs/01_rl_framework_numba.ipynb 20
@@ -110,7 +111,7 @@ class TargetEnv():
     
     
     def __init__(self,
-                 Nt = 10,
+                 Nt = 10, # blabla
                  L = 1.3,
                  r = 1.5,
                  lc = np.array([[1.0],[1]]),
@@ -119,33 +120,44 @@ class TargetEnv():
                  destructive = False,
                  lc_distribution = 'constant'):
         
-        """Class defining the foraging environment. It includes the methods needed to place several agents to the world.
-
-        Updated from rl_framework.TargetEnv:
-         - lc_distribution: now allows to consider different distributions. lc now means different things depending on the distribution.
+        """        
+        Class defining the foraging environment. It includes the methods needed to place several agents to the world.
         
-        Parameters
-        ----------
-        Nt: int 
+        Updated from `rl_framework.TargetEnv`:        
+            > `lc_distribution`: now allows to consider different distributions. lc now means different things depending on the distribution.
+        
+        **Inputs**
+        
+        `Nt` : (int) 
             Number of targets.
-        L: int
+            
+        `L` : (int)
             Size of the (squared) world.
-        r: int 
+            
+        `r` : (int) 
             Radius with center the target position. It defines the area in which agent detects the target.
-        lc: 
+            
+        `lc` 
             Cutoff length. Displacement away from target (to implement revisitable targets by displacing agent away from the visited target).
-        agent_step: int, optional 
+            
+        `agent_step`: (int, optional)
             Displacement of one step. The default is 1.
-        num_agents: int, optional 
+            
+        `num_agents`: (int, optional)
             Number of agents that forage at the same time. The default is 1.
-        destructive: bool, optional
+            
+        `destructive`: (bool, optional)
             True if targets are destructive. The default is False.
-        lc_distribution: str
-            Chosee between 'power_law', 'pareto' and None. Depending on the previous, lc has different meanings:
-            power_law : lc is sampled from a power law x^{-1-alpha} where alpha = self.lc.flatten()[0] 
-            pareto : lc is sampled from a Pareto distribution with alpha = self.lc.flatten()[0] and x_minim = self.lc.flatten()[0]
-            None : if len(lc) == 1, then that's the lc. If len(lc) > 1, then samples an lc considering vals = lc[0] and probabilities = lc[1]
+            
+        `lc_distribution`: (str) Chosee between 'power_law', 'pareto' and None. Depending on the previous, lc has different meanings:
+        
+        > `power_law` : lc is sampled from a power law x^{-1-alpha} where alpha = self.lc.flatten()[0] 
+        
+        > `pareto` : lc is sampled from a Pareto distribution with alpha = self.lc.flatten()[0] and x_minim = self.lc.flatten()[0]
+        
+        > `None` : if len(lc) == 1, then that's the lc. If len(lc) > 1, then samples an lc considering vals = lc[0] and probabilities = lc[1]
         """
+        
         
         self.Nt = Nt
         self.L = L
@@ -270,12 +282,12 @@ class TargetEnv():
         self.positions[agent_index] = (self.positions[agent_index])%self.L
     
 
-# %% ../../nbs/lib_nbs/01_rl_framework_numba.ipynb 29
+# %% ../../nbs/lib_nbs/01_rl_framework_numba.ipynb 30
 @jit(nopython = NOPYTHON)
 def single_agent_walk(N_runs : int, # Total number of runs / episodes to evaluate
                       time_ep : int, # Length of each run / episode
                       policy : np.array, # Policy of the walker
-                      env # Environment where the walker moves
+                      env : object# Environment where the walker moves
                      )-> np.array :  # Array containing the number of targets from in each run
 
     """
@@ -317,7 +329,7 @@ def single_agent_walk(N_runs : int, # Total number of runs / episodes to evaluat
                 
     return save_rewards
 
-# %% ../../nbs/lib_nbs/01_rl_framework_numba.ipynb 30
+# %% ../../nbs/lib_nbs/01_rl_framework_numba.ipynb 31
 @jit(nopython = NOPYTHON, parallel = True)
 def multi_agents_walk(N_runs : int, # Total number of runs / episodes to evaluate
                       time_ep : int, # Length of each run / episode
@@ -325,14 +337,14 @@ def multi_agents_walk(N_runs : int, # Total number of runs / episodes to evaluat
                       Nt = 100, # Number of targets in the environment
                       L = 100, # Size of the environment
                       r = 0.5, # Radius of the targets
-                      lc = np.array([[1.0],[1]]), # Parameters of lc distribution or lc itself 
+                      lc = 1.0, # Parameters of lc distribution or lc itself 
                       agent_step = 1, # Length of agent's step
                       destructive_targets = False, # True if targets are destructive. The default is False. 
                       lc_distribution = 'constant', # lc distribution
-                      policy = np.array([[1]*100, [0]*100]) # Policy of the agents
+                      policy = [[1,1], [0,0]] # Policy of the agents
               )-> np.array : # Array containing number of targets found for each agent at each run.
     """
-    Runs in parallel single_agent_walk. Due to numba props, we need to give all parameters as inputs.
+    Runs in parallel single_agent_walk. Due to numba props, we need to give all parameters as inputs (see source).
     """
     
     save_rewards = np.zeros((N_agents, N_runs))
@@ -347,7 +359,7 @@ def multi_agents_walk(N_runs : int, # Total number of runs / episodes to evaluat
         
     return save_rewards
 
-# %% ../../nbs/lib_nbs/01_rl_framework_numba.ipynb 33
+# %% ../../nbs/lib_nbs/01_rl_framework_numba.ipynb 34
 @jitclass([("num_percepts_list", int64[:]),           
            ("initial_prob_distr", float64[:,:]),           
            ("fixed_policy", float64[:,:]) ,
@@ -551,7 +563,7 @@ class _Forager_original():
         ''' simplified to case of single forager. Returns list because is what deliberate needs'''
         return np.array([self.agent_state])
 
-# %% ../../nbs/lib_nbs/01_rl_framework_numba.ipynb 36
+# %% ../../nbs/lib_nbs/01_rl_framework_numba.ipynb 37
 @jitclass([("num_percepts_list", int64[:]),           
            ("initial_prob_distr", float64[:,:]),           
            ("fixed_policy", float64[:,:]) ,
@@ -791,7 +803,7 @@ class _Forager_efficient_H():
         ''' simplified to case of single forager. Returns list because is what deliberate needs'''
         return np.array([self.agent_state])
 
-# %% ../../nbs/lib_nbs/01_rl_framework_numba.ipynb 52
+# %% ../../nbs/lib_nbs/01_rl_framework_numba.ipynb 53
 @jitclass([("size_state_space", int64[:]),           
            ("initial_prob_distr", float64[:,:]),           
            ("fixed_policy", float64[:,:]) ,
@@ -840,7 +852,36 @@ class Forager():
 
         
         """
-        Updated version of the Forager class, with an efficient update both for the H-matrix and the G-matrix.
+        Updated version of the `rl_framework.Forager` class, with an efficient update both for the H-matrix and the G-matrix.
+
+        **Inputs**
+        
+        `num_actions` : 
+            Number of actions
+            
+        `size_state_space` : 
+             List where each entry is the state space of each perceptual feature. In general we only consider one perceptual feature (counter)
+        
+        `gamma_damping` :
+            Gamma of PS
+        
+        `eta_glow_damping` :
+            Glow of PS
+        
+        `policy_type` :
+            Sampling of policy
+        
+        `beta_softmax` :
+            Parameters if policy is softmax
+        
+        `initial_prob_distr` :
+            Initial h-matrix
+        
+        `fixed_policy` :
+            If considering a fixed policy
+        
+        `max_no_H_update` :
+            Maximum number of steps before an update of H and G matrices.
         """
         
         self.agent_state = 0
@@ -1076,7 +1117,7 @@ class Forager():
         ''' simplified to case of single forager. Returns list because is what deliberate needs'''
         return np.array([self.agent_state])
 
-# %% ../../nbs/lib_nbs/01_rl_framework_numba.ipynb 65
+# %% ../../nbs/lib_nbs/01_rl_framework_numba.ipynb 66
 @jit(nopython = NOPYTHON)
 def _train_loop_original(episodes, # Number of episodes to train
                time_ep, # Length of episode
@@ -1134,7 +1175,7 @@ def _train_loop_original(episodes, # Number of episodes to train
     
     return save_rewards, agent.h_matrix
 
-# %% ../../nbs/lib_nbs/01_rl_framework_numba.ipynb 66
+# %% ../../nbs/lib_nbs/01_rl_framework_numba.ipynb 67
 @jit(nopython = NOPYTHON)
 def _train_loop_h_efficient(episodes, time_ep, agent, env, h_mat_allT = False):  
     '''
@@ -1191,14 +1232,14 @@ def _train_loop_h_efficient(episodes, time_ep, agent, env, h_mat_allT = False):
       
     return (save_rewards, policy_t) if h_mat_allT else (save_rewards, agent.h_matrix)
 
-# %% ../../nbs/lib_nbs/01_rl_framework_numba.ipynb 67
+# %% ../../nbs/lib_nbs/01_rl_framework_numba.ipynb 68
 @jit(nopython = NOPYTHON)
-def train_loop(episodes, # Number of episodes to train
-               time_ep, # Length of episode
-               agent, # Agent class
-               env, # Environment class
-               h_mat_allT = False # If True, returns the h_matrix at all times
-              ):      
+def train_loop(episodes : int, # Number of episodes to train
+               time_ep : int, # Length of episode
+               agent : object, # Agent class
+               env : object, # Environment class
+               h_mat_allT : bool = False # If True, returns the h_matrix at all times
+              )-> tuple: # Rewards and h-matrix of the trained agent      
     '''    
     Given an agent and environment, performs a loop train for the `TargetEnv` type of environment, by adequatly
     updating the H and G counters, considering boundaries, etc... 
@@ -1259,7 +1300,7 @@ def train_loop(episodes, # Number of episodes to train
       
     return (save_rewards, policy_t) if h_mat_allT else (save_rewards, agent.h_matrix)
 
-# %% ../../nbs/lib_nbs/01_rl_framework_numba.ipynb 73
+# %% ../../nbs/lib_nbs/01_rl_framework_numba.ipynb 74
 @jit(nopython = NOPYTHON, parallel = True)
 def run_agents(episodes, # Number of episodes
                time_ep, # Length of episode
