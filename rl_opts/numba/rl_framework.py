@@ -629,7 +629,7 @@ class _Forager_efficient_H():
         # for i in range(self.max_no_H_update):
         #     self.prefactor_2[i+1] = self.gamma_damping*np.sum((1-self.gamma_damping)**np.arange(i+1))
         # and this it the efficient way
-        sum_term = (1-self.gamma_damping)**np.arange(self.max_no_H_update+1)
+        sum_term = (1-self.gamma_damping)**np.arange(self.max_no_update+1)
         self.prefactor_2 = self.gamma_damping*(np.cumsum(sum_term)-sum_term)
         
     def init_matrices(self):
