@@ -125,7 +125,8 @@ class TargetEnv():
         
         Updated from `rl_framework.TargetEnv`:        
             > `lc_distribution`: now allows to consider different distributions. lc now means different things depending on the distribution.
-        
+            > `TargetEnv.update_pos_disp`: allows to update the position of the agent with a given displacement.            
+            
         **Inputs**
         
         `Nt` : (int) 
@@ -190,7 +191,7 @@ class TargetEnv():
 
         
 
-    def update_pos(self, change_direction):        
+    def update_pos(self, change_direction, agent_index = 0):        
         """
         Updates information of the agent depending on its decision.
 
@@ -199,9 +200,8 @@ class TargetEnv():
         change_direction : bool
             Whether the agent decided to turn or not.
         agent_index : int, optional
-            Index of the given agent. The default is 0.
-        """
-        agent_index = 0
+            Index of the given agent. Default is 0.
+        """        
         # Save previous position to check if crossing happened
         self.previous_pos[agent_index] = self.positions[agent_index].copy()
         
@@ -212,7 +212,23 @@ class TargetEnv():
         self.positions[agent_index][0] = self.positions[agent_index][0] + self.agent_step*np.cos(self.current_directions[agent_index])
         self.positions[agent_index][1] = self.positions[agent_index][1] + self.agent_step*np.sin(self.current_directions[agent_index])
         
-       
+    def update_pos_disp(self, 
+                        displacement, # tuple or array stating (disp_x, disp_y)
+                        agent_index = 0 # index of the agent. Only matters for collective experiments
+                       ):
+        """
+        Updates the position of the agent based on the input displacement
+        """
+        # Save previous position to check if crossing happened
+        self.previous_pos[agent_index] = self.positions[agent_index].copy()
+        
+        #Update position
+        self.positions[agent_index][0] = self.positions[agent_index][0] + displacement[0]
+        self.positions[agent_index][1] = self.positions[agent_index][1] + displacement[1]
+        
+
+
+    
     def check_encounter(self):
         """
         Checks whether the agent found a target, and updates the information accordingly.
@@ -282,7 +298,7 @@ class TargetEnv():
         self.positions[agent_index] = (self.positions[agent_index])%self.L
     
 
-# %% ../../nbs/lib_nbs/01_rl_framework_numba.ipynb 30
+# %% ../../nbs/lib_nbs/01_rl_framework_numba.ipynb 29
 @jit(nopython = NOPYTHON)
 def single_agent_walk(N_runs : int, # Total number of runs / episodes to evaluate
                       time_ep : int, # Length of each run / episode
@@ -329,7 +345,7 @@ def single_agent_walk(N_runs : int, # Total number of runs / episodes to evaluat
                 
     return save_rewards
 
-# %% ../../nbs/lib_nbs/01_rl_framework_numba.ipynb 31
+# %% ../../nbs/lib_nbs/01_rl_framework_numba.ipynb 30
 @jit(nopython = NOPYTHON, parallel = True)
 def multi_agents_walk(N_runs : int, # Total number of runs / episodes to evaluate
                       time_ep : int, # Length of each run / episode
@@ -359,7 +375,7 @@ def multi_agents_walk(N_runs : int, # Total number of runs / episodes to evaluat
         
     return save_rewards
 
-# %% ../../nbs/lib_nbs/01_rl_framework_numba.ipynb 34
+# %% ../../nbs/lib_nbs/01_rl_framework_numba.ipynb 33
 @jitclass([("num_percepts_list", int64[:]),           
            ("initial_prob_distr", float64[:,:]),           
            ("fixed_policy", float64[:,:]) ,
@@ -563,7 +579,7 @@ class _Forager_original():
         ''' simplified to case of single forager. Returns list because is what deliberate needs'''
         return np.array([self.agent_state])
 
-# %% ../../nbs/lib_nbs/01_rl_framework_numba.ipynb 37
+# %% ../../nbs/lib_nbs/01_rl_framework_numba.ipynb 36
 @jitclass([("num_percepts_list", int64[:]),           
            ("initial_prob_distr", float64[:,:]),           
            ("fixed_policy", float64[:,:]) ,
@@ -803,7 +819,7 @@ class _Forager_efficient_H():
         ''' simplified to case of single forager. Returns list because is what deliberate needs'''
         return np.array([self.agent_state])
 
-# %% ../../nbs/lib_nbs/01_rl_framework_numba.ipynb 53
+# %% ../../nbs/lib_nbs/01_rl_framework_numba.ipynb 52
 @jitclass([("size_state_space", int64[:]),           
            ("initial_prob_distr", float64[:,:]),           
            ("fixed_policy", float64[:,:]) ,
@@ -1117,7 +1133,7 @@ class Forager():
         ''' simplified to case of single forager. Returns list because is what deliberate needs'''
         return np.array([self.agent_state])
 
-# %% ../../nbs/lib_nbs/01_rl_framework_numba.ipynb 66
+# %% ../../nbs/lib_nbs/01_rl_framework_numba.ipynb 65
 @jit(nopython = NOPYTHON)
 def _train_loop_original(episodes, # Number of episodes to train
                time_ep, # Length of episode
@@ -1175,7 +1191,7 @@ def _train_loop_original(episodes, # Number of episodes to train
     
     return save_rewards, agent.h_matrix
 
-# %% ../../nbs/lib_nbs/01_rl_framework_numba.ipynb 67
+# %% ../../nbs/lib_nbs/01_rl_framework_numba.ipynb 66
 @jit(nopython = NOPYTHON)
 def _train_loop_h_efficient(episodes, time_ep, agent, env, h_mat_allT = False):  
     '''
@@ -1232,7 +1248,7 @@ def _train_loop_h_efficient(episodes, time_ep, agent, env, h_mat_allT = False):
       
     return (save_rewards, policy_t) if h_mat_allT else (save_rewards, agent.h_matrix)
 
-# %% ../../nbs/lib_nbs/01_rl_framework_numba.ipynb 68
+# %% ../../nbs/lib_nbs/01_rl_framework_numba.ipynb 67
 @jit(nopython = NOPYTHON)
 def train_loop(episodes : int, # Number of episodes to train
                time_ep : int, # Length of episode
@@ -1300,7 +1316,7 @@ def train_loop(episodes : int, # Number of episodes to train
       
     return (save_rewards, policy_t) if h_mat_allT else (save_rewards, agent.h_matrix)
 
-# %% ../../nbs/lib_nbs/01_rl_framework_numba.ipynb 74
+# %% ../../nbs/lib_nbs/01_rl_framework_numba.ipynb 73
 @jit(nopython = NOPYTHON, parallel = True)
 def run_agents(episodes, # Number of episodes
                time_ep, # Length of episode
