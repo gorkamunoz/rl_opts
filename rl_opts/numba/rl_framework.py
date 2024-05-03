@@ -177,7 +177,11 @@ class TargetEnv():
         Environment initialization.
         """
         # self.target_positions = np.random.rand(self.Nt, 2)*self.L
-        self.target_positions = np.random.uniform(self.r, self.L-self.r, size = (self.Nt, 2))
+        if self.r < self.L:
+            self.target_positions = np.random.uniform(self.r/2, self.L-self.r/2, size = (self.Nt, 2))
+        else: # This is just a rare, test case that puts all targets in the center if the target radius is huge
+            self.target_positions = np.ones((self.Nt, 2))*self.L/2
+            
         
         #store who is/was rewarded
         self.current_rewards = np.zeros(self.num_agents)
@@ -1427,6 +1431,8 @@ class virtual_ABM:
         
         self.num_episodes = num_episodes
         self.time_ep = time_ep
+
+        self.init_training()
         
 
     def _particle_position(self):
