@@ -4,7 +4,12 @@
 __all__ = ['TargetEnv', 'PSAgent', 'Forager']
 
 # %% ../nbs/lib_nbs/01_rl_framework.ipynb 5
-import torch
+try:
+    import torch
+except:
+    import warnings
+    warnings.warn('torch is not installed, you will need it for the classic rl_opts.rl_framework version')
+    
 import numpy as np
 
 from .utils import isBetween_c_Vec, coord_mod

@@ -2,7 +2,7 @@
 
 # %% auto 0
 __all__ = ['NOPYTHON', 'isBetween_c_Vec_numba', 'pareto_sample', 'rand_choice_nb', 'TargetEnv', 'single_agent_walk',
-           'multi_agents_walk', 'Forager', 'train_loop', 'run_agents']
+           'multi_agents_walk', 'Forager', 'train_loop', 'run_agents', 'virtual_ABM', 'get_ABM_motion']
 
 # %% ../../nbs/lib_nbs/01_rl_framework_numba.ipynb 5
 import numpy as np
@@ -176,7 +176,8 @@ class TargetEnv():
         """
         Environment initialization.
         """
-        self.target_positions = np.random.rand(self.Nt, 2)*self.L
+        # self.target_positions = np.random.rand(self.Nt, 2)*self.L
+        self.target_positions = np.random.uniform(self.r, self.L-self.r, size = (self.Nt, 2))
         
         #store who is/was rewarded
         self.current_rewards = np.zeros(self.num_agents)
@@ -213,12 +214,13 @@ class TargetEnv():
         self.positions[agent_index][1] = self.positions[agent_index][1] + self.agent_step*np.sin(self.current_directions[agent_index])
         
     def update_pos_disp(self, 
-                        displacement, # tuple or array stating (disp_x, disp_y)
-                        agent_index = 0 # index of the agent. Only matters for collective experiments
+                        displacement, # tuple or array stating (disp_x, disp_y)                        
                        ):
         """
         Updates the position of the agent based on the input displacement
         """
+        agent_index = 0 # index of the agent. For collective experiments we should put this as input
+        
         # Save previous position to check if crossing happened
         self.previous_pos[agent_index] = self.positions[agent_index].copy()
         
@@ -1311,8 +1313,14 @@ def train_loop(episodes : int, # Number of episodes to train
 
             # Saving
             save_rewards[ep, t] = reward
+
+        # updating H and G at the last episode if there was no reward on it.
+        if ep == episodes-1 and reward != 1:
+            agent._learn_post_reward(reward)            
             
         if h_mat_allT: policy_t[ep] = agent.h_matrix[0,:] / agent.h_matrix.sum(0)
+
+    
       
     return (save_rewards, policy_t) if h_mat_allT else (save_rewards, agent.h_matrix)
 
@@ -1377,3 +1385,139 @@ def run_agents(episodes, # Number of episodes
         save_h_matrix[n_agent] = mat
         
     return save_rewards, save_h_matrix
+
+# %% ../../nbs/lib_nbs/01_rl_framework_numba.ipynb 81
+#@jitclass
+class virtual_ABM:
+
+    def __init__(self, 
+                 num_episodes : int = None, # If int, number of episodes. If None, don't consider episodes
+                 time_ep : int = None, # If int, length of an episodes. If episodes = None, it is not considered.
+                 L : float = 5, # Size of the environment
+                 r : float = 1, # Radius of the target       
+                 max_counter : int = 500, # Maximum number for the agent's phase counter (i.e. what it gets as station)
+                 gamma_damping : float = 0.001, # Gamma of PS
+                 eta_glow_damping : float = 0.001, # Glow of PS                 
+                 max_no_H_update : int = int(1e4) # maximum number of steps before an update of H and G matrices.
+                 ):
+        
+        # Arguments for TargetEnv
+        Nt = 1 # Number of targets
+        destructive = True
+        lc = np.array([[1.0],[1]]) # Won't enter into effect if destructive = True
+        lc_distribution = 'constant' # Won't enter into effect if destructive = True
+        agent_step = 1
+
+        self.env = TargetEnv(Nt, L, r, lc, agent_step, 1, destructive, lc_distribution)
+        
+        self.particle_position = self.env.positions[0]
+
+        # Arguments for Forager
+        num_actions = 2
+        self.max_counter = max_counter
+        size_state_space = np.array([2, self.max_counter]) # first is phase (either active or passive). Second is the counter till last change
+        policy_type='standard' # Sampling of policy
+        beta_softmax=3 # Parameters if policy is softmax
+        initial_prob_distr = np.array([[],[]]) # Initial h-matrix
+        fixed_policy=np.array([[],[]]) # If considering a fixed policy
+        
+        self.agent = Forager(num_actions,size_state_space,gamma_damping,
+                             eta_glow_damping,policy_type,beta_softmax,
+                             initial_prob_distr,fixed_policy,max_no_H_update)       
+        
+        self.num_episodes = num_episodes
+        self.time_ep = time_ep
+        
+
+    def _particle_position(self):
+        return self.env.positions[0]
+    def _target_position(self):
+        return self.env.target_positions[0] 
+    
+    def init_training(self):
+        ''' Initializes the environment and epochs '''
+        self.init_virtual_env()
+        
+        if self.num_episodes: 
+            self.epoch = -1 # we start at -1 because init_epoch will sum one and set it at zero.
+            self.init_epoch()
+
+    def init_virtual_env(self):
+        # Current phase is: 0 for passive, 1 for active
+        self.current_phase = 0 # Starting always in the passive phase
+
+        # Initialize the environment (puts agent and target in random position)
+        self.env.init_env()
+
+        # Initialize / Reset agent's props
+        self.agent.agent_state = 0
+        self.agent.reset_g()
+        self.agent.N_upd_H = 0
+        self.agent.N_upd_G = 0
+
+    def init_epoch(self):
+        ''' Initializes a new epoch '''
+        self.init_virtual_env()
+        self.epoch += 1
+        self.t_ep = 0
+
+    def step(self, disp, return_reward = False):
+        ''' Makes a step in the virtual environment and subsequently learns'''
+
+        # Given the new displacement, update the environment and get the reward
+        self.env.update_pos_disp(disp)
+        reward = self.env.check_encounter()        
+        self.env.check_bc()
+
+
+        # Constraint that rewards can only be received in the passive phase:
+        if self.current_phase != 0:
+            reward = 0
+            
+        # Learn
+        # Now that we collected the reward, we have s,a,R and can learn        
+        # First we update the H update counter
+        self.agent.N_upd_H += 1        
+        # If the rewards are not zero or we reach the maximum no upd counters, we update
+        if (reward != 0) or (self.agent.N_upd_H == self.agent.max_no_H_update-1):
+            self.agent._learn_post_reward(reward)
+        
+        
+        # Acting
+        # Create a state based on current phase and agent state
+        state = np.array([self.current_phase, self.agent.agent_state])
+        # Get an action based on this state
+        action = self.agent.deliberate(state)
+        
+        if action == 0: # Continuing in the same phase
+            self.agent.agent_state += 1 
+        elif action == 1:
+            self.agent.agent_state = 0
+            self.current_phase = 1 - self.current_phase
+
+        if self.agent.agent_state == self.max_counter - 1:
+            self.agent.agent_state = 0
+
+        if self.num_episodes:
+            self.t_ep += 1
+            if self.t_ep == self.time_ep:
+                self.init_epoch()
+            
+
+        if return_reward:
+            return action, reward
+        else:
+            return action
+        
+
+# %% ../../nbs/lib_nbs/01_rl_framework_numba.ipynb 83
+def get_ABM_motion(x, y, theta, phi, vdt, sigma, sigma_theta, L):
+       
+    x += phi * vdt * np.cos(theta) + sigma * np.random.randn() 
+    x = x % L
+
+    y += phi * vdt * np.sin(theta) + sigma * np.random.randn() 
+    y = y % L
+
+    theta += sigma_theta * np.random.randn() 
+    return x, y, theta
