@@ -13,7 +13,7 @@ __all__ = ['isBetween_c_Vec_numba', 'pareto_sample', 'rand_choice_nb', 'TargetEn
            'train_loop_MoveReset2D', 'run_agents_MoveReset2D', 'run_agents_MoveReset2D_multiparam',
            'train_loop_MoveReset', 'run_agents_MoveReset']
 
-# %% ../nbs/lib_nbs/dev_rl_framework_numba.ipynb 5
+# %% ../nbs/lib_nbs/dev_rl_framework_numba.ipynb 6
 import numpy as np
 import numba
 from numba.experimental import jitclass
@@ -21,7 +21,7 @@ from numba import jit, float64, int64, bool_, prange, njit
 import math
 import random
 
-# %% ../nbs/lib_nbs/dev_rl_framework_numba.ipynb 9
+# %% ../nbs/lib_nbs/dev_rl_framework_numba.ipynb 10
 @njit
 def isBetween_c_Vec_numba(a, b, c, r):
         """
@@ -67,7 +67,7 @@ def isBetween_c_Vec_numba(a, b, c, r):
             
         return mask
 
-# %% ../nbs/lib_nbs/dev_rl_framework_numba.ipynb 15
+# %% ../nbs/lib_nbs/dev_rl_framework_numba.ipynb 16
 @njit
 def pareto_sample(alpha, xm, size=1):
     samples = np.zeros(size)
@@ -77,7 +77,7 @@ def pareto_sample(alpha, xm, size=1):
         samples[ii] = x
     return samples
 
-# %% ../nbs/lib_nbs/dev_rl_framework_numba.ipynb 17
+# %% ../nbs/lib_nbs/dev_rl_framework_numba.ipynb 18
 @njit
 def rand_choice_nb(arr, prob):
     """
@@ -87,7 +87,7 @@ def rand_choice_nb(arr, prob):
     """
     return arr[np.searchsorted(np.cumsum(prob), np.random.random(), side="right")]
 
-# %% ../nbs/lib_nbs/dev_rl_framework_numba.ipynb 20
+# %% ../nbs/lib_nbs/dev_rl_framework_numba.ipynb 21
 @jitclass([("target_positions", float64[:,:]) ,
            ("current_rewards", float64[:]) ,
            ("kicked", float64[:]) ,
@@ -268,7 +268,7 @@ class TargetEnv():
         self.positions[agent_index] = (self.positions[agent_index])%self.L
     
 
-# %% ../nbs/lib_nbs/dev_rl_framework_numba.ipynb 37
+# %% ../nbs/lib_nbs/dev_rl_framework_numba.ipynb 38
 @njit
 def single_agent_walk(N_runs, time_ep, policy, env):  
     
@@ -308,7 +308,7 @@ def single_agent_walk(N_runs, time_ep, policy, env):
                 
     return save_rewards
 
-# %% ../nbs/lib_nbs/dev_rl_framework_numba.ipynb 39
+# %% ../nbs/lib_nbs/dev_rl_framework_numba.ipynb 40
 @njit(parallel = True)
 def multi_agents_walk(N_runs, time_ep, N_agents,
                # Environment props
@@ -336,7 +336,7 @@ def multi_agents_walk(N_runs, time_ep, N_agents,
         
     return save_rewards
 
-# %% ../nbs/lib_nbs/dev_rl_framework_numba.ipynb 42
+# %% ../nbs/lib_nbs/dev_rl_framework_numba.ipynb 43
 @jitclass
 class ResetEnv_1D():
     L : float
@@ -368,7 +368,7 @@ class ResetEnv_1D():
             return 1
         else: return 0
 
-# %% ../nbs/lib_nbs/dev_rl_framework_numba.ipynb 43
+# %% ../nbs/lib_nbs/dev_rl_framework_numba.ipynb 44
 @njit
 def reset_search_loop(T, reset_policy, env):
     
@@ -414,7 +414,7 @@ def multi_loop_exp(T, rates, L, D):
         rews_rate[idxr] = reset_search_loop(T = T, reset_policy = reset_policy, env = env)
     return rews_rate
 
-# %% ../nbs/lib_nbs/dev_rl_framework_numba.ipynb 48
+# %% ../nbs/lib_nbs/dev_rl_framework_numba.ipynb 49
 @jitclass([("position", float64[:]),
            ("target_position", float64[:,:]),
            ("previous_pos", float64[:])
@@ -473,7 +473,7 @@ class ResetEnv_2D():
             
         
 
-# %% ../nbs/lib_nbs/dev_rl_framework_numba.ipynb 49
+# %% ../nbs/lib_nbs/dev_rl_framework_numba.ipynb 50
 @njit(parallel = True)
 def multi_loop_constant_2D(T, resets, dist_target, radius_target, D):
     rews_reset = np.zeros_like(resets)
@@ -514,7 +514,7 @@ def multi_loop_policies_2D(T, reset_policies, dist_target, radius_target, D):
         
     return rews_rate
 
-# %% ../nbs/lib_nbs/dev_rl_framework_numba.ipynb 53
+# %% ../nbs/lib_nbs/dev_rl_framework_numba.ipynb 54
 @njit(parallel = True)
 def reset_loop_saving_positions_2D(n_agents, T, reset_policy, dist_target, radius_target, D):
 
@@ -541,7 +541,7 @@ def reset_loop_saving_positions_2D(n_agents, T, reset_policy, dist_target, radiu
     
     return positions
 
-# %% ../nbs/lib_nbs/dev_rl_framework_numba.ipynb 60
+# %% ../nbs/lib_nbs/dev_rl_framework_numba.ipynb 61
 import matplotlib.patches as patches
 from matplotlib.animation import FuncAnimation
 from IPython.display import HTML
@@ -577,7 +577,7 @@ def animate_positions_with_target(bins, positions, radius_target, target_positio
     return ani
 
 
-# %% ../nbs/lib_nbs/dev_rl_framework_numba.ipynb 64
+# %% ../nbs/lib_nbs/dev_rl_framework_numba.ipynb 65
 @jitclass
 class MoveResetEnv_1D():
     L : float
@@ -629,7 +629,7 @@ class MoveResetEnv_1D():
         else: 
             return 0            
 
-# %% ../nbs/lib_nbs/dev_rl_framework_numba.ipynb 68
+# %% ../nbs/lib_nbs/dev_rl_framework_numba.ipynb 69
 @njit
 def MoveReset_allfixed(T, reset, turn, env):
     
@@ -684,7 +684,7 @@ def multi_loop_MoveReset_allfixed(T, resets, turns, L, step_length):
     return rews
 
 
-# %% ../nbs/lib_nbs/dev_rl_framework_numba.ipynb 72
+# %% ../nbs/lib_nbs/dev_rl_framework_numba.ipynb 73
 @jitclass([("position", float64[:]),
            ("target_position", float64[:,:]),
            ("previous_pos", float64[:])
@@ -756,7 +756,7 @@ class MoveResetEnv_2D():
                 self.previous_pos = self.position.copy()
                 return 0
 
-# %% ../nbs/lib_nbs/dev_rl_framework_numba.ipynb 76
+# %% ../nbs/lib_nbs/dev_rl_framework_numba.ipynb 77
 @jitclass([("target_positions", float64[:,:]),
            ("position", float64[:]),
            ("previous_pos", float64[:]),
@@ -891,7 +891,7 @@ class MoveResetEnv_multiTarget_2D():
         self.position = (self.position)%self.L
     
 
-# %% ../nbs/lib_nbs/dev_rl_framework_numba.ipynb 80
+# %% ../nbs/lib_nbs/dev_rl_framework_numba.ipynb 81
 @jitclass([("target_positions", float64[:,:]) ,
            ("current_rewards", float64[:]) ,
            ("kicked", float64[:]) ,
@@ -1106,7 +1106,7 @@ class MoveResetEnv_withlc_2D():
         self.positions[agent_index] = (self.positions[agent_index])%self.L
     
 
-# %% ../nbs/lib_nbs/dev_rl_framework_numba.ipynb 85
+# %% ../nbs/lib_nbs/dev_rl_framework_numba.ipynb 86
 @njit
 def MoveReset2D_allfixed(T, reset, turn, env):
     
@@ -1164,7 +1164,7 @@ def multi_loop_MoveReset2D_allfixed(T, resets, turns, dist_target, radius_target
 
     return rews
 
-# %% ../nbs/lib_nbs/dev_rl_framework_numba.ipynb 91
+# %% ../nbs/lib_nbs/dev_rl_framework_numba.ipynb 92
 @njit
 def MoveReset2D_multitarget_allfixed(T, reset, turn, env):
     
@@ -1224,7 +1224,7 @@ def multi_loop_MoveReset2D_multitarget_allfixed(T, resets, turns, L, Nt, r, step
     return rews
 
 
-# %% ../nbs/lib_nbs/dev_rl_framework_numba.ipynb 97
+# %% ../nbs/lib_nbs/dev_rl_framework_numba.ipynb 98
 @jitclass([("num_percepts_list", int64[:]),           
            ("initial_prob_distr", float64[:,:]),           
            ("fixed_policy", float64[:,:]) ,
@@ -1416,7 +1416,7 @@ class PSAgent():
         return action
     
 
-# %% ../nbs/lib_nbs/dev_rl_framework_numba.ipynb 100
+# %% ../nbs/lib_nbs/dev_rl_framework_numba.ipynb 101
 @jitclass([("num_percepts_list", int64[:]),           
            ("initial_prob_distr", float64[:,:]),           
            ("fixed_policy", float64[:,:]) ,
@@ -1617,7 +1617,7 @@ class Forager():
         ''' simplified to case of single forager. Returns list because is what deliberate needs'''
         return np.array([self.agent_state])
 
-# %% ../nbs/lib_nbs/dev_rl_framework_numba.ipynb 104
+# %% ../nbs/lib_nbs/dev_rl_framework_numba.ipynb 105
 @jitclass([("num_percepts_list", int64[:]),           
            ("initial_prob_distr", float64[:,:]),           
            ("fixed_policy", float64[:,:]) ,
@@ -1860,7 +1860,7 @@ class Forager_efficient_H():
         ''' simplified to case of single forager. Returns list because is what deliberate needs'''
         return np.array([self.agent_state])
 
-# %% ../nbs/lib_nbs/dev_rl_framework_numba.ipynb 110
+# %% ../nbs/lib_nbs/dev_rl_framework_numba.ipynb 111
 @jitclass([("size_state_space", int64[:]),           
            ("initial_prob_distr", float64[:,:]),           
            ("fixed_policy", float64[:,:]) ,
@@ -2148,7 +2148,7 @@ class Forager_efficient():
         ''' simplified to case of single forager. Returns list because is what deliberate needs'''
         return np.array([self.agent_state])
 
-# %% ../nbs/lib_nbs/dev_rl_framework_numba.ipynb 120
+# %% ../nbs/lib_nbs/dev_rl_framework_numba.ipynb 121
 @jitclass([("size_state_space", int64[:]),           
            ("initial_prob_distr", float64[:,:]),           
            ("fixed_policy", float64[:,:]) ,
@@ -2431,7 +2431,7 @@ class Forager_multi_param():
         ''' simplified to case of single forager. Returns list because is what deliberate needs'''
         return np.array([self.agent_state])
 
-# %% ../nbs/lib_nbs/dev_rl_framework_numba.ipynb 131
+# %% ../nbs/lib_nbs/dev_rl_framework_numba.ipynb 132
 @njit
 def train_loop(episodes, time_ep, agent, env):    
     
@@ -2482,7 +2482,7 @@ def train_loop(episodes, time_ep, agent, env):
     
     return save_rewards, agent.h_matrix
 
-# %% ../nbs/lib_nbs/dev_rl_framework_numba.ipynb 132
+# %% ../nbs/lib_nbs/dev_rl_framework_numba.ipynb 133
 @njit
 def train_loop_h_efficient(episodes, time_ep, agent, env, h_mat_allT = False):  
 
@@ -2536,7 +2536,7 @@ def train_loop_h_efficient(episodes, time_ep, agent, env, h_mat_allT = False):
       
     return (save_rewards, policy_t) if h_mat_allT else (save_rewards, agent.h_matrix)
 
-# %% ../nbs/lib_nbs/dev_rl_framework_numba.ipynb 133
+# %% ../nbs/lib_nbs/dev_rl_framework_numba.ipynb 134
 @njit
 def train_loop_full_efficient(episodes, time_ep, agent, env, h_mat_allT = False):  
 
@@ -2597,7 +2597,7 @@ def train_loop_full_efficient(episodes, time_ep, agent, env, h_mat_allT = False)
       
     return (save_rewards, policy_t) if h_mat_allT else (save_rewards, agent.h_matrix)
 
-# %% ../nbs/lib_nbs/dev_rl_framework_numba.ipynb 134
+# %% ../nbs/lib_nbs/dev_rl_framework_numba.ipynb 135
 @njit(parallel = True)
 def run_agents(episodes, time_ep, N_agents,
                # Environment props
@@ -2656,7 +2656,7 @@ def run_agents(episodes, time_ep, N_agents,
         
     return save_rewards, save_h_matrix
 
-# %% ../nbs/lib_nbs/dev_rl_framework_numba.ipynb 146
+# %% ../nbs/lib_nbs/dev_rl_framework_numba.ipynb 147
 @njit
 def train_loop_reset(episodes, time_ep, agent, env, h_mat_allT = False, when_save_h_mat = 1, reset_after_reward = True):  
 
@@ -2708,7 +2708,7 @@ def train_loop_reset(episodes, time_ep, agent, env, h_mat_allT = False, when_sav
       
     return (save_rewards/time_ep, policy_t) if h_mat_allT else (save_rewards/time_ep, agent.h_matrix)
 
-# %% ../nbs/lib_nbs/dev_rl_framework_numba.ipynb 166
+# %% ../nbs/lib_nbs/dev_rl_framework_numba.ipynb 167
 @njit(parallel = True)
 def run_agents_reset(episodes, time_ep, N_agents,
                        # Environment props
@@ -2783,7 +2783,7 @@ def run_agents_reset(episodes, time_ep, N_agents,
         
     return save_rewards, save_h_matrix
 
-# %% ../nbs/lib_nbs/dev_rl_framework_numba.ipynb 172
+# %% ../nbs/lib_nbs/dev_rl_framework_numba.ipynb 173
 @njit(parallel = True)
 def run_agents_reset_2D(episodes, time_ep, N_agents,
                      # Environment props
@@ -2828,7 +2828,7 @@ def run_agents_reset_2D(episodes, time_ep, N_agents,
         
     return save_rewards, save_h_matrix
 
-# %% ../nbs/lib_nbs/dev_rl_framework_numba.ipynb 183
+# %% ../nbs/lib_nbs/dev_rl_framework_numba.ipynb 184
 @njit(parallel = True)
 def train_loop_MoveReset2D(episodes, time_ep, agent, env, h_mat_allT = False, turn_0_when_reset = False):  
 
@@ -2903,7 +2903,7 @@ def train_loop_MoveReset2D(episodes, time_ep, agent, env, h_mat_allT = False, tu
         if h_mat_allT: policy_t[ep] = agent.h_matrix[0,:] / agent.h_matrix.sum(0)
     return (save_rewards, policy_t) if h_mat_allT else (save_rewards, agent.h_matrix)
 
-# %% ../nbs/lib_nbs/dev_rl_framework_numba.ipynb 188
+# %% ../nbs/lib_nbs/dev_rl_framework_numba.ipynb 189
 @njit(parallel = True)
 def run_agents_MoveReset2D(episodes, time_ep, N_agents,
                          # Environment props
@@ -2945,7 +2945,7 @@ def run_agents_MoveReset2D(episodes, time_ep, N_agents,
         
     return save_rewards, save_h_matrix
 
-# %% ../nbs/lib_nbs/dev_rl_framework_numba.ipynb 196
+# %% ../nbs/lib_nbs/dev_rl_framework_numba.ipynb 197
 @njit(parallel = True)
 def run_agents_MoveReset2D_multiparam(episodes, time_ep, N_agents,
                          # Environment props
@@ -2990,7 +2990,7 @@ def run_agents_MoveReset2D_multiparam(episodes, time_ep, N_agents,
         
     return save_rewards, save_h_matrix
 
-# %% ../nbs/lib_nbs/dev_rl_framework_numba.ipynb 203
+# %% ../nbs/lib_nbs/dev_rl_framework_numba.ipynb 204
 @njit(parallel = True)
 def train_loop_MoveReset(episodes, time_ep, agent, env, h_mat_allT = False):  
 
@@ -3082,7 +3082,7 @@ def train_loop_MoveReset(episodes, time_ep, agent, env, h_mat_allT = False):
     
     return (save_rewards, policy_t) if h_mat_allT else (save_rewards, agent.h_matrix)
 
-# %% ../nbs/lib_nbs/dev_rl_framework_numba.ipynb 204
+# %% ../nbs/lib_nbs/dev_rl_framework_numba.ipynb 205
 @njit(parallel = True)
 def run_agents_MoveReset(episodes, time_ep, N_agents,
                          # Environment props
