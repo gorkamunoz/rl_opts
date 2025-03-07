@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>RL-OptS - Classic version</title>
+<title>RL-OptS - Reinforcement learning agents</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,69 +20,6 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1.6em;
   vertical-align: middle;
 }
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-    color: #aaaaaa;
-  }
-pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-}
-code span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code span.at { color: #7d9029; } /* Attribute */
-code span.bn { color: #40a070; } /* BaseN */
-code span.bu { color: #008000; } /* BuiltIn */
-code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code span.ch { color: #4070a0; } /* Char */
-code span.cn { color: #880000; } /* Constant */
-code span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code span.dt { color: #902000; } /* DataType */
-code span.dv { color: #40a070; } /* DecVal */
-code span.er { color: #ff0000; font-weight: bold; } /* Error */
-code span.ex { } /* Extension */
-code span.fl { color: #40a070; } /* Float */
-code span.fu { color: #06287e; } /* Function */
-code span.im { color: #008000; font-weight: bold; } /* Import */
-code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
-code span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code span.op { color: #666666; } /* Operator */
-code span.ot { color: #007020; } /* Other */
-code span.pp { color: #bc7a00; } /* Preprocessor */
-code span.sc { color: #4070a0; } /* SpecialChar */
-code span.ss { color: #bb6688; } /* SpecialString */
-code span.st { color: #4070a0; } /* String */
-code span.va { color: #19177c; } /* Variable */
-code span.vs { color: #4070a0; } /* VerbatimString */
-code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
 
@@ -124,11 +61,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 
 <link rel="stylesheet" href="../style.css">
-<meta property="og:title" content="RL-OptS - Classic version">
-<meta property="og:description" content="This notebook gathers the functions creating the RL framework proposed in our work. Namely, it can be use to generate both the foraging environment as well as the agents moving on them.">
+<meta property="og:title" content="RL-OptS - Reinforcement learning agents">
+<meta property="og:description" content="This notebook gathers the functions creating different kinds of agents for foraging and target search in various scenarios, adapted for their use in the reinforcement learning paradigm.">
 <meta property="og:site-name" content="RL-OptS">
-<meta name="twitter:title" content="RL-OptS - Classic version">
-<meta name="twitter:description" content="This notebook gathers the functions creating the RL framework proposed in our work. Namely, it can be use to generate both the foraging environment as well as the agents moving on them.">
+<meta name="twitter:title" content="RL-OptS - Reinforcement learning agents">
+<meta name="twitter:description" content="This notebook gathers the functions creating different kinds of agents for foraging and target search in various scenarios, adapted for their use in the reinforcement learning paradigm.">
 <meta name="twitter:card" content="summary">
 </head>
 
@@ -168,7 +105,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     </nav>
   <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
     <div class="container-fluid d-flex justify-content-between">
-      <h1 class="quarto-secondary-nav-title">Classic version</h1>
+      <h1 class="quarto-secondary-nav-title">Reinforcement learning agents</h1>
       <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
         <i class="bi bi-chevron-right"></i>
       </button>
@@ -204,17 +141,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth2 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../lib_nbs/rl_framework.html" class="sidebar-item-text sidebar-link active">Classic version</a>
+  <a href="../lib_nbs/rl_framework.html" class="sidebar-item-text sidebar-link">Classic version</a>
   </div>
 </li>
           <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false">numba implementation</a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">numba implementation</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth3 ">  
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth3 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../lib_nbs/environments_numba.html" class="sidebar-item-text sidebar-link">Reinforcement learning environments</a>
@@ -222,7 +159,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../lib_nbs/agents_numba.html" class="sidebar-item-text sidebar-link">Reinforcement learning agents</a>
+  <a href="../lib_nbs/agents_numba.html" class="sidebar-item-text sidebar-link active">Reinforcement learning agents</a>
   </div>
 </li>
       </ul>
@@ -290,18 +227,29 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#environment" id="toc-environment" class="nav-link active" data-scroll-target="#environment">Environment</a>
+  <li><a href="#helpers" id="toc-helpers" class="nav-link active" data-scroll-target="#helpers">Helpers</a>
   <ul class="collapse">
-  <li><a href="#targetenv" id="toc-targetenv" class="nav-link" data-scroll-target="#targetenv">TargetEnv</a></li>
-  </ul></li>
-  <li><a href="#projective-simulation-agent" id="toc-projective-simulation-agent" class="nav-link" data-scroll-target="#projective-simulation-agent">Projective Simulation agent</a>
+  <li><a href="#random-sampling-from-array-with-probs" id="toc-random-sampling-from-array-with-probs" class="nav-link" data-scroll-target="#random-sampling-from-array-with-probs">Random sampling from array with probs</a>
   <ul class="collapse">
-  <li><a href="#psagent" id="toc-psagent" class="nav-link" data-scroll-target="#psagent">PSAgent</a></li>
+  <li><a href="#rand_choice_nb" id="toc-rand_choice_nb" class="nav-link" data-scroll-target="#rand_choice_nb">rand_choice_nb</a></li>
   </ul></li>
-  <li><a href="#general-forager-agent" id="toc-general-forager-agent" class="nav-link" data-scroll-target="#general-forager-agent">General forager agent</a>
+  </ul></li>
+  <li><a href="#forager" id="toc-forager" class="nav-link" data-scroll-target="#forager">Forager</a>
   <ul class="collapse">
-  <li><a href="#forager" id="toc-forager" class="nav-link" data-scroll-target="#forager">Forager</a></li>
+  <li><a href="#forager-1" id="toc-forager-1" class="nav-link" data-scroll-target="#forager-1">Forager</a></li>
   </ul></li>
+  <li><a href="#parallel-training-launchers" id="toc-parallel-training-launchers" class="nav-link" data-scroll-target="#parallel-training-launchers">Parallel training launchers</a>
+  <ul class="collapse">
+  <li><a href="#for-resetenv" id="toc-for-resetenv" class="nav-link" data-scroll-target="#for-resetenv">For ResetEnv</a>
+  <ul class="collapse">
+  <li><a href="#search-loop" id="toc-search-loop" class="nav-link" data-scroll-target="#search-loop">Search loop</a></li>
+  <li><a href="#train_loop_reset" id="toc-train_loop_reset" class="nav-link" data-scroll-target="#train_loop_reset">train_loop_reset</a></li>
+  <li><a href="#launchers" id="toc-launchers" class="nav-link" data-scroll-target="#launchers">Launchers</a></li>
+  <li><a href="#run_agents_reset_1d" id="toc-run_agents_reset_1d" class="nav-link" data-scroll-target="#run_agents_reset_1d">run_agents_reset_1D</a></li>
+  <li><a href="#run_agents_reset_2d" id="toc-run_agents_reset_2d" class="nav-link" data-scroll-target="#run_agents_reset_2d">run_agents_reset_2D</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#nbdev" id="toc-nbdev" class="nav-link" data-scroll-target="#nbdev">nbdev</a></li>
   </ul>
 <div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/gorkamunoz/rl_opts/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
     </div>
@@ -310,7 +258,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title d-none d-lg-block">Classic version</h1>
+<h1 class="title d-none d-lg-block">Reinforcement learning agents</h1>
 </div>
 
 
@@ -326,39 +274,75 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </header>
 
 <!-- WARNING: THIS FILE WAS AUTOGENERATED! DO NOT EDIT! -->
-<p>This notebook gathers the functions creating the RL framework proposed in our work. Namely, it can be use to generate both the foraging environment as well as the agents moving on them.</p>
-<section id="environment" class="level1">
-<h1>Environment</h1>
-<p>Class that defines the foraging environment</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>np.random.rand()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<pre><code>0.4958686188975374</code></pre>
-</div>
-</div>
+<p>This notebook gathers the functions creating different kinds of agents for foraging and target search in various scenarios, adapted for their use in the reinforcement learning paradigm.</p>
+<section id="helpers" class="level1">
+<h1>Helpers</h1>
+<section id="random-sampling-from-array-with-probs" class="level2">
+<h2 class="anchored" data-anchor-id="random-sampling-from-array-with-probs">Random sampling from array with probs</h2>
 <hr>
-<p><a href="https://github.com/gorkamunoz/rl_opts/blob/master/rl_opts/rl_framework/numba/environments.py#L92" target="_blank" style="float:right; font-size:smaller">source</a></p>
-<section id="targetenv" class="level3">
-<h3 class="anchored" data-anchor-id="targetenv">TargetEnv</h3>
+<p><a href="https://github.com/gorkamunoz/rl_opts/blob/master/rl_opts/rl_framework_numba.py#L82" target="_blank" style="float:right; font-size:smaller">source</a></p>
+<section id="rand_choice_nb" class="level3">
+<h3 class="anchored" data-anchor-id="rand_choice_nb">rand_choice_nb</h3>
 <blockquote class="blockquote">
-<pre><code> TargetEnv (Nt, L, r, lc, agent_step=1, boundary_condition='periodic',
-            num_agents=1, high_den=5, destructive=False)</code></pre>
+<pre><code> rand_choice_nb (arr, prob)</code></pre>
 </blockquote>
-<p><em>Class defining the foraging environment. It includes the methods needed to place several agents to the world.</em></p>
+<p><em>:param arr: A 1D numpy array of values to sample from. :param prob: A 1D numpy array of probabilities for the given samples. :return: A random sample from the given array with a given probability.</em></p>
 </section>
 </section>
-<section id="projective-simulation-agent" class="level1">
-<h1>Projective Simulation agent</h1>
+</section>
+<section id="forager" class="level1">
+<h1>Forager</h1>
 <hr>
-<p><a href="https://github.com/gorkamunoz/rl_opts/blob/master/rl_opts/rl_framework/legacy.py#L232" target="_blank" style="float:right; font-size:smaller">source</a></p>
-<section id="psagent" class="level3">
-<h3 class="anchored" data-anchor-id="psagent">PSAgent</h3>
+<p><a href="https://github.com/gorkamunoz/rl_opts/blob/master/rl_opts/rl_framework_numba.py#L1427" target="_blank" style="float:right; font-size:smaller">source</a></p>
+<section id="forager-1" class="level3">
+<h3 class="anchored" data-anchor-id="forager-1">Forager</h3>
 <blockquote class="blockquote">
-<pre><code> PSAgent (num_actions, num_percepts_list, gamma_damping=0.0,
-          eta_glow_damping=0.0, policy_type='standard', beta_softmax=3,
-          initial_prob_distr=None, fixed_policy=None)</code></pre>
+<pre><code> Forager (*args, **kwargs)</code></pre>
 </blockquote>
-<p><em>Base class of a Reinforcement Learning agent based on Projective Simulation, with two-layered network. This class has been adapted from https://github.com/qic-ibk/projectivesimulation</em></p>
+<p>*This class defines a Forager agent, able to perform actions and learn from rewards based on the PS paradigm.</p>
+<p>This is an updated version from the one used in the original paper (https://doi.org/10.1088/1367-2630/ad19a8), taking into account the improvements made to the H and G matrices proposed by Michele Caraglio in our paper (https://doi.org/10.1039/D3SM01680C).*</p>
+</section>
+</section>
+<section id="parallel-training-launchers" class="level1">
+<h1>Parallel training launchers</h1>
+<section id="for-resetenv" class="level2">
+<h2 class="anchored" data-anchor-id="for-resetenv">For ResetEnv</h2>
+<section id="search-loop" class="level3">
+<h3 class="anchored" data-anchor-id="search-loop">Search loop</h3>
+<hr>
+<p><a href="https://github.com/gorkamunoz/rl_opts/blob/master/rl_opts/rl_framework_numba.py#L2661" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="train_loop_reset" class="level3">
+<h3 class="anchored" data-anchor-id="train_loop_reset">train_loop_reset</h3>
+<blockquote class="blockquote">
+<pre><code> train_loop_reset (episodes, time_ep, agent, env, h_mat_allT=False,
+                   when_save_h_mat=1, reset_after_reward=True)</code></pre>
+</blockquote>
+</section>
+<section id="launchers" class="level3">
+<h3 class="anchored" data-anchor-id="launchers">Launchers</h3>
+<blockquote class="blockquote">
+<p>Note: we have to separate the launchers in 1D and 2D because of <code>numba</code> compilation, which would give errors due to the enviroments asking for different inputs.</p>
+</blockquote>
+<section id="d" class="level4">
+<h4 class="anchored" data-anchor-id="d">1D</h4>
+<hr>
+<p><a href="https://github.com/gorkamunoz/rl_opts/blob/master/rl_opts/rl_framework/numba/agents.py#L380" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+</section>
+<section id="run_agents_reset_1d" class="level3">
+<h3 class="anchored" data-anchor-id="run_agents_reset_1d">run_agents_reset_1D</h3>
+<blockquote class="blockquote">
+<pre><code> run_agents_reset_1D (episodes, time_ep, N_agents, D=0.5, L=10.0,
+                      num_actions=2, size_state_space=array([100]),
+                      gamma_damping=1e-05, eta_glow_damping=0.1,
+                      g_update='s', initial_prob_distr=array([], shape=(2,
+                      0), dtype=float64), policy_type='standard',
+                      beta_softmax=3, fixed_policy=array([], shape=(2, 0),
+                      dtype=float64), max_no_H_update=1000,
+                      h_mat_allT=False, reset_after_reward=True,
+                      num_runs=None)</code></pre>
+</blockquote>
 <table class="table">
 <colgroup>
 <col style="width: 6%">
@@ -376,119 +360,280 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </thead>
 <tbody>
 <tr class="odd">
-<td>num_actions</td>
-<td>int &gt;=1</td>
+<td>episodes</td>
 <td></td>
-<td>Number of actions.</td>
+<td></td>
+<td></td>
 </tr>
 <tr class="even">
-<td>num_percepts_list</td>
-<td>list of integers &gt;=1, not nested</td>
+<td>time_ep</td>
 <td></td>
-<td>Cardinality of each category/feature of percept space.</td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>N_agents</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td>D</td>
+<td>float</td>
+<td>0.5</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>L</td>
+<td>float</td>
+<td>10.0</td>
+<td>Environment props</td>
+</tr>
+<tr class="even">
+<td>num_actions</td>
+<td>int</td>
+<td>2</td>
+<td>Agent props</td>
+</tr>
+<tr class="odd">
+<td>size_state_space</td>
+<td>ndarray</td>
+<td>[100]</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>gamma_damping</td>
+<td>float</td>
+<td>1e-05</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>eta_glow_damping</td>
+<td>float</td>
+<td>0.1</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>g_update</td>
+<td>str</td>
+<td>s</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>initial_prob_distr</td>
+<td></td>
+<td>[]</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>policy_type</td>
+<td>str</td>
+<td>standard</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>beta_softmax</td>
+<td>int</td>
+<td>3</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>fixed_policy</td>
+<td></td>
+<td>[]</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>max_no_H_update</td>
+<td>int</td>
+<td>1000</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>h_mat_allT</td>
+<td>bool</td>
+<td>False</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>reset_after_reward</td>
+<td>bool</td>
+<td>True</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>num_runs</td>
+<td>NoneType</td>
+<td>None</td>
+<td>When we want N_agent != number of max cores, we use this to make few runs<br>over the selected number of cores, given by N_agents.</td>
+</tr>
+</tbody>
+</table>
+<section id="d-1" class="level4">
+<h4 class="anchored" data-anchor-id="d-1">2D</h4>
+<hr>
+<p><a href="https://github.com/gorkamunoz/rl_opts/blob/master/rl_opts/rl_framework_numba.py#L2788" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+</section>
+<section id="run_agents_reset_2d" class="level3">
+<h3 class="anchored" data-anchor-id="run_agents_reset_2d">run_agents_reset_2D</h3>
+<blockquote class="blockquote">
+<pre><code> run_agents_reset_2D (episodes, time_ep, N_agents, dist_target=10.0,
+                      radius_target=1.0, D=0.5, num_actions=2,
+                      size_state_space=array([100]), gamma_damping=1e-05,
+                      eta_glow_damping=0.1, initial_prob_distr=array([],
+                      shape=(2, 0), dtype=float64),
+                      policy_type='standard', beta_softmax=3,
+                      fixed_policy=array([], shape=(2, 0), dtype=float64),
+                      max_no_H_update=1000, h_mat_allT=False,
+                      when_save_h_mat=1, reset_after_reward=True,
+                      g_update='s', num_runs=None)</code></pre>
+</blockquote>
+<table class="table">
+<colgroup>
+<col style="width: 6%">
+<col style="width: 25%">
+<col style="width: 34%">
+<col style="width: 34%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th><strong>Type</strong></th>
+<th><strong>Default</strong></th>
+<th><strong>Details</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>episodes</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td>time_ep</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>N_agents</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td>dist_target</td>
+<td>float</td>
+<td>10.0</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>radius_target</td>
+<td>float</td>
+<td>1.0</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>D</td>
+<td>float</td>
+<td>0.5</td>
+<td>Environment props</td>
+</tr>
+<tr class="odd">
+<td>num_actions</td>
+<td>int</td>
+<td>2</td>
+<td>Agent props</td>
+</tr>
+<tr class="even">
+<td>size_state_space</td>
+<td>ndarray</td>
+<td>[100]</td>
+<td></td>
 </tr>
 <tr class="odd">
 <td>gamma_damping</td>
 <td>float</td>
-<td>0.0</td>
-<td>Forgetting/damping of h-values at the end of each interaction. The default is 0.0.</td>
+<td>1e-05</td>
+<td></td>
 </tr>
 <tr class="even">
 <td>eta_glow_damping</td>
 <td>float</td>
-<td>0.0</td>
-<td>Controls the damping of glow; setting this to 1 effectively switches off glow. The default is 0.0.</td>
-</tr>
-<tr class="odd">
-<td>policy_type</td>
-<td>str</td>
-<td>standard</td>
-<td>Toggles the rule used to compute probabilities from h-values. See probability_distr. The default is ‘standard’.</td>
-</tr>
-<tr class="even">
-<td>beta_softmax</td>
-<td>int</td>
-<td>3</td>
-<td>Probabilities are proportional to exp(beta*h_value). If policy_type != ‘softmax’, then this is irrelevant. The default is 3.</td>
+<td>0.1</td>
+<td></td>
 </tr>
 <tr class="odd">
 <td>initial_prob_distr</td>
-<td>NoneType</td>
-<td>None</td>
-<td>In case the user wants to change the initialization policy for the agent. This list contains, per percept, a list with the values of the initial h values for each action. The default is None.</td>
+<td></td>
+<td>[]</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>policy_type</td>
+<td>str</td>
+<td>standard</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>beta_softmax</td>
+<td>int</td>
+<td>3</td>
+<td></td>
 </tr>
 <tr class="even">
 <td>fixed_policy</td>
+<td></td>
+<td>[]</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>max_no_H_update</td>
+<td>int</td>
+<td>1000</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>h_mat_allT</td>
+<td>bool</td>
+<td>False</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>when_save_h_mat</td>
+<td>int</td>
+<td>1</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>reset_after_reward</td>
+<td>bool</td>
+<td>True</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>g_update</td>
+<td>str</td>
+<td>s</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>num_runs</td>
 <td>NoneType</td>
 <td>None</td>
-<td>In case the user wants to fix a policy for the agent. This list contains, per percept, a list with the values of the probabilities for each action. <br>Example: Percept 0: fixed_policy[0] = [p(a0), p(a1), p(a2)] = [0.2, 0.3, 0.5], where a0, a1 and a2 are the three possible actions. The default is None.</td>
+<td>When we want N_agent != number of max cores, we use this to make few runs<br>over the selected number of cores, given by N_agents.</td>
 </tr>
 </tbody>
 </table>
 </section>
 </section>
-<section id="general-forager-agent" class="level1">
-<h1>General forager agent</h1>
-<hr>
-<p><a href="https://github.com/gorkamunoz/rl_opts/blob/master/rl_opts/rl_framework/numba/agents.py#L32" target="_blank" style="float:right; font-size:smaller">source</a></p>
-<section id="forager" class="level3">
-<h3 class="anchored" data-anchor-id="forager">Forager</h3>
-<blockquote class="blockquote">
-<pre><code> Forager (state_space, num_actions, visual_cone=3.141592653589793,
-          visual_radius=1.0, **kwargs)</code></pre>
-</blockquote>
-<p><em>This class extends the general <a href="https://gorkamunoz.github.io/rl_opts/lib_nbs/rl_framework.html#psagent"><code>PSAgent</code></a> class and adapts it to the foraging scenario·</em></p>
-<table class="table">
-<colgroup>
-<col style="width: 6%">
-<col style="width: 25%">
-<col style="width: 34%">
-<col style="width: 34%">
-</colgroup>
-<thead>
-<tr class="header">
-<th></th>
-<th><strong>Type</strong></th>
-<th><strong>Default</strong></th>
-<th><strong>Details</strong></th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>state_space</td>
-<td>list</td>
-<td></td>
-<td>List where each entry is the state space of each perceptual feature.<br>E.g. [state space of step counter, state space of density of successful neighbours].</td>
-</tr>
-<tr class="even">
-<td>num_actions</td>
-<td>int</td>
-<td></td>
-<td>Number of actions.</td>
-</tr>
-<tr class="odd">
-<td>visual_cone</td>
-<td>float</td>
-<td>3.141592653589793</td>
-<td>Visual cone (angle, in radians) of the forager, useful in scenarios with ensembles of agents. The default is np.pi.</td>
-</tr>
-<tr class="even">
-<td>visual_radius</td>
-<td>float</td>
-<td>1.0</td>
-<td>Radius of the visual region, useful in scenarious with ensembles of agents. The default is 1.0.</td>
-</tr>
-<tr class="odd">
-<td>kwargs</td>
-<td>VAR_KEYWORD</td>
-<td></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-
-
 </section>
+<section id="nbdev" class="level1">
+<h1>nbdev</h1>
+
+
 </section>
 
 </main> <!-- /main -->

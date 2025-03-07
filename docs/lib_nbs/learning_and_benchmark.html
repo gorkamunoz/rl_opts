@@ -194,11 +194,41 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           </a> 
       </div>
       <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="false">RL framework</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="false">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth2 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../lib_nbs/rl_framework.html" class="sidebar-item-text sidebar-link">Reinforcement learning framework</a>
+  <a href="../lib_nbs/rl_framework.html" class="sidebar-item-text sidebar-link">Classic version</a>
   </div>
 </li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false">numba implementation</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth3 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../lib_nbs/environments_numba.html" class="sidebar-item-text sidebar-link">Reinforcement learning environments</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../lib_nbs/agents_numba.html" class="sidebar-item-text sidebar-link">Reinforcement learning agents</a>
+  </div>
+</li>
+      </ul>
+  </li>
+      </ul>
+  </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../lib_nbs/learning_and_benchmark.html" class="sidebar-item-text sidebar-link active">Learning and benchmarking</a>
@@ -223,12 +253,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="false">Tutorials</a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false">Tutorials</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../tutorials/tutorial_learning.html" class="sidebar-item-text sidebar-link">Reinforcement Learning</a>
@@ -242,6 +272,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../tutorials/tutorial_imitation.html" class="sidebar-item-text sidebar-link">Imitation learning</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/tutorial_reset.html" class="sidebar-item-text sidebar-link">Learning to reset in target search problems</a>
   </div>
 </li>
       </ul>
@@ -306,7 +341,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <blockquote class="blockquote">
 <pre><code> learning (config, results_path, run)</code></pre>
 </blockquote>
-<p>Training of the RL agent</p>
+<p><em>Training of the RL agent</em></p>
 <table class="table">
 <thead>
 <tr class="header">
@@ -345,7 +380,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <pre><code> walk_from_policy (policy, time_ep, n, L, Nt, r, lc, destructive=False,
                    with_bound=False, bound=100)</code></pre>
 </blockquote>
-<p>Walk of foragers given a policy. Performance is evaluated as the number of targets found in a fixed time time_ep.</p>
+<p><em>Walk of foragers given a policy. Performance is evaluated as the number of targets found in a fixed time time_ep.</em></p>
 <table class="table">
 <colgroup>
 <col style="width: 6%">
@@ -441,7 +476,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <blockquote class="blockquote">
 <pre><code> agent_efficiency (results_path, config, run, num_walks, episode_interval)</code></pre>
 </blockquote>
-<p>Computes the agent’s average search efficiency over a number of walks where the agent follows a fixed policy. This is repeated with the policies at different stages of the training to analyze the evolution of its performance.</p>
+<p><em>Computes the agent’s average search efficiency over a number of walks where the agent follows a fixed policy. This is repeated with the policies at different stages of the training to analyze the evolution of its performance.</em></p>
 <table class="table">
 <colgroup>
 <col style="width: 9%">
@@ -489,13 +524,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h1>Benchmarks</h1>
 <p>Code to get the search efficiency of the benchmark models. We consider Lévy and bi-exponential distributions and obtain the model parameters that achieve the highest search efficiency. We use the library <code>Tune</code> for the efficiency optimization within given parameter ranges.</p>
 <hr>
-<p><a href="https://github.com/gorkamunoz/rl_opts/blob/master/rl_opts/learn_and_bench.py#L255" target="_blank" style="float:right; font-size:smaller">source</a></p>
+<p><a href="https://github.com/gorkamunoz/rl_opts/blob/master/rl_opts/learn_and_bench.py#L253" target="_blank" style="float:right; font-size:smaller">source</a></p>
 <section id="average_search_efficiency" class="level3">
 <h3 class="anchored" data-anchor-id="average_search_efficiency">average_search_efficiency</h3>
 <blockquote class="blockquote">
 <pre><code> average_search_efficiency (config)</code></pre>
 </blockquote>
-<p>Get the average search efficiency, considering the benchmark model defined in config.</p>
+<p><em>Get the average search efficiency, considering the benchmark model defined in config.</em></p>
 <table class="table">
 <colgroup>
 <col style="width: 9%">

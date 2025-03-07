@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>RL-OptS - Classic version</title>
+<title>RL-OptS - Reinforcement learning environments</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -124,11 +124,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 
 <link rel="stylesheet" href="../style.css">
-<meta property="og:title" content="RL-OptS - Classic version">
-<meta property="og:description" content="This notebook gathers the functions creating the RL framework proposed in our work. Namely, it can be use to generate both the foraging environment as well as the agents moving on them.">
+<meta property="og:title" content="RL-OptS - Reinforcement learning environments">
+<meta property="og:description" content="This notebook gathers the functions creating different kinds of environments for foraging and target search in various scenarios, adapted for their use in the reinforcement learning paradigm.">
 <meta property="og:site-name" content="RL-OptS">
-<meta name="twitter:title" content="RL-OptS - Classic version">
-<meta name="twitter:description" content="This notebook gathers the functions creating the RL framework proposed in our work. Namely, it can be use to generate both the foraging environment as well as the agents moving on them.">
+<meta name="twitter:title" content="RL-OptS - Reinforcement learning environments">
+<meta name="twitter:description" content="This notebook gathers the functions creating different kinds of environments for foraging and target search in various scenarios, adapted for their use in the reinforcement learning paradigm.">
 <meta name="twitter:card" content="summary">
 </head>
 
@@ -168,7 +168,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     </nav>
   <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
     <div class="container-fluid d-flex justify-content-between">
-      <h1 class="quarto-secondary-nav-title">Classic version</h1>
+      <h1 class="quarto-secondary-nav-title">Reinforcement learning environments</h1>
       <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
         <i class="bi bi-chevron-right"></i>
       </button>
@@ -204,20 +204,20 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth2 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../lib_nbs/rl_framework.html" class="sidebar-item-text sidebar-link active">Classic version</a>
+  <a href="../lib_nbs/rl_framework.html" class="sidebar-item-text sidebar-link">Classic version</a>
   </div>
 </li>
           <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false">numba implementation</a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">numba implementation</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth3 ">  
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth3 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../lib_nbs/environments_numba.html" class="sidebar-item-text sidebar-link">Reinforcement learning environments</a>
+  <a href="../lib_nbs/environments_numba.html" class="sidebar-item-text sidebar-link active">Reinforcement learning environments</a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -290,17 +290,54 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#environment" id="toc-environment" class="nav-link active" data-scroll-target="#environment">Environment</a>
+  <li><a href="#helpers" id="toc-helpers" class="nav-link active" data-scroll-target="#helpers">Helpers</a>
   <ul class="collapse">
-  <li><a href="#targetenv" id="toc-targetenv" class="nav-link" data-scroll-target="#targetenv">TargetEnv</a></li>
+  <li><a href="#isbetween" id="toc-isbetween" class="nav-link" data-scroll-target="#isbetween">isBetween</a>
+  <ul class="collapse">
+  <li><a href="#isbetween_c_vec_numba" id="toc-isbetween_c_vec_numba" class="nav-link" data-scroll-target="#isbetween_c_vec_numba">isBetween_c_Vec_numba</a></li>
   </ul></li>
-  <li><a href="#projective-simulation-agent" id="toc-projective-simulation-agent" class="nav-link" data-scroll-target="#projective-simulation-agent">Projective Simulation agent</a>
+  <li><a href="#pareto-sampling" id="toc-pareto-sampling" class="nav-link" data-scroll-target="#pareto-sampling">Pareto sampling</a>
   <ul class="collapse">
-  <li><a href="#psagent" id="toc-psagent" class="nav-link" data-scroll-target="#psagent">PSAgent</a></li>
+  <li><a href="#pareto_sample" id="toc-pareto_sample" class="nav-link" data-scroll-target="#pareto_sample">pareto_sample</a></li>
   </ul></li>
-  <li><a href="#general-forager-agent" id="toc-general-forager-agent" class="nav-link" data-scroll-target="#general-forager-agent">General forager agent</a>
+  <li><a href="#random-sampling-from-array-with-probs" id="toc-random-sampling-from-array-with-probs" class="nav-link" data-scroll-target="#random-sampling-from-array-with-probs">Random sampling from array with probs</a>
   <ul class="collapse">
-  <li><a href="#forager" id="toc-forager" class="nav-link" data-scroll-target="#forager">Forager</a></li>
+  <li><a href="#rand_choice_nb" id="toc-rand_choice_nb" class="nav-link" data-scroll-target="#rand_choice_nb">rand_choice_nb</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#targetenv" id="toc-targetenv" class="nav-link" data-scroll-target="#targetenv">TargetEnv</a>
+  <ul class="collapse">
+  <li><a href="#targetenv-1" id="toc-targetenv-1" class="nav-link" data-scroll-target="#targetenv-1">TargetEnv</a></li>
+  </ul></li>
+  <li><a href="#resetenv" id="toc-resetenv" class="nav-link" data-scroll-target="#resetenv">ResetEnv</a>
+  <ul class="collapse">
+  <li><a href="#search-loop-with-fixed-policy-an-arbitrary-environment" id="toc-search-loop-with-fixed-policy-an-arbitrary-environment" class="nav-link" data-scroll-target="#search-loop-with-fixed-policy-an-arbitrary-environment">Search loop with fixed policy an arbitrary environment</a></li>
+  <li><a href="#reset_search_loop" id="toc-reset_search_loop" class="nav-link" data-scroll-target="#reset_search_loop">reset_search_loop</a></li>
+  <li><a href="#d" id="toc-d" class="nav-link" data-scroll-target="#d">1D</a>
+  <ul class="collapse">
+  <li><a href="#resetenv_1d" id="toc-resetenv_1d" class="nav-link" data-scroll-target="#resetenv_1d">ResetEnv_1D</a></li>
+  <li><a href="#parallel-search-loops-for-reset-1d" id="toc-parallel-search-loops-for-reset-1d" class="nav-link" data-scroll-target="#parallel-search-loops-for-reset-1d">Parallel search loops for Reset 1D</a></li>
+  <li><a href="#parallel_reset1d_exp" id="toc-parallel_reset1d_exp" class="nav-link" data-scroll-target="#parallel_reset1d_exp">parallel_Reset1D_exp</a></li>
+  <li><a href="#parallel_reset1d_sharp" id="toc-parallel_reset1d_sharp" class="nav-link" data-scroll-target="#parallel_reset1d_sharp">parallel_Reset1D_sharp</a></li>
+  </ul></li>
+  <li><a href="#d-1" id="toc-d-1" class="nav-link" data-scroll-target="#d-1">2D</a>
+  <ul class="collapse">
+  <li><a href="#resetenv_2d" id="toc-resetenv_2d" class="nav-link" data-scroll-target="#resetenv_2d">ResetEnv_2D</a></li>
+  </ul></li>
+  <li><a href="#parallel-search-loops-for-reset-2d" id="toc-parallel-search-loops-for-reset-2d" class="nav-link" data-scroll-target="#parallel-search-loops-for-reset-2d">Parallel search loops for Reset 2D</a>
+  <ul class="collapse">
+  <li><a href="#parallel_reset2d_policies" id="toc-parallel_reset2d_policies" class="nav-link" data-scroll-target="#parallel_reset2d_policies">parallel_Reset2D_policies</a></li>
+  <li><a href="#parallel_reset2d_exp" id="toc-parallel_reset2d_exp" class="nav-link" data-scroll-target="#parallel_reset2d_exp">parallel_Reset2D_exp</a></li>
+  <li><a href="#parallel_reset2d_sharp" id="toc-parallel_reset2d_sharp" class="nav-link" data-scroll-target="#parallel_reset2d_sharp">parallel_Reset2D_sharp</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#turnresetenv" id="toc-turnresetenv" class="nav-link" data-scroll-target="#turnresetenv">TurnResetEnv</a>
+  <ul class="collapse">
+  <li><a href="#turnresetenv_2d" id="toc-turnresetenv_2d" class="nav-link" data-scroll-target="#turnresetenv_2d">TurnResetEnv_2D</a></li>
+  <li><a href="#search-loop-with-fixed-policy" id="toc-search-loop-with-fixed-policy" class="nav-link" data-scroll-target="#search-loop-with-fixed-policy">Search loop with fixed policy</a>
+  <ul class="collapse">
+  <li><a href="#search_loop_turn_reset_sharp" id="toc-search_loop_turn_reset_sharp" class="nav-link" data-scroll-target="#search_loop_turn_reset_sharp">search_loop_turn_reset_sharp</a></li>
+  </ul></li>
   </ul></li>
   </ul>
 <div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/gorkamunoz/rl_opts/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
@@ -310,7 +347,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title d-none d-lg-block">Classic version</h1>
+<h1 class="title d-none d-lg-block">Reinforcement learning environments</h1>
 </div>
 
 
@@ -326,168 +363,257 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </header>
 
 <!-- WARNING: THIS FILE WAS AUTOGENERATED! DO NOT EDIT! -->
-<p>This notebook gathers the functions creating the RL framework proposed in our work. Namely, it can be use to generate both the foraging environment as well as the agents moving on them.</p>
-<section id="environment" class="level1">
-<h1>Environment</h1>
-<p>Class that defines the foraging environment</p>
+<p>This notebook gathers the functions creating different kinds of environments for foraging and target search in various scenarios, adapted for their use in the reinforcement learning paradigm.</p>
+<section id="helpers" class="level1">
+<h1>Helpers</h1>
+<section id="isbetween" class="level2">
+<h2 class="anchored" data-anchor-id="isbetween">isBetween</h2>
+<hr>
+<p><a href="https://github.com/gorkamunoz/rl_opts/blob/master/rl_opts/rl_framework_numba.py#L28" target="_blank" style="float:right; font-size:smaller">source</a></p>
+<section id="isbetween_c_vec_numba" class="level3">
+<h3 class="anchored" data-anchor-id="isbetween_c_vec_numba">isBetween_c_Vec_numba</h3>
+<blockquote class="blockquote">
+<pre><code> isBetween_c_Vec_numba (a, b, c, r)</code></pre>
+</blockquote>
+<p>Checks whether point c is crossing the line formed with point a and b.</p>
+<table class="table">
+<colgroup>
+<col style="width: 9%">
+<col style="width: 38%">
+<col style="width: 52%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th><strong>Type</strong></th>
+<th><strong>Details</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>a</td>
+<td>tensor, shape = (1,2)</td>
+<td>Previous position.</td>
+</tr>
+<tr class="even">
+<td>b</td>
+<td>tensor, shape = (1,2)</td>
+<td>Current position.</td>
+</tr>
+<tr class="odd">
+<td>c</td>
+<td>tensor, shape = (Nt,2)</td>
+<td>Positions of all targets.</td>
+</tr>
+<tr class="even">
+<td>r</td>
+<td>int/float</td>
+<td>Target radius.</td>
+</tr>
+<tr class="odd">
+<td><strong>Returns</strong></td>
+<td><strong>array of boolean values</strong></td>
+<td><strong>True at the indices of found targets.</strong></td>
+</tr>
+</tbody>
+</table>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>np.random.rand()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<pre><code>0.4958686188975374</code></pre>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>compiling <span class="op">=</span> isBetween_c_Vec_numba(np.array([<span class="fl">0.1</span>,<span class="dv">1</span>]), np.array([<span class="dv">1</span>,<span class="dv">3</span>]), np.random.rand(<span class="dv">100</span>,<span class="dv">2</span>), <span class="fl">0.00001</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>4.65 μs ± 25.2 ns per loop (mean ± std. dev. of 7 runs, 100,000 loops each)</code></pre>
 </div>
 </div>
-<hr>
-<p><a href="https://github.com/gorkamunoz/rl_opts/blob/master/rl_opts/rl_framework/numba/environments.py#L92" target="_blank" style="float:right; font-size:smaller">source</a></p>
-<section id="targetenv" class="level3">
-<h3 class="anchored" data-anchor-id="targetenv">TargetEnv</h3>
-<blockquote class="blockquote">
-<pre><code> TargetEnv (Nt, L, r, lc, agent_step=1, boundary_condition='periodic',
-            num_agents=1, high_den=5, destructive=False)</code></pre>
-</blockquote>
-<p><em>Class defining the foraging environment. It includes the methods needed to place several agents to the world.</em></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> rl_opts.utils <span class="im">import</span> isBetween_c_Vec <span class="im">as</span> oldbetween</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>40.4 μs ± 177 ns per loop (mean ± std. dev. of 7 runs, 10,000 loops each)</code></pre>
+</div>
+</div>
 </section>
 </section>
-<section id="projective-simulation-agent" class="level1">
-<h1>Projective Simulation agent</h1>
+<section id="pareto-sampling" class="level2">
+<h2 class="anchored" data-anchor-id="pareto-sampling">Pareto sampling</h2>
 <hr>
-<p><a href="https://github.com/gorkamunoz/rl_opts/blob/master/rl_opts/rl_framework/legacy.py#L232" target="_blank" style="float:right; font-size:smaller">source</a></p>
-<section id="psagent" class="level3">
-<h3 class="anchored" data-anchor-id="psagent">PSAgent</h3>
+<p><a href="https://github.com/gorkamunoz/rl_opts/blob/master/rl_opts/rl_framework_numba.py#L74" target="_blank" style="float:right; font-size:smaller">source</a></p>
+<section id="pareto_sample" class="level3">
+<h3 class="anchored" data-anchor-id="pareto_sample">pareto_sample</h3>
 <blockquote class="blockquote">
-<pre><code> PSAgent (num_actions, num_percepts_list, gamma_damping=0.0,
-          eta_glow_damping=0.0, policy_type='standard', beta_softmax=3,
-          initial_prob_distr=None, fixed_policy=None)</code></pre>
+<pre><code> pareto_sample (alpha, xm, size=1)</code></pre>
 </blockquote>
-<p><em>Base class of a Reinforcement Learning agent based on Projective Simulation, with two-layered network. This class has been adapted from https://github.com/qic-ibk/projectivesimulation</em></p>
+</section>
+</section>
+<section id="random-sampling-from-array-with-probs" class="level2">
+<h2 class="anchored" data-anchor-id="random-sampling-from-array-with-probs">Random sampling from array with probs</h2>
+<hr>
+<p><a href="https://github.com/gorkamunoz/rl_opts/blob/master/rl_opts/rl_framework_numba.py#L84" target="_blank" style="float:right; font-size:smaller">source</a></p>
+<section id="rand_choice_nb" class="level3">
+<h3 class="anchored" data-anchor-id="rand_choice_nb">rand_choice_nb</h3>
+<blockquote class="blockquote">
+<pre><code> rand_choice_nb (arr, prob)</code></pre>
+</blockquote>
+<p>:param arr: A 1D numpy array of values to sample from. :param prob: A 1D numpy array of probabilities for the given samples. :return: A random sample from the given array with a given probability.</p>
+</section>
+</section>
+</section>
+<section id="targetenv" class="level1">
+<h1>TargetEnv</h1>
+<hr>
+<p><a href="https://github.com/gorkamunoz/rl_opts/blob/master/rl_opts/rl_framework_numba.py#L102" target="_blank" style="float:right; font-size:smaller">source</a></p>
+<section id="targetenv-1" class="level3">
+<h3 class="anchored" data-anchor-id="targetenv-1">TargetEnv</h3>
+<blockquote class="blockquote">
+<pre><code> TargetEnv (*args, **kwargs)</code></pre>
+</blockquote>
+<p>Class defining the a Foraging environment with multiple targets and two actions: continue in the same direction and turn by a random angle.</p>
+</section>
+</section>
+<section id="resetenv" class="level1">
+<h1>ResetEnv</h1>
+<section id="search-loop-with-fixed-policy-an-arbitrary-environment" class="level3">
+<h3 class="anchored" data-anchor-id="search-loop-with-fixed-policy-an-arbitrary-environment">Search loop with fixed policy an arbitrary environment</h3>
+<hr>
+<p><a href="https://github.com/gorkamunoz/rl_opts/blob/master/rl_opts/rl_framework_numba.py#L375" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="reset_search_loop" class="level3">
+<h3 class="anchored" data-anchor-id="reset_search_loop">reset_search_loop</h3>
+<blockquote class="blockquote">
+<pre><code> reset_search_loop (T, reset_policy, env)</code></pre>
+</blockquote>
+<p>Loop that runs the reset environment with a given reset policy.</p>
 <table class="table">
-<colgroup>
-<col style="width: 6%">
-<col style="width: 25%">
-<col style="width: 34%">
-<col style="width: 34%">
-</colgroup>
 <thead>
 <tr class="header">
 <th></th>
-<th><strong>Type</strong></th>
-<th><strong>Default</strong></th>
 <th><strong>Details</strong></th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td>num_actions</td>
-<td>int &gt;=1</td>
-<td></td>
-<td>Number of actions.</td>
+<td>T</td>
+<td>Number of steps</td>
 </tr>
 <tr class="even">
-<td>num_percepts_list</td>
-<td>list of integers &gt;=1, not nested</td>
-<td></td>
-<td>Cardinality of each category/feature of percept space.</td>
+<td>reset_policy</td>
+<td>Reset policy</td>
 </tr>
 <tr class="odd">
-<td>gamma_damping</td>
-<td>float</td>
-<td>0.0</td>
-<td>Forgetting/damping of h-values at the end of each interaction. The default is 0.0.</td>
-</tr>
-<tr class="even">
-<td>eta_glow_damping</td>
-<td>float</td>
-<td>0.0</td>
-<td>Controls the damping of glow; setting this to 1 effectively switches off glow. The default is 0.0.</td>
-</tr>
-<tr class="odd">
-<td>policy_type</td>
-<td>str</td>
-<td>standard</td>
-<td>Toggles the rule used to compute probabilities from h-values. See probability_distr. The default is ‘standard’.</td>
-</tr>
-<tr class="even">
-<td>beta_softmax</td>
-<td>int</td>
-<td>3</td>
-<td>Probabilities are proportional to exp(beta*h_value). If policy_type != ‘softmax’, then this is irrelevant. The default is 3.</td>
-</tr>
-<tr class="odd">
-<td>initial_prob_distr</td>
-<td>NoneType</td>
-<td>None</td>
-<td>In case the user wants to change the initialization policy for the agent. This list contains, per percept, a list with the values of the initial h values for each action. The default is None.</td>
-</tr>
-<tr class="even">
-<td>fixed_policy</td>
-<td>NoneType</td>
-<td>None</td>
-<td>In case the user wants to fix a policy for the agent. This list contains, per percept, a list with the values of the probabilities for each action. <br>Example: Percept 0: fixed_policy[0] = [p(a0), p(a1), p(a2)] = [0.2, 0.3, 0.5], where a0, a1 and a2 are the three possible actions. The default is None.</td>
+<td>env</td>
+<td>Environment</td>
 </tr>
 </tbody>
 </table>
 </section>
-</section>
-<section id="general-forager-agent" class="level1">
-<h1>General forager agent</h1>
+<section id="d" class="level2">
+<h2 class="anchored" data-anchor-id="d">1D</h2>
 <hr>
-<p><a href="https://github.com/gorkamunoz/rl_opts/blob/master/rl_opts/rl_framework/numba/agents.py#L32" target="_blank" style="float:right; font-size:smaller">source</a></p>
-<section id="forager" class="level3">
-<h3 class="anchored" data-anchor-id="forager">Forager</h3>
+<p><a href="https://github.com/gorkamunoz/rl_opts/blob/master/rl_opts/rl_framework_numba.py#L343" target="_blank" style="float:right; font-size:smaller">source</a></p>
+<section id="resetenv_1d" class="level3">
+<h3 class="anchored" data-anchor-id="resetenv_1d">ResetEnv_1D</h3>
 <blockquote class="blockquote">
-<pre><code> Forager (state_space, num_actions, visual_cone=3.141592653589793,
-          visual_radius=1.0, **kwargs)</code></pre>
+<pre><code> ResetEnv_1D (*args, **kwargs)</code></pre>
 </blockquote>
-<p><em>This class extends the general <a href="https://gorkamunoz.github.io/rl_opts/lib_nbs/rl_framework.html#psagent"><code>PSAgent</code></a> class and adapts it to the foraging scenario·</em></p>
-<table class="table">
-<colgroup>
-<col style="width: 6%">
-<col style="width: 25%">
-<col style="width: 34%">
-<col style="width: 34%">
-</colgroup>
-<thead>
-<tr class="header">
-<th></th>
-<th><strong>Type</strong></th>
-<th><strong>Default</strong></th>
-<th><strong>Details</strong></th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>state_space</td>
-<td>list</td>
-<td></td>
-<td>List where each entry is the state space of each perceptual feature.<br>E.g. [state space of step counter, state space of density of successful neighbours].</td>
-</tr>
-<tr class="even">
-<td>num_actions</td>
-<td>int</td>
-<td></td>
-<td>Number of actions.</td>
-</tr>
-<tr class="odd">
-<td>visual_cone</td>
-<td>float</td>
-<td>3.141592653589793</td>
-<td>Visual cone (angle, in radians) of the forager, useful in scenarios with ensembles of agents. The default is np.pi.</td>
-</tr>
-<tr class="even">
-<td>visual_radius</td>
-<td>float</td>
-<td>1.0</td>
-<td>Radius of the visual region, useful in scenarious with ensembles of agents. The default is 1.0.</td>
-</tr>
-<tr class="odd">
-<td>kwargs</td>
-<td>VAR_KEYWORD</td>
-<td></td>
-<td></td>
-</tr>
-</tbody>
-</table>
+<p>Initialize self. See help(type(self)) for accurate signature.</p>
+</section>
+<section id="parallel-search-loops-for-reset-1d" class="level3">
+<h3 class="anchored" data-anchor-id="parallel-search-loops-for-reset-1d">Parallel search loops for Reset 1D</h3>
+<hr>
+</section>
+<section id="parallel_reset1d_exp" class="level3">
+<h3 class="anchored" data-anchor-id="parallel_reset1d_exp">parallel_Reset1D_exp</h3>
+<blockquote class="blockquote">
+<pre><code> parallel_Reset1D_exp (T, rates, L, D)</code></pre>
+</blockquote>
+<p>Runs the Reset 1D loop in parallel for different exponential resetting rates.</p>
+<hr>
+</section>
+<section id="parallel_reset1d_sharp" class="level3">
+<h3 class="anchored" data-anchor-id="parallel_reset1d_sharp">parallel_Reset1D_sharp</h3>
+<blockquote class="blockquote">
+<pre><code> parallel_Reset1D_sharp (T, resets, L, D)</code></pre>
+</blockquote>
+<p>Runs the Reset 1D loop in parallel for different sharp resetting times.</p>
+</section>
+</section>
+<section id="d-1" class="level2">
+<h2 class="anchored" data-anchor-id="d-1">2D</h2>
+<hr>
+<p><a href="https://github.com/gorkamunoz/rl_opts/blob/master/rl_opts/rl_framework_numba.py#L424" target="_blank" style="float:right; font-size:smaller">source</a></p>
+<section id="resetenv_2d" class="level3">
+<h3 class="anchored" data-anchor-id="resetenv_2d">ResetEnv_2D</h3>
+<blockquote class="blockquote">
+<pre><code> ResetEnv_2D (*args, **kwargs)</code></pre>
+</blockquote>
+<p>Initialize self. See help(type(self)) for accurate signature.</p>
+</section>
+</section>
+<section id="parallel-search-loops-for-reset-2d" class="level2">
+<h2 class="anchored" data-anchor-id="parallel-search-loops-for-reset-2d">Parallel search loops for Reset 2D</h2>
+<hr>
+<section id="parallel_reset2d_policies" class="level3">
+<h3 class="anchored" data-anchor-id="parallel_reset2d_policies">parallel_Reset2D_policies</h3>
+<blockquote class="blockquote">
+<pre><code> parallel_Reset2D_policies (T, reset_policies, dist_target, radius_target,
+                            D)</code></pre>
+</blockquote>
+<hr>
+</section>
+<section id="parallel_reset2d_exp" class="level3">
+<h3 class="anchored" data-anchor-id="parallel_reset2d_exp">parallel_Reset2D_exp</h3>
+<blockquote class="blockquote">
+<pre><code> parallel_Reset2D_exp (T, rates, dist_target, radius_target, D)</code></pre>
+</blockquote>
+<hr>
+</section>
+<section id="parallel_reset2d_sharp" class="level3">
+<h3 class="anchored" data-anchor-id="parallel_reset2d_sharp">parallel_Reset2D_sharp</h3>
+<blockquote class="blockquote">
+<pre><code> parallel_Reset2D_sharp (T, resets, dist_target, radius_target, D)</code></pre>
+</blockquote>
+</section>
+</section>
+</section>
+<section id="turnresetenv" class="level1">
+<h1>TurnResetEnv</h1>
+<blockquote class="blockquote">
+<p>Only 2D is considered</p>
+</blockquote>
+<hr>
+<section id="turnresetenv_2d" class="level3">
+<h3 class="anchored" data-anchor-id="turnresetenv_2d">TurnResetEnv_2D</h3>
+<blockquote class="blockquote">
+<pre><code> TurnResetEnv_2D (*args, **kwargs)</code></pre>
+</blockquote>
+<p>Class defining a Foraging environment with a single target and three possible actions:</p>
+<ul>
+<li>Continue in the same direction</li>
+<li>Turn by a random angle</li>
+<li>Reset to the origin</li>
+</ul>
+<p>The agent makes steps of constant length given by agent_step.</p>
+</section>
+<section id="search-loop-with-fixed-policy" class="level2">
+<h2 class="anchored" data-anchor-id="search-loop-with-fixed-policy">Search loop with fixed policy</h2>
+<hr>
+<section id="search_loop_turn_reset_sharp" class="level3">
+<h3 class="anchored" data-anchor-id="search_loop_turn_reset_sharp">search_loop_turn_reset_sharp</h3>
+<blockquote class="blockquote">
+<pre><code> search_loop_turn_reset_sharp (T, reset, turn, env)</code></pre>
+</blockquote>
+<p>Runs a search loop of T steps. There is a single counter that works as follows:</p>
+<ul>
+<li>Starts at 0</li>
+<li>For each turn or continue action gets +1</li>
+<li>If reset or reach the target is set to 0</li>
+</ul>
 
 
+</section>
 </section>
 </section>
 

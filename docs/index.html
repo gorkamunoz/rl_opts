@@ -194,11 +194,41 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           </a> 
       </div>
       <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="false">RL framework</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="false">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth2 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./lib_nbs/rl_framework.html" class="sidebar-item-text sidebar-link">Reinforcement learning framework</a>
+  <a href="./lib_nbs/rl_framework.html" class="sidebar-item-text sidebar-link">Classic version</a>
   </div>
 </li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false">numba implementation</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth3 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./lib_nbs/environments_numba.html" class="sidebar-item-text sidebar-link">Reinforcement learning environments</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./lib_nbs/agents_numba.html" class="sidebar-item-text sidebar-link">Reinforcement learning agents</a>
+  </div>
+</li>
+      </ul>
+  </li>
+      </ul>
+  </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./lib_nbs/learning_and_benchmark.html" class="sidebar-item-text sidebar-link">Learning and benchmarking</a>
@@ -223,12 +253,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="false">Tutorials</a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false">Tutorials</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./tutorials/tutorial_learning.html" class="sidebar-item-text sidebar-link">Reinforcement Learning</a>
@@ -244,6 +274,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <a href="./tutorials/tutorial_imitation.html" class="sidebar-item-text sidebar-link">Imitation learning</a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./tutorials/tutorial_reset.html" class="sidebar-item-text sidebar-link">Learning to reset in target search problems</a>
+  </div>
+</li>
       </ul>
   </li>
     </ul>
@@ -257,7 +292,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <ul>
   <li><a href="#installation" id="toc-installation" class="nav-link active" data-scroll-target="#installation">Installation</a></li>
   <li><a href="#tutorials" id="toc-tutorials" class="nav-link" data-scroll-target="#tutorials">Tutorials</a></li>
-  <li><a href="#package-structure" id="toc-package-structure" class="nav-link" data-scroll-target="#package-structure">Package structure</a></li>
   <li><a href="#cite" id="toc-cite" class="nav-link" data-scroll-target="#cite">Cite</a></li>
   </ul>
 <div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/gorkamunoz/rl_opts/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
@@ -280,7 +314,11 @@ Reinforcement Learning of Optimal Search strategies
 <p align="center">
 <a href="https://zenodo.org/badge/latestdoi/424986383"><img src="https://zenodo.org/badge/424986383.svg" alt="DOI"></a> <a href="https://badge.fury.io/py/rl_opts"><img src="https://badge.fury.io/py/rl_opts.svg" alt="PyPI version"></a> <a href="https://badge.fury.io/py/b"><img src="https://img.shields.io/badge/python-3.9-red" alt="Python version"></a>
 </p>
-<p>This library builds the necessary tools needed to study, replicate and develop the results of the paper: <a href="https://arxiv.org/abs/2303.06050">“Optimal foraging strategies can be learned and outperform Lévy walks”</a> by <em>G. Muñoz-Gil, A. López-Incera, L. J. Fiderer</em> and <em>H. J. Briegel</em>.</p>
+<p>This library builds the necessary tools needed to study, replicate and develop reinforcement learning agents for target search problems, as well as a benchmark baselines with which to compare. This library is based in two different publications:</p>
+<ul>
+<li><p><a href="https://arxiv.org/abs/2303.06050">“Optimal foraging strategies can be learned”</a> by <em>G. Muñoz-Gil, A. López-Incera, L. J. Fiderer</em> and <em>H. J. Briegel</em>. Here we developed agents able to learn how to forage efficiently in environments with multiple targets.</p></li>
+<li><p><a href="https://arxiv.org/abs/2303.06050">“Learning to reset in target search problems”</a> by <em>G. Muñoz-Gil, H. J. Briegel</em> and <em>M. Caraglio</em>. Here we extended the agents to be able to reset to the origin, a feature that has revolutionize target search problems in the last years.</p></li>
+</ul>
 <section id="installation" class="level3">
 <h3 class="anchored" data-anchor-id="installation">Installation</h3>
 <p>You can access all these tools installing the python package <code>rl_opts</code> via Pypi:</p>
@@ -294,35 +332,24 @@ Reinforcement Learning of Optimal Search strategies
 <p>We have prepared a series of tutorials to guide you through the most important functionalities of the package. You can find them in the <a href="https://github.com/gorkamunoz/rl_opts/tree/master/nbs/tutorials">Tutorials folder</a> of the Github repository or in the Tutorials tab of our <a href="https://gorkamunoz.github.io/rl_opts/">webpage</a>, with notebooks that will help you navigate the package as well as reproducing the results of our paper via minimal examples. In particular, we have three tutorials:</p>
 <ul>
 <li><a href="./tutorials/tutorial_learning.html" style="text-decoration:none">Reinforcement learning </a> : shows how to train a RL agent based on Projective Simulation agents to search targets in randomly distributed environments as the ones considered in our paper.</li>
+<li><a href="./tutorials/tutorial_reset.html" style="text-decoration:none">Learning to reset in target search problems </a> : shows how to train a RL agent similar to the previous, but with the ability to reset to the origin, an action that is learned along its spatial dynamics.</li>
 <li><a href="./tutorials/tutorial_imitation.html" style="text-decoration:none">Imitation learning </a> : shows how to train a RL agent to imitate the policy of an expert equipped with a pre-trained policy. The latter is based on the benchmark strategies common in the literature.</li>
 <li><a href="./tutorials/tutorial_benchmarks.html" style="text-decoration:none">Benchmarks </a> : shows how launch various benchmark strategies with which to compare the trained RL agents.</li>
 </ul>
 </section>
-<section id="package-structure" class="level3">
-<h3 class="anchored" data-anchor-id="package-structure">Package structure</h3>
-<p>The package contains a set of modules for:</p>
-<ul>
-<li><a href="./lib_nbs/rl_framework.html" style="text-decoration:none">Reinforcement learning framework (<code>rl_opts.rl_framework</code>)</a> : building foraging environments as well as the RL agents moving on them.</li>
-<li><a href="./lib_nbs/learning_and_benchmark.html" style="text-decoration:none">Learning and benchmarking (<code>rl_opts.learn_and_bench</code>)</a> : training RL agents as well as benchmarking them w.r.t. to known foraging strategies.</li>
-<li><a href="./lib_nbs/imitation_learning.html" style="text-decoration:none">Imitation learning (<code>rl_opts.imitation</code>)</a>: training RL agents in imitation schemes via foraging experts.</li>
-<li><a href="./lib_nbs/analytics.html" style="text-decoration:none">Analytical functions (<code>rl_opts.analytics)</code></a>: builiding analytical functions for step length distributions as well as tranforming these to foraging policies.</li>
-<li><a href="./lib_nbs/utils.html" style="text-decoration:none">Utils (<code>rl_opts.utils)</code></a>: helpers used throughout the package.</li>
-</ul>
-</section>
 <section id="cite" class="level3">
 <h3 class="anchored" data-anchor-id="cite">Cite</h3>
-<p>We kindly ask you to cite our paper if any of the previous material was useful for your work, here is the bibtex info:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode latex code-with-copy"><code class="sourceCode latex"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>@article{munoz2023optimal,</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  doi = {10.48550/ARXIV.2303.06050},  </span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  url = {https://arxiv.org/abs/2303.06050},  </span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  author = {Muñoz-Gil, Gorka and López-Incera, Andrea and Fiderer, Lukas J. and Briegel, Hans J.},  </span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  title = {Optimal foraging strategies can be learned and outperform Lévy walks},  </span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  publisher = {arXiv},  </span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  archivePrefix = {arXiv},</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  eprint = {2303.06050},</span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  primaryClass = {cond-mat.stat-mech},  </span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  year = {2023},</span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>We kindly ask you to cite our paper if any of the previous material was useful for your work:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode latex code-with-copy"><code class="sourceCode latex"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>@article{munoz2024optimal,</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  title={Optimal foraging strategies can be learned},</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  author={Mu{<span class="fu">\~</span>n}oz-Gil, Gorka and L{<span class="fu">\'</span>o}pez-Incera, Andrea and Fiderer, Lukas J and Briegel, Hans J},</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  journal={New Journal of Physics},</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  volume={26},</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  number={1},</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  pages={013010},</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  year={2024},</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  publisher={IOP Publishing}</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
 
 </section>
