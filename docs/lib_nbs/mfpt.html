@@ -195,11 +195,41 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           </a> 
       </div>
       <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="false">RL framework</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="false">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth2 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../lib_nbs/rl_framework.html" class="sidebar-item-text sidebar-link">Reinforcement learning framework</a>
+  <a href="../lib_nbs/rl_framework.html" class="sidebar-item-text sidebar-link">Classic version</a>
   </div>
 </li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false">numba implementation</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth3 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../lib_nbs/environments_numba.html" class="sidebar-item-text sidebar-link">Reinforcement learning environments</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../lib_nbs/agents_numba.html" class="sidebar-item-text sidebar-link">Reinforcement learning agents</a>
+  </div>
+</li>
+      </ul>
+  </li>
+      </ul>
+  </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../lib_nbs/learning_and_benchmark.html" class="sidebar-item-text sidebar-link">Learning and benchmarking</a>
@@ -224,12 +254,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="false">Tutorials</a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false">Tutorials</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../tutorials/tutorial_learning.html" class="sidebar-item-text sidebar-link">Reinforcement Learning</a>
@@ -243,6 +273,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../tutorials/tutorial_imitation.html" class="sidebar-item-text sidebar-link">Imitation learning</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/tutorial_reset.html" class="sidebar-item-text sidebar-link">Learning to reset in target search problems</a>
   </div>
 </li>
       </ul>
@@ -316,7 +351,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <pre><code> constant_velocity_generator (N, T, time_sampler, velocity=1,
                               **sample_args)</code></pre>
 </blockquote>
-<p>Given a sampler for length of time steps, generates a trajectory considering a constant velocity in the sampled times. After each time step, we sample a new direction.</p>
+<p><em>Given a sampler for length of time steps, generates a trajectory considering a constant velocity in the sampled times. After each time step, we sample a new direction.</em></p>
 <table class="table">
 <thead>
 <tr class="header">
@@ -353,7 +388,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </tr>
 <tr class="odd">
 <td>sample_args</td>
-<td></td>
+<td>VAR_KEYWORD</td>
 <td></td>
 <td></td>
 </tr>
@@ -399,7 +434,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <pre><code> mfpt_rw (N:int, T:int, x0:float, Ls:list, traj_generator:Callable,
           max_loop=5, save=None, **args_generator)</code></pre>
 </blockquote>
-<p>Calculates MFPT to boundaries at 0 and L starting in x0</p>
+<p><em>Calculates MFPT to boundaries at 0 and L starting in x0</em></p>
 <table class="table">
 <colgroup>
 <col style="width: 6%">
@@ -460,7 +495,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </tr>
 <tr class="even">
 <td>args_generator</td>
-<td></td>
+<td>VAR_KEYWORD</td>
 <td></td>
 <td></td>
 </tr>
@@ -479,7 +514,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
                    traj_generator:Callable, max_loop=5, time_sampler=None,
                    save=None, **args_generator)</code></pre>
 </blockquote>
-<p>Calculates MFPT to boundaries at 0 and L starting in x0 with a traj generator informed on the scales of the sysmte (x0 and L)</p>
+<p><em>Calculates MFPT to boundaries at 0 and L starting in x0 with a traj generator informed on the scales of the sysmte (x0 and L)</em></p>
 <table class="table">
 <colgroup>
 <col style="width: 6%">
@@ -546,7 +581,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </tr>
 <tr class="odd">
 <td>args_generator</td>
-<td></td>
+<td>VAR_KEYWORD</td>
 <td></td>
 <td></td>
 </tr>
@@ -643,7 +678,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <blockquote class="blockquote">
 <pre><code> Biexp (informed=False, **args)</code></pre>
 </blockquote>
-<p>Initialize self. See help(type(self)) for accurate signature.</p>
+<p><em>Initialize self. See help(type(self)) for accurate signature.</em></p>
 <hr>
 <p><a href="https://github.com/gorkamunoz/rl_opts/blob/master/rl_opts/mfpt.py#L218" target="_blank" style="float:right; font-size:smaller">source</a></p>
 </section>
@@ -1094,7 +1129,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <pre><code> constant_velocity_generator_2D (N, T, time_sampler, velocity=1,
                                  **sample_args)</code></pre>
 </blockquote>
-<p>Given a sampler for length of time steps, generates a 2D trajectory considering a constant velocity in the sampled times. After each time step, we sample a new direction.</p>
+<p><em>Given a sampler for length of time steps, generates a 2D trajectory considering a constant velocity in the sampled times. After each time step, we sample a new direction.</em></p>
 <table class="table">
 <thead>
 <tr class="header">
@@ -1131,7 +1166,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </tr>
 <tr class="odd">
 <td>sample_args</td>
-<td></td>
+<td>VAR_KEYWORD</td>
 <td></td>
 <td></td>
 </tr>
@@ -1174,7 +1209,7 @@ Finished generating trajectories</code></pre>
 <pre><code> mfpt_rw_2D (N:int, T:int, x0:list, Ls:list, traj_generator:Callable,
              max_loop=5, **args_generator)</code></pre>
 </blockquote>
-<p>Calculates MFPT to boundaries at 0 and L starting in x0 in 2D</p>
+<p><em>Calculates MFPT to boundaries at 0 and L starting in x0 in 2D</em></p>
 <table class="table">
 <colgroup>
 <col style="width: 6%">
@@ -1229,7 +1264,7 @@ Finished generating trajectories</code></pre>
 </tr>
 <tr class="odd">
 <td>args_generator</td>
-<td></td>
+<td>VAR_KEYWORD</td>
 <td></td>
 <td></td>
 </tr>
@@ -1366,7 +1401,7 @@ Finished generating trajectories</code></pre>
                       traj_generator:Callable, max_loop=5,
                       **args_generator)</code></pre>
 </blockquote>
-<p>Calculates MFPT to boundaries at 0 and L starting in x0 in 2D</p>
+<p><em>Calculates MFPT to boundaries at 0 and L starting in x0 in 2D</em></p>
 <table class="table">
 <colgroup>
 <col style="width: 6%">
@@ -1421,7 +1456,7 @@ Finished generating trajectories</code></pre>
 </tr>
 <tr class="odd">
 <td>args_generator</td>
-<td></td>
+<td>VAR_KEYWORD</td>
 <td></td>
 <td></td>
 </tr>

@@ -195,11 +195,41 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           </a> 
       </div>
       <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="false">RL framework</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="false">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth2 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../lib_nbs/rl_framework.html" class="sidebar-item-text sidebar-link">Reinforcement learning framework</a>
+  <a href="../lib_nbs/rl_framework.html" class="sidebar-item-text sidebar-link">Classic version</a>
   </div>
 </li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false">numba implementation</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth3 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../lib_nbs/environments_numba.html" class="sidebar-item-text sidebar-link">Reinforcement learning environments</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../lib_nbs/agents_numba.html" class="sidebar-item-text sidebar-link">Reinforcement learning agents</a>
+  </div>
+</li>
+      </ul>
+  </li>
+      </ul>
+  </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../lib_nbs/learning_and_benchmark.html" class="sidebar-item-text sidebar-link">Learning and benchmarking</a>
@@ -224,12 +254,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="false">Tutorials</a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false">Tutorials</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../tutorials/tutorial_learning.html" class="sidebar-item-text sidebar-link">Reinforcement Learning</a>
@@ -243,6 +273,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../tutorials/tutorial_imitation.html" class="sidebar-item-text sidebar-link">Imitation learning</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/tutorial_reset.html" class="sidebar-item-text sidebar-link">Learning to reset in target search problems</a>
   </div>
 </li>
       </ul>
@@ -299,10 +334,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <blockquote class="blockquote">
 <pre><code> pdf_multimode (L:int, lambdas:list, probs:list)</code></pre>
 </blockquote>
-<p>Computes the discrete PDF of multi-mode exponential of the form</p>
+<p>*Computes the discrete PDF of multi-mode exponential of the form</p>
 <p><span class="math display">\[
 \Pr(L) = \sum_{i=1,2} \omega_i (1-e^{-1/\lambda_i}) e^{-(L-1)/\lambda_i} \, ,
-\]</span> where <span class="math inline">\(\omega\)</span> is the probability of each mode and <span class="math inline">\(\lambda\)</span> it’s scale.</p>
+\]</span> where <span class="math inline">\(\omega\)</span> is the probability of each mode and <span class="math inline">\(\lambda\)</span> it’s scale.*</p>
 <table class="table">
 <thead>
 <tr class="header">
@@ -357,9 +392,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <blockquote class="blockquote">
 <pre><code> pdf_powerlaw (L:float, beta:float=1)</code></pre>
 </blockquote>
-<p>Computes the discrete PDF of a powerlaw of the form <span class="math display">\[
+<p><em>Computes the discrete PDF of a powerlaw of the form <span class="math display">\[
 \Pr(L)\sim L^{-1-\mathrm{beta}}.
-\]</span></p>
+\]</span></em></p>
 <table class="table">
 <thead>
 <tr class="header">
@@ -410,7 +445,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <blockquote class="blockquote">
 <pre><code> pdf_discrete_sample (pdf_func:object, num_samples:int, **args_func)</code></pre>
 </blockquote>
-<p>Samples discrete values from a given PDF</p>
+<p><em>Samples discrete values from a given PDF</em></p>
 <table class="table">
 <thead>
 <tr class="header">
@@ -432,7 +467,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </tr>
 <tr class="odd">
 <td>args_func</td>
-<td></td>
+<td>VAR_KEYWORD</td>
 <td></td>
 </tr>
 <tr class="even">
@@ -476,7 +511,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <blockquote class="blockquote">
 <pre><code> get_policy_from_dist (n_max, func, renorm=True, **args_func)</code></pre>
 </blockquote>
-<p>Given a PDF of step lengths, calculates the corresponding policy</p>
+<p><em>Given a PDF of step lengths, calculates the corresponding policy</em></p>
 <table class="table">
 <colgroup>
 <col style="width: 6%">
@@ -513,7 +548,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </tr>
 <tr class="even">
 <td>args_func</td>
-<td></td>
+<td>VAR_KEYWORD</td>
 <td></td>
 <td></td>
 </tr>

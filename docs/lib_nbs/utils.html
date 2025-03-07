@@ -131,11 +131,41 @@ ul.task-list li input[type="checkbox"] {
           </a> 
       </div>
       <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="false">RL framework</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="false">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth2 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../lib_nbs/rl_framework.html" class="sidebar-item-text sidebar-link">Reinforcement learning framework</a>
+  <a href="../lib_nbs/rl_framework.html" class="sidebar-item-text sidebar-link">Classic version</a>
   </div>
 </li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false">numba implementation</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth3 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../lib_nbs/environments_numba.html" class="sidebar-item-text sidebar-link">Reinforcement learning environments</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../lib_nbs/agents_numba.html" class="sidebar-item-text sidebar-link">Reinforcement learning agents</a>
+  </div>
+</li>
+      </ul>
+  </li>
+      </ul>
+  </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../lib_nbs/learning_and_benchmark.html" class="sidebar-item-text sidebar-link">Learning and benchmarking</a>
@@ -160,12 +190,12 @@ ul.task-list li input[type="checkbox"] {
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="false">Tutorials</a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false">Tutorials</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../tutorials/tutorial_learning.html" class="sidebar-item-text sidebar-link">Reinforcement Learning</a>
@@ -179,6 +209,11 @@ ul.task-list li input[type="checkbox"] {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../tutorials/tutorial_imitation.html" class="sidebar-item-text sidebar-link">Imitation learning</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/tutorial_reset.html" class="sidebar-item-text sidebar-link">Learning to reset in target search problems</a>
   </div>
 </li>
       </ul>
@@ -240,7 +275,7 @@ ul.task-list li input[type="checkbox"] {
 <blockquote class="blockquote">
 <pre><code> isBetween_c_Vec (a, b, c, r)</code></pre>
 </blockquote>
-<p>Checks whether point c is crossing the line formed with point a and b.</p>
+<p><em>Checks whether point c is crossing the line formed with point a and b.</em></p>
 <table class="table">
 <colgroup>
 <col style="width: 9%">
@@ -290,7 +325,7 @@ ul.task-list li input[type="checkbox"] {
 <blockquote class="blockquote">
 <pre><code> coord_mod (coord1, coord2, mod)</code></pre>
 </blockquote>
-<p>Computes the distance difference between two coordinates, in a world with size ‘mod’ and periodic boundary conditions.</p>
+<p><em>Computes the distance difference between two coordinates, in a world with size ‘mod’ and periodic boundary conditions.</em></p>
 <table class="table">
 <colgroup>
 <col style="width: 9%">
@@ -335,7 +370,7 @@ ul.task-list li input[type="checkbox"] {
 <blockquote class="blockquote">
 <pre><code> isBetween_c_Vec_nAgents (a, b, c, r)</code></pre>
 </blockquote>
-<p>Checks whether point c is crossing the line formed with point a and b. Code to run several agents in parallel.</p>
+<p><em>Checks whether point c is crossing the line formed with point a and b. Code to run several agents in parallel.</em></p>
 <table class="table">
 <colgroup>
 <col style="width: 9%">
@@ -385,7 +420,7 @@ ul.task-list li input[type="checkbox"] {
 <blockquote class="blockquote">
 <pre><code> get_encounters (agent_previous_pos, agent_pos, target_positions, L, r)</code></pre>
 </blockquote>
-<p>Considering the agent walks, it checks whether the agent finds a target while walking the current step. Code to run several agents in parallel.</p>
+<p><em>Considering the agent walks, it checks whether the agent finds a target while walking the current step. Code to run several agents in parallel.</em></p>
 <table class="table">
 <colgroup>
 <col style="width: 9%">
@@ -443,7 +478,7 @@ ul.task-list li input[type="checkbox"] {
 <blockquote class="blockquote">
 <pre><code> get_config (config, config_path='configurations/learning/')</code></pre>
 </blockquote>
-<p>Get the configuration file of the given experiment and config name (e.g.&nbsp;exp_0).</p>
+<p><em>Get the configuration file of the given experiment and config name (e.g.&nbsp;exp_0).</em></p>
 <table class="table">
 <colgroup>
 <col style="width: 6%">
@@ -488,7 +523,7 @@ ul.task-list li input[type="checkbox"] {
 <blockquote class="blockquote">
 <pre><code> get_policy (results_path, agent, episode)</code></pre>
 </blockquote>
-<p>Gets the policy of an agent at a given episode.</p>
+<p><em>Gets the policy of an agent at a given episode.</em></p>
 <table class="table">
 <colgroup>
 <col style="width: 9%">
@@ -533,7 +568,7 @@ ul.task-list li input[type="checkbox"] {
 <blockquote class="blockquote">
 <pre><code> get_performance (results_path, agent_list, episode_list)</code></pre>
 </blockquote>
-<p>Extract data with the efficiencies obtained in the postlearning analysis.</p>
+<p><em>Extract data with the efficiencies obtained in the postlearning analysis.</em></p>
 <table class="table">
 <colgroup>
 <col style="width: 9%">
@@ -578,7 +613,7 @@ ul.task-list li input[type="checkbox"] {
 <blockquote class="blockquote">
 <pre><code> get_opt (path, df)</code></pre>
 </blockquote>
-<p>Get the highest efficiency obtained by the benchmark models and the corresponding parameters.</p>
+<p><em>Get the highest efficiency obtained by the benchmark models and the corresponding parameters.</em></p>
 <table class="table">
 <colgroup>
 <col style="width: 9%">

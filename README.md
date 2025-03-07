@@ -16,9 +16,21 @@ Reinforcement Learning of Optimal Search strategies
 </p>
 
 This library builds the necessary tools needed to study, replicate and
-develop the results of the paper: [“Optimal foraging strategies can be
-learned and outperform Lévy walks”](https://arxiv.org/abs/2303.06050) by
-*G. Muñoz-Gil, A. López-Incera, L. J. Fiderer* and *H. J. Briegel*.
+develop reinforcement learning agents for target search problems, as
+well as a benchmark baselines with which to compare. This library is
+based in two different publications:
+
+- [“Optimal foraging strategies can be
+  learned”](https://arxiv.org/abs/2303.06050) by *G. Muñoz-Gil, A.
+  López-Incera, L. J. Fiderer* and *H. J. Briegel*. Here we developed
+  agents able to learn how to forage efficiently in environments with
+  multiple targets.
+
+- [“Learning to reset in target search
+  problems”](https://arxiv.org/abs/2303.06050) by *G. Muñoz-Gil, H. J.
+  Briegel* and *M. Caraglio*. Here we extended the agents to be able to
+  reset to the origin, a feature that has revolutionize target search
+  problems in the last years.
 
 ### Installation
 
@@ -54,6 +66,10 @@ our paper via minimal examples. In particular, we have three tutorials:
   learning </a> : shows how to train a RL agent based on Projective
   Simulation agents to search targets in randomly distributed
   environments as the ones considered in our paper.
+- <a href="tutorials/tutorial_reset.ipynb" style="text-decoration:none">Learning
+  to reset in target search problems </a> : shows how to train a RL
+  agent similar to the previous, but with the ability to reset to the
+  origin, an action that is learned along its spatial dynamics.
 - <a href="tutorials/tutorial_imitation.ipynb" style="text-decoration:none">Imitation
   learning </a> : shows how to train a RL agent to imitate the policy of
   an expert equipped with a pre-trained policy. The latter is based on
@@ -62,41 +78,20 @@ our paper via minimal examples. In particular, we have three tutorials:
   </a> : shows how launch various benchmark strategies with which to
   compare the trained RL agents.
 
-### Package structure
-
-The package contains a set of modules for:
-
-- <a href="lib_nbs/01_rl_framework.ipynb" style="text-decoration:none">Reinforcement
-  learning framework (`rl_opts.rl_framework`)</a> : building foraging
-  environments as well as the RL agents moving on them.
-- <a href="lib_nbs/02_learning_and_benchmark.ipynb" style="text-decoration:none">Learning
-  and benchmarking (`rl_opts.learn_and_bench`)</a> : training RL agents
-  as well as benchmarking them w.r.t. to known foraging strategies.
-- <a href="lib_nbs/04_imitation_learning.ipynb" style="text-decoration:none">Imitation
-  learning (`rl_opts.imitation`)</a>: training RL agents in imitation
-  schemes via foraging experts.
-- <a href="lib_nbs/03_analytics.ipynb" style="text-decoration:none">Analytical
-  functions (`rl_opts.analytics)`</a>: builiding analytical functions
-  for step length distributions as well as tranforming these to foraging
-  policies.
-- <a href="lib_nbs/00_utils.ipynb" style="text-decoration:none">Utils
-  (`rl_opts.utils)`</a>: helpers used throughout the package.
-
 ### Cite
 
 We kindly ask you to cite our paper if any of the previous material was
-useful for your work, here is the bibtex info:
+useful for your work:
 
 ``` latex
-@article{munoz2023optimal,
-  doi = {10.48550/ARXIV.2303.06050},  
-  url = {https://arxiv.org/abs/2303.06050},  
-  author = {Muñoz-Gil, Gorka and López-Incera, Andrea and Fiderer, Lukas J. and Briegel, Hans J.},  
-  title = {Optimal foraging strategies can be learned and outperform Lévy walks},  
-  publisher = {arXiv},  
-  archivePrefix = {arXiv},
-  eprint = {2303.06050},
-  primaryClass = {cond-mat.stat-mech},  
-  year = {2023},
+@article{munoz2024optimal,
+  title={Optimal foraging strategies can be learned},
+  author={Mu{\~n}oz-Gil, Gorka and L{\'o}pez-Incera, Andrea and Fiderer, Lukas J and Briegel, Hans J},
+  journal={New Journal of Physics},
+  volume={26},
+  number={1},
+  pages={013010},
+  year={2024},
+  publisher={IOP Publishing}
 }
 ```
