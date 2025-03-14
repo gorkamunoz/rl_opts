@@ -2,58 +2,58 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://gorkamunoz.github.io/rl_opts/tutorials/tutorial_imitation.html</loc>
-    <lastmod>2025-03-07T12:57:53.393Z</lastmod>
+    <lastmod>2025-03-14T09:11:36.532Z</lastmod>
   </url>
   <url>
     <loc>https://gorkamunoz.github.io/rl_opts/tutorials/tutorial_learning.html</loc>
-    <lastmod>2025-03-07T12:57:53.688Z</lastmod>
+    <lastmod>2025-03-14T09:11:36.841Z</lastmod>
   </url>
   <url>
     <loc>https://gorkamunoz.github.io/rl_opts/tutorials/tutorial_benchmarks.html</loc>
-    <lastmod>2025-03-07T12:57:53.951Z</lastmod>
+    <lastmod>2025-03-14T09:11:37.104Z</lastmod>
   </url>
   <url>
     <loc>https://gorkamunoz.github.io/rl_opts/tutorials/tutorial_reset.html</loc>
-    <lastmod>2025-03-07T12:57:54.323Z</lastmod>
+    <lastmod>2025-03-14T09:11:37.476Z</lastmod>
   </url>
   <url>
     <loc>https://gorkamunoz.github.io/rl_opts/index.html</loc>
-    <lastmod>2025-03-07T12:57:54.533Z</lastmod>
+    <lastmod>2025-03-14T09:11:37.699Z</lastmod>
   </url>
   <url>
     <loc>https://gorkamunoz.github.io/rl_opts/lib_nbs/environments_numba.html</loc>
-    <lastmod>2025-03-07T12:57:54.776Z</lastmod>
+    <lastmod>2025-03-14T09:11:37.945Z</lastmod>
   </url>
   <url>
     <loc>https://gorkamunoz.github.io/rl_opts/lib_nbs/analytics.html</loc>
-    <lastmod>2025-03-07T12:57:55.015Z</lastmod>
+    <lastmod>2025-03-14T09:11:38.177Z</lastmod>
   </url>
   <url>
     <loc>https://gorkamunoz.github.io/rl_opts/lib_nbs/learning_and_benchmark.html</loc>
-    <lastmod>2025-03-07T12:57:55.248Z</lastmod>
+    <lastmod>2025-03-14T09:11:38.417Z</lastmod>
   </url>
   <url>
     <loc>https://gorkamunoz.github.io/rl_opts/lib_nbs/imitation_learning.html</loc>
-    <lastmod>2025-03-07T12:57:55.455Z</lastmod>
+    <lastmod>2025-03-14T09:11:38.635Z</lastmod>
   </url>
   <url>
     <loc>https://gorkamunoz.github.io/rl_opts/lib_nbs/mfpt.html</loc>
-    <lastmod>2025-03-07T12:57:55.965Z</lastmod>
+    <lastmod>2025-03-14T09:11:39.141Z</lastmod>
   </url>
   <url>
     <loc>https://gorkamunoz.github.io/rl_opts/lib_nbs/dev_rl_framework_numba.html</loc>
-    <lastmod>2025-03-07T12:57:56.623Z</lastmod>
+    <lastmod>2025-03-14T09:11:39.781Z</lastmod>
   </url>
   <url>
     <loc>https://gorkamunoz.github.io/rl_opts/lib_nbs/rl_framework.html</loc>
-    <lastmod>2025-03-07T12:57:56.836Z</lastmod>
+    <lastmod>2025-03-14T09:11:40.008Z</lastmod>
   </url>
   <url>
     <loc>https://gorkamunoz.github.io/rl_opts/lib_nbs/utils.html</loc>
-    <lastmod>2025-03-07T12:57:57.067Z</lastmod>
+    <lastmod>2025-03-14T09:11:40.249Z</lastmod>
   </url>
   <url>
     <loc>https://gorkamunoz.github.io/rl_opts/lib_nbs/agents_numba.html</loc>
-    <lastmod>2025-03-07T12:57:57.284Z</lastmod>
+    <lastmod>2025-03-14T09:11:40.466Z</lastmod>
   </url>
 </urlset>

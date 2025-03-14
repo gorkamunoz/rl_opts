@@ -53,7 +53,7 @@
     "href": "tutorials/tutorial_reset.html",
     "title": "Learning to reset in target search problems",
     "section": "",
-    "text": "import numpy as np\nfrom tqdm.notebook import tqdm\nimport matplotlib.pyplot as plt\nimport numba"
+    "text": "In this notebook, we exemplify how to train agents in a target search problems, similar to the foraging problems we deal with in the rest of this library. In this case we consider a single target.\nThe agents we consider here have an important addition: they are able to reset to the origin. As we show in our paper (link to be update), this helps agents reach much better efficiencies compared to a non-resetting strategy.\nLet’s start this tutorial by importing some necesarry libraries:"
   },
   {
     "objectID": "tutorials/tutorial_reset.html#sharp-and-exponential",
@@ -123,7 +123,7 @@
     "href": "lib_nbs/environments_numba.html#d",
     "title": "Reinforcement learning environments",
     "section": "1D",
-    "text": "1D\n\nsource\n\nResetEnv_1D\n\n ResetEnv_1D (*args, **kwargs)\n\nInitialize self. See help(type(self)) for accurate signature.\n\n\nParallel search loops for Reset 1D\n\n\n\nparallel_Reset1D_exp\n\n parallel_Reset1D_exp (T, rates, L, D)\n\nRuns the Reset 1D loop in parallel for different exponential resetting rates.\n\n\n\nparallel_Reset1D_sharp\n\n parallel_Reset1D_sharp (T, resets, L, D)\n\nRuns the Reset 1D loop in parallel for different sharp resetting times."
+    "text": "1D\n\nsource\n\nResetEnv_1D\n\n ResetEnv_1D (*args, **kwargs)\n\nInitialize self. See help(type(self)) for accurate signature.\n\n\nParallel search loops for Reset 1D\n\nsource\n\n\nparallel_Reset1D_exp\n\n parallel_Reset1D_exp (T, rates, L, D)\n\nRuns the Reset 1D loop in parallel for different exponential resetting rates.\n\nsource\n\n\nparallel_Reset1D_sharp\n\n parallel_Reset1D_sharp (T, resets, L, D)\n\nRuns the Reset 1D loop in parallel for different sharp resetting times."
   },
   {
     "objectID": "lib_nbs/environments_numba.html#d-1",
@@ -137,14 +137,14 @@
     "href": "lib_nbs/environments_numba.html#parallel-search-loops-for-reset-2d",
     "title": "Reinforcement learning environments",
     "section": "Parallel search loops for Reset 2D",
-    "text": "Parallel search loops for Reset 2D\n\n\nparallel_Reset2D_policies\n\n parallel_Reset2D_policies (T, reset_policies, dist_target, radius_target,\n                            D)\n\n\n\n\nparallel_Reset2D_exp\n\n parallel_Reset2D_exp (T, rates, dist_target, radius_target, D)\n\n\n\n\nparallel_Reset2D_sharp\n\n parallel_Reset2D_sharp (T, resets, dist_target, radius_target, D)"
+    "text": "Parallel search loops for Reset 2D\n\nsource\n\nparallel_Reset2D_policies\n\n parallel_Reset2D_policies (T, reset_policies, dist_target, radius_target,\n                            D)\n\n\nsource\n\n\nparallel_Reset2D_exp\n\n parallel_Reset2D_exp (T, rates, dist_target, radius_target, D)\n\n\nsource\n\n\nparallel_Reset2D_sharp\n\n parallel_Reset2D_sharp (T, resets, dist_target, radius_target, D)"
   },
   {
     "objectID": "lib_nbs/environments_numba.html#search-loop-with-fixed-policy",
     "href": "lib_nbs/environments_numba.html#search-loop-with-fixed-policy",
     "title": "Reinforcement learning environments",
     "section": "Search loop with fixed policy",
-    "text": "Search loop with fixed policy\n\n\nsearch_loop_turn_reset_sharp\n\n search_loop_turn_reset_sharp (T, reset, turn, env)\n\nRuns a search loop of T steps. There is a single counter that works as follows:\n\nStarts at 0\nFor each turn or continue action gets +1\nIf reset or reach the target is set to 0"
+    "text": "Search loop with fixed policy\n\nsource\n\nsearch_loop_turn_reset_sharp\n\n search_loop_turn_reset_sharp (T, reset, turn, env)\n\n*Runs a search loop of T steps. There is a single counter that works as follows:\n\nStarts at 0\nFor each turn or continue action gets +1\nIf reset or reach the target is set to 0*"
   },
   {
     "objectID": "lib_nbs/analytics.html",
