@@ -314,10 +314,11 @@ Reinforcement Learning of Optimal Search strategies
 <p align="center">
 <a href="https://zenodo.org/badge/latestdoi/424986383"><img src="https://zenodo.org/badge/424986383.svg" alt="DOI"></a> <a href="https://badge.fury.io/py/rl_opts"><img src="https://badge.fury.io/py/rl_opts.svg" alt="PyPI version"></a> <a href="https://badge.fury.io/py/b"><img src="https://img.shields.io/badge/python-3.9-red" alt="Python version"></a>
 </p>
-<p>This library builds the necessary tools needed to study, replicate and develop reinforcement learning agents for target search problems, as well as a benchmark baselines with which to compare. This library is based in two different publications:</p>
+<p>This library builds the necessary tools needed to study, replicate and develop reinforcement learning agents for target search problems, as well as a benchmark baselines with which to compare the. This library is based in three different publications:</p>
 <ul>
-<li><p><a href="https://arxiv.org/abs/2303.06050">“Optimal foraging strategies can be learned”</a> by <em>G. Muñoz-Gil, A. López-Incera, L. J. Fiderer</em> and <em>H. J. Briegel</em>. Here we developed agents able to learn how to forage efficiently in environments with multiple targets.</p></li>
-<li><p><a href="https://arxiv.org/abs/2303.06050">“Learning to reset in target search problems”</a> by <em>G. Muñoz-Gil, H. J. Briegel</em> and <em>M. Caraglio</em>. Here we extended the agents to be able to reset to the origin, a feature that has revolutionize target search problems in the last years.</p></li>
+<li><p><a href="https://arxiv.org/abs/2303.06050">“Optimal foraging strategies can be learned”</a> by <em>G. Muñoz-Gil, A. López-Incera, L. J. Fiderer</em> and <em>H. J. Briegel</em> (2024). Here we developed agents able to learn how to forage efficiently in environments with multiple targets.</p></li>
+<li><p><a href="https://pubs.rsc.org/en/content/articlehtml/2024/sm/d3sm01680c">“Learning how to find targets in the micro-world: the case of intermittent active Brownian particles”</a> by <em>M. Caraglio, H. Kaur, L. Fiderer, A. López-Incera, H. J. Briegel, T. Franosch</em>, and <em>G. Muñoz-Gil</em> (2024). In this case, we study the ability of agents to learn how to switch from passive to active diffusion to enhance their target search efficiency.</p></li>
+<li><p><a href="https://arxiv.org/abs/2503.11330">“Learning to reset in target search problems”</a> by <em>G. Muñoz-Gil, H. J. Briegel</em> and <em>M. Caraglio</em> (2025). Here we extended the agents to be able to reset to the origin, a feature that has revolutionize target search problems in the last years.</p></li>
 </ul>
 <section id="installation" class="level3">
 <h3 class="anchored" data-anchor-id="installation">Installation</h3>
@@ -331,25 +332,45 @@ Reinforcement Learning of Optimal Search strategies
 <h3 class="anchored" data-anchor-id="tutorials">Tutorials</h3>
 <p>We have prepared a series of tutorials to guide you through the most important functionalities of the package. You can find them in the <a href="https://github.com/gorkamunoz/rl_opts/tree/master/nbs/tutorials">Tutorials folder</a> of the Github repository or in the Tutorials tab of our <a href="https://gorkamunoz.github.io/rl_opts/">webpage</a>, with notebooks that will help you navigate the package as well as reproducing the results of our paper via minimal examples. In particular, we have three tutorials:</p>
 <ul>
-<li><a href="./tutorials/tutorial_learning.html" style="text-decoration:none">Reinforcement learning </a> : shows how to train a RL agent based on Projective Simulation agents to search targets in randomly distributed environments as the ones considered in our paper.</li>
+<li><a href="./tutorials/tutorial_learning.html" style="text-decoration:none">Learning to forage with RL </a> : shows how to train a RL agent based on Projective Simulation agents to search targets in randomly distributed environments as the ones considered in our paper.</li>
 <li><a href="./tutorials/tutorial_reset.html" style="text-decoration:none">Learning to reset in target search problems </a> : shows how to train a RL agent similar to the previous, but with the ability to reset to the origin, an action that is learned along its spatial dynamics.</li>
 <li><a href="./tutorials/tutorial_imitation.html" style="text-decoration:none">Imitation learning </a> : shows how to train a RL agent to imitate the policy of an expert equipped with a pre-trained policy. The latter is based on the benchmark strategies common in the literature.</li>
-<li><a href="./tutorials/tutorial_benchmarks.html" style="text-decoration:none">Benchmarks </a> : shows how launch various benchmark strategies with which to compare the trained RL agents.</li>
+<li><a href="./tutorials/tutorial_benchmarks.html" style="text-decoration:none">Forangin benchmarks: beyond Lévy walks </a> : shows how launch various benchmark strategies with which to compare the trained RL agents.</li>
 </ul>
 </section>
 <section id="cite" class="level3">
 <h3 class="anchored" data-anchor-id="cite">Cite</h3>
-<p>We kindly ask you to cite our paper if any of the previous material was useful for your work:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode latex code-with-copy"><code class="sourceCode latex"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>@article{munoz2024optimal,</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  title={Optimal foraging strategies can be learned},</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  author={Mu{<span class="fu">\~</span>n}oz-Gil, Gorka and L{<span class="fu">\'</span>o}pez-Incera, Andrea and Fiderer, Lukas J and Briegel, Hans J},</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  journal={New Journal of Physics},</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  volume={26},</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  number={1},</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  pages={013010},</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  year={2024},</span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  publisher={IOP Publishing}</span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>We kindly ask you to cite us if any of the previous material was useful for you. You can either cite this library:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode latex code-with-copy"><code class="sourceCode latex"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>@software{rlopts,</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  author       = {Mu<span class="fu">\~</span>noz-Gil, Gorka and L<span class="fu">\'</span>opez-Incera, Andrea and Caraglio Michele and Fiderer, Lukas J. and Briegel, Hans J.},</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  title        = {<span class="fu">\uppercase</span>{RL}-<span class="fu">\uppercase</span>{O}pt<span class="fu">\uppercase</span>{S}: Reinforcement Learning of Optimal Search Strategies},</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  month        = jan,</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  year         = 2024,</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  publisher    = {Zenodo},</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  version      = {v1.0},</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  doi          = {10.5281/zenodo.10450489},</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  url          = {https://doi.org/10.5281/zenodo.7727873}}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>or the works it’s based on:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode latex code-with-copy"><code class="sourceCode latex"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>@article{munoz2024optimal,</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  title={Optimal foraging strategies can be learned},</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  author={Mu{<span class="fu">\~</span>n}oz-Gil, Gorka and L{<span class="fu">\'</span>o}pez-Incera, Andrea and Fiderer, Lukas J and Briegel, Hans J},</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  journal={New Journal of Physics},</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  volume={26},</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  number={1},</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  pages={013010},</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  year={2024},</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  publisher={IOP Publishing}</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode latex code-with-copy"><code class="sourceCode latex"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>@misc{munoz2025learning,</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>      title={Learning to reset in target search problems}, </span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>      author={Gorka Muñoz-Gil and Hans J. Briegel and Michele Caraglio},</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>      year={2025},</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>      eprint={2503.11330},</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>      archivePrefix={arXiv},</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>      primaryClass={cond-mat.stat-mech},</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>      url={https://arxiv.org/abs/2503.11330}, </span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>```</p>
 
 
 </section>

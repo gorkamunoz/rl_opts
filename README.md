@@ -17,20 +17,28 @@ Reinforcement Learning of Optimal Search strategies
 
 This library builds the necessary tools needed to study, replicate and
 develop reinforcement learning agents for target search problems, as
-well as a benchmark baselines with which to compare. This library is
-based in two different publications:
+well as a benchmark baselines with which to compare the. This library is
+based in three different publications:
 
 - [“Optimal foraging strategies can be
   learned”](https://arxiv.org/abs/2303.06050) by *G. Muñoz-Gil, A.
-  López-Incera, L. J. Fiderer* and *H. J. Briegel*. Here we developed
-  agents able to learn how to forage efficiently in environments with
-  multiple targets.
+  López-Incera, L. J. Fiderer* and *H. J. Briegel* (2024). Here we
+  developed agents able to learn how to forage efficiently in
+  environments with multiple targets.
+
+- [“Learning how to find targets in the micro-world: the case of
+  intermittent active Brownian
+  particles”](https://pubs.rsc.org/en/content/articlehtml/2024/sm/d3sm01680c)
+  by *M. Caraglio, H. Kaur, L. Fiderer, A. López-Incera, H. J.
+  Briegel, T. Franosch*, and *G. Muñoz-Gil* (2024). In this case, we
+  study the ability of agents to learn how to switch from passive to
+  active diffusion to enhance their target search efficiency.
 
 - [“Learning to reset in target search
-  problems”](https://arxiv.org/abs/2303.06050) by *G. Muñoz-Gil, H. J.
-  Briegel* and *M. Caraglio*. Here we extended the agents to be able to
-  reset to the origin, a feature that has revolutionize target search
-  problems in the last years.
+  problems”](https://arxiv.org/abs/2503.11330) by *G. Muñoz-Gil, H. J.
+  Briegel* and *M. Caraglio* (2025). Here we extended the agents to be
+  able to reset to the origin, a feature that has revolutionize target
+  search problems in the last years.
 
 ### Installation
 
@@ -62,9 +70,9 @@ of the Github repository or in the Tutorials tab of our
 will help you navigate the package as well as reproducing the results of
 our paper via minimal examples. In particular, we have three tutorials:
 
-- <a href="tutorials/tutorial_learning.ipynb" style="text-decoration:none">Reinforcement
-  learning </a> : shows how to train a RL agent based on Projective
-  Simulation agents to search targets in randomly distributed
+- <a href="tutorials/tutorial_learning.ipynb" style="text-decoration:none">Learning
+  to forage with RL </a> : shows how to train a RL agent based on
+  Projective Simulation agents to search targets in randomly distributed
   environments as the ones considered in our paper.
 - <a href="tutorials/tutorial_reset.ipynb" style="text-decoration:none">Learning
   to reset in target search problems </a> : shows how to train a RL
@@ -74,14 +82,28 @@ our paper via minimal examples. In particular, we have three tutorials:
   learning </a> : shows how to train a RL agent to imitate the policy of
   an expert equipped with a pre-trained policy. The latter is based on
   the benchmark strategies common in the literature.
-- <a href="tutorials/tutorial_benchmarks.ipynb" style="text-decoration:none">Benchmarks
-  </a> : shows how launch various benchmark strategies with which to
-  compare the trained RL agents.
+- <a href="tutorials/tutorial_benchmarks.ipynb" style="text-decoration:none">Forangin
+  benchmarks: beyond Lévy walks </a> : shows how launch various
+  benchmark strategies with which to compare the trained RL agents.
 
 ### Cite
 
-We kindly ask you to cite our paper if any of the previous material was
-useful for your work:
+We kindly ask you to cite us if any of the previous material was useful
+for you. You can either cite this library:
+
+``` latex
+@software{rlopts,
+  author       = {Mu\~noz-Gil, Gorka and L\'opez-Incera, Andrea and Caraglio Michele and Fiderer, Lukas J. and Briegel, Hans J.},
+  title        = {\uppercase{RL}-\uppercase{O}pt\uppercase{S}: Reinforcement Learning of Optimal Search Strategies},
+  month        = jan,
+  year         = 2024,
+  publisher    = {Zenodo},
+  version      = {v1.0},
+  doi          = {10.5281/zenodo.10450489},
+  url          = {https://doi.org/10.5281/zenodo.7727873}}
+```
+
+or the works it’s based on:
 
 ``` latex
 @article{munoz2024optimal,
@@ -95,3 +117,17 @@ useful for your work:
   publisher={IOP Publishing}
 }
 ```
+
+``` latex
+@misc{munoz2025learning,
+      title={Learning to reset in target search problems}, 
+      author={Gorka Muñoz-Gil and Hans J. Briegel and Michele Caraglio},
+      year={2025},
+      eprint={2503.11330},
+      archivePrefix={arXiv},
+      primaryClass={cond-mat.stat-mech},
+      url={https://arxiv.org/abs/2503.11330}, 
+}
+```
+
+\`\`\`
