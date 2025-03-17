@@ -70,19 +70,19 @@ of the Github repository or in the Tutorials tab of our
 will help you navigate the package as well as reproducing the results of
 our paper via minimal examples. In particular, we have three tutorials:
 
-- <a href="tutorials/tutorial_learning.ipynb" style="text-decoration:none">Learning
+- <a href="nbs/tutorials/tutorial_learning.ipynb" style="text-decoration:none">Learning
   to forage with RL </a> : shows how to train a RL agent based on
   Projective Simulation agents to search targets in randomly distributed
   environments as the ones considered in our paper.
-- <a href="tutorials/tutorial_reset.ipynb" style="text-decoration:none">Learning
+- <a href="nbs/tutorials/tutorial_reset.ipynb" style="text-decoration:none">Learning
   to reset in target search problems </a> : shows how to train a RL
   agent similar to the previous, but with the ability to reset to the
   origin, an action that is learned along its spatial dynamics.
-- <a href="tutorials/tutorial_imitation.ipynb" style="text-decoration:none">Imitation
+- <a href="nbs/tutorials/tutorial_imitation.ipynb" style="text-decoration:none">Imitation
   learning </a> : shows how to train a RL agent to imitate the policy of
   an expert equipped with a pre-trained policy. The latter is based on
   the benchmark strategies common in the literature.
-- <a href="tutorials/tutorial_benchmarks.ipynb" style="text-decoration:none">Forangin
+- <a href="nbs/tutorials/tutorial_benchmarks.ipynb" style="text-decoration:none">Forangin
   benchmarks: beyond Lévy walks </a> : shows how launch various
   benchmark strategies with which to compare the trained RL agents.
 
