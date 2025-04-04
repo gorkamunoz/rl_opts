@@ -17,9 +17,9 @@ import matplotlib.pyplot as plt
 
 # %% ../nbs/lib_nbs/develop/launch_robots.ipynb 11
 # Training spec
-TIME_EP = 20000
-EPISODES = 20000
-N_AGENTS = 100
+TIME_EP = 2000
+EPISODES = 1000
+N_AGENTS = 30 # If you keep it below you number of cores, it runs in a single "run". If not, it needs to do N_AGENTS/N_CORES runs
 
 # Environment 
 Nt = 100; L = 100; r = 1; tau = 3; agent_radius = 2; avg_vel = 1.04; std_vel = 0.67; avg_turn_angle = 0.64; std_turn_angle = 0.41;
@@ -31,12 +31,13 @@ gamma_damping = 0.00001
 eta_glow_damping = 0.1
 initial_prob_distr = (np.array([0.988, 0.012/2, 0.012/2])*np.ones((3, TIME_EP)).transpose()).transpose()
 
-# %% ../nbs/lib_nbs/develop/launch_robots.ipynb 75
+
+# %% ../nbs/lib_nbs/develop/launch_robots.ipynb 73
 import numba
 import numpy as np
 from .robot_search import parallel_robots_trajectories
 
-# %% ../nbs/lib_nbs/develop/launch_robots.ipynb 94
+# %% ../nbs/lib_nbs/develop/launch_robots.ipynb 92
 # Training spec
 TIME_EP = 1000000
 EPISODES = 1

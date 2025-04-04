@@ -6,9 +6,8 @@ __all__ = ['NOPYTHON', 'rotation_arc', 'arc_in_target_numba', 'RobotSearch', 'tr
 
 # %% ../nbs/lib_nbs/06_robot_search.ipynb 5
 import numpy as np
-import numba
 from numba.experimental import jitclass
-from numba import jit, float64, int64, bool_, prange, njit
+from numba import float64, int64, bool_, prange, njit
 import math
 import random
 
@@ -399,11 +398,8 @@ def run_robot_training_parallel(episodes, # Number of episodes
                                 fixed_policy = np.array([[],[]]),
                                 max_no_H_update = int(1e3)
                                ):
-    #mean reward per episode
-    #save_rewards = np.zeros((N_agents, episodes))
     
-    #reward per time step (for single but long episodes)
-    save_rewards = np.zeros((N_agents, time_ep))
+    save_rewards = np.zeros((N_agents, episodes))
     
     if h_mat_allT:
         save_h_matrix = np.zeros((N_agents, episodes, size_state_space[0]))  
@@ -419,19 +415,17 @@ def run_robot_training_parallel(episodes, # Number of episodes
                         initial_prob_distr,fixed_policy,max_no_H_update,'s')
                           
         rews, mat = train_loop_robot(episodes, time_ep, agent, env, h_mat_allT)
+
              
         #mean reward per episode
-        #for t in range(episodes):
-            #save_rewards[n_agent, t] = np.mean(rews[t])
-            
-        #reward per time step (for single but long episodes)
-        save_rewards[n_agent,:] = rews[0,:]
+        for t in range(episodes):
+            save_rewards[n_agent, t] = np.mean(rews[t])
         
         save_h_matrix[n_agent] = mat
         
     return save_rewards, save_h_matrix
 
-# %% ../nbs/lib_nbs/06_robot_search.ipynb 30
+# %% ../nbs/lib_nbs/06_robot_search.ipynb 33
 @njit
 def single_robot_trajectory(time_ep : int, # Length of each run / episode
                             policy : np.array, # Policy of the walker (rows: states. columns:prob of doing each action)
@@ -494,7 +488,7 @@ def single_robot_trajectory(time_ep : int, # Length of each run / episode
                 
     return (number_visited_targets, agent_positions, env.target_positions, rew_per_timestep) 
 
-# %% ../nbs/lib_nbs/06_robot_search.ipynb 31
+# %% ../nbs/lib_nbs/06_robot_search.ipynb 34
 @njit(parallel = True)
 def parallel_robots_trajectories(time_ep : int, # Length of each run / episode
                                  N_agents : int, # Number of agents to consider
