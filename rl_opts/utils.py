@@ -209,6 +209,8 @@ def isBetween_c_Vec_numba(a, b, c, r):
         return mask
 
 # %% ../nbs/lib_nbs/00_utils.ipynb 17
+import random
+
 @njit
 def pareto_sample(alpha, xm, size=1):
     samples = np.zeros(size)
