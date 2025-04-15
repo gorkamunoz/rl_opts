@@ -1471,14 +1471,17 @@ class virtual_ABM:
         ''' Makes a step in the virtual environment and subsequently learns'''
 
         # Given the new displacement, update the environment and get the reward
-        self.env.update_pos_disp(disp)
-        reward = self.env.check_encounter()        
-        self.env.check_bc()
-
-
-        # Constraint that rewards can only be received in the passive phase:
-        if self.current_phase != 0:
+        self.env.update_pos_disp(disp)        
+             
+        # If we are in the passive phase, we check encounters with targets
+        if self.current_phase == 0:
+            reward = self.env.check_encounter()         
+        # If in active phase, we can't get targets hence reward is 0
+        else:
             reward = 0
+
+        # Checking boundary conditions
+        self.env.check_bc()
             
         # Learn
         # Now that we collected the reward, we have s,a,R and can learn        
