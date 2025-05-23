@@ -173,7 +173,21 @@ class TargetEnv():
         self.positions[agent_index][0] = self.positions[agent_index][0] + self.agent_step*np.cos(self.current_directions[agent_index])
         self.positions[agent_index][1] = self.positions[agent_index][1] + self.agent_step*np.sin(self.current_directions[agent_index])
         
-       
+    def update_pos_disp(self, 
+                    displacement, # tuple or array stating (disp_x, disp_y)                        
+                   ):
+        """
+        Updates the position of the agent based on the input displacement
+        """
+        agent_index = 0 # index of the agent. For collective experiments we should put this as input
+        
+        # Save previous position to check if crossing happened
+        self.previous_pos[agent_index] = self.positions[agent_index].copy()
+        
+        #Update position
+        self.positions[agent_index][0] = self.positions[agent_index][0] + displacement[0]
+        self.positions[agent_index][1] = self.positions[agent_index][1] + displacement[1]
+        
     def check_encounter(self,
                        agent_index=0 # Index of the given agent. The default is 0. This is only keeped for future devs
                        ): # True if the agent found a target, else False
