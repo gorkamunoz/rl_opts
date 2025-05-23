@@ -8,7 +8,7 @@ import numpy as np
 
 from ..utils import isBetween_c_Vec, coord_mod
 
-# %% ../../nbs/lib_nbs/01_rl_framework.ipynb 7
+# %% ../../nbs/lib_nbs/01_rl_framework.ipynb 6
 class TargetEnv():
     def __init__(self,
                  Nt,
@@ -228,7 +228,7 @@ class TargetEnv():
         return mask_in_sight, mask_behind
     
 
-# %% ../../nbs/lib_nbs/01_rl_framework.ipynb 9
+# %% ../../nbs/lib_nbs/01_rl_framework.ipynb 8
 class PSAgent():
     
     def __init__(self, num_actions, 
@@ -406,7 +406,7 @@ class PSAgent():
         return action
 
 
-# %% ../../nbs/lib_nbs/01_rl_framework.ipynb 11
+# %% ../../nbs/lib_nbs/01_rl_framework.ipynb 10
 class Forager(PSAgent):
     
     def __init__(self, state_space, num_actions, visual_cone= np.pi, visual_radius=1.0, **kwargs):
