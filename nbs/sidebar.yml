@@ -9,7 +9,10 @@ website:
             - section: RL framework
               contents: 
                   - lib_nbs/01_rl_framework.ipynb
-                  - lib_nbs/01_rl_framework_numba.ipynb
+                  - section: numba implementation
+                    contents:
+                      - lib_nbs/11_environments_numba.ipynb
+                      - lib_nbs/12_agents_numba.ipynb
             - lib_nbs/02_learning_and_benchmark.ipynb
             - lib_nbs/04_imitation_learning.ipynb
             - lib_nbs/03_analytics.ipynb            
@@ -19,3 +22,4 @@ website:
             - tutorials/tutorial_learning.ipynb
             - tutorials/tutorial_benchmarks.ipynb
             - tutorials/tutorial_imitation.ipynb
+            - tutorials/tutorial_reset.ipynb

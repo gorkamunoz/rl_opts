@@ -7,7 +7,7 @@ __all__ = ['learning', 'walk_from_policy', 'agent_efficiency', 'average_search_e
 import numpy as np
 import pathlib
 
-from .rl_framework import TargetEnv, Forager
+from .rl_framework.legacy import TargetEnv, Forager
 from .utils import get_encounters
 
 # %% ../nbs/lib_nbs/02_learning_and_benchmark.ipynb 5

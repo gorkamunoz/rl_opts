@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.335">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>RL-OptS - Reinforcement learning agents</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../style.css">
+<meta property="og:title" content="RL-OptS - Reinforcement learning agents">
+<meta property="og:description" content="This notebook gathers the functions creating different kinds of agents for foraging and target search in various scenarios, adapted for their use in the reinforcement learning paradigm.">
+<meta property="og:site-name" content="RL-OptS">
+<meta name="twitter:title" content="RL-OptS - Reinforcement learning agents">
+<meta name="twitter:description" content="This notebook gathers the functions creating different kinds of agents for foraging and target search in various scenarios, adapted for their use in the reinforcement learning paradigm.">
+<meta name="twitter:card" content="summary">
+</head>
+
+<body class="nav-sidebar floating nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../figs/logo.png" alt="" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">RL-OptS</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/gorkamunoz/rl_opts/"><i class="bi bi-github" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com/gorka_mgm"><i class="bi bi-twitter" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+</ul>
+              <div id="quarto-search" class="" title="Search"></div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title">Reinforcement learning agents</h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">Get started</a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">Documentation</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">RL framework</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth2 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../lib_nbs/rl_framework.html" class="sidebar-item-text sidebar-link">Classic version</a>
+  </div>
+</li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">numba implementation</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth3 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../lib_nbs/environments_numba.html" class="sidebar-item-text sidebar-link">Reinforcement learning environments</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../lib_nbs/agents_numba.html" class="sidebar-item-text sidebar-link active">Reinforcement learning agents</a>
+  </div>
+</li>
+      </ul>
+  </li>
+      </ul>
+  </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../lib_nbs/learning_and_benchmark.html" class="sidebar-item-text sidebar-link">Learning and benchmarking</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../lib_nbs/imitation_learning.html" class="sidebar-item-text sidebar-link">Imitation learning</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../lib_nbs/analytics.html" class="sidebar-item-text sidebar-link">Analytical functions</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../lib_nbs/utils.html" class="sidebar-item-text sidebar-link">Utils</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false">Tutorials</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/tutorial_learning.html" class="sidebar-item-text sidebar-link">Reinforcement Learning</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/tutorial_benchmarks.html" class="sidebar-item-text sidebar-link">Benchmarks</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/tutorial_imitation.html" class="sidebar-item-text sidebar-link">Imitation learning</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tutorials/tutorial_reset.html" class="sidebar-item-text sidebar-link">Learning to reset in target search problems</a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#helpers" id="toc-helpers" class="nav-link active" data-scroll-target="#helpers">Helpers</a>
+  <ul class="collapse">
+  <li><a href="#random-sampling-from-array-with-probs" id="toc-random-sampling-from-array-with-probs" class="nav-link" data-scroll-target="#random-sampling-from-array-with-probs">Random sampling from array with probs</a>
+  <ul class="collapse">
+  <li><a href="#rand_choice_nb" id="toc-rand_choice_nb" class="nav-link" data-scroll-target="#rand_choice_nb">rand_choice_nb</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#forager" id="toc-forager" class="nav-link" data-scroll-target="#forager">Forager</a>
+  <ul class="collapse">
+  <li><a href="#forager-1" id="toc-forager-1" class="nav-link" data-scroll-target="#forager-1">Forager</a></li>
+  </ul></li>
+  <li><a href="#parallel-training-launchers" id="toc-parallel-training-launchers" class="nav-link" data-scroll-target="#parallel-training-launchers">Parallel training launchers</a>
+  <ul class="collapse">
+  <li><a href="#for-resetenv" id="toc-for-resetenv" class="nav-link" data-scroll-target="#for-resetenv">For ResetEnv</a>
+  <ul class="collapse">
+  <li><a href="#search-loop" id="toc-search-loop" class="nav-link" data-scroll-target="#search-loop">Search loop</a></li>
+  <li><a href="#train_loop_reset" id="toc-train_loop_reset" class="nav-link" data-scroll-target="#train_loop_reset">train_loop_reset</a></li>
+  <li><a href="#launchers" id="toc-launchers" class="nav-link" data-scroll-target="#launchers">Launchers</a></li>
+  <li><a href="#run_agents_reset_1d" id="toc-run_agents_reset_1d" class="nav-link" data-scroll-target="#run_agents_reset_1d">run_agents_reset_1D</a></li>
+  <li><a href="#run_agents_reset_2d" id="toc-run_agents_reset_2d" class="nav-link" data-scroll-target="#run_agents_reset_2d">run_agents_reset_2D</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#nbdev" id="toc-nbdev" class="nav-link" data-scroll-target="#nbdev">nbdev</a></li>
+  </ul>
+<div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/gorkamunoz/rl_opts/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
+    </div>
+<!-- main -->
+<main class="content column-body" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title d-none d-lg-block">Reinforcement learning agents</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<!-- WARNING: THIS FILE WAS AUTOGENERATED! DO NOT EDIT! -->
+<p>This notebook gathers the functions creating different kinds of agents for foraging and target search in various scenarios, adapted for their use in the reinforcement learning paradigm.</p>
+<section id="helpers" class="level1">
+<h1>Helpers</h1>
+<section id="random-sampling-from-array-with-probs" class="level2">
+<h2 class="anchored" data-anchor-id="random-sampling-from-array-with-probs">Random sampling from array with probs</h2>
+<hr>
+<p><a href="https://github.com/gorkamunoz/rl_opts/blob/master/rl_opts/rl_framework_numba.py#L82" target="_blank" style="float:right; font-size:smaller">source</a></p>
+<section id="rand_choice_nb" class="level3">
+<h3 class="anchored" data-anchor-id="rand_choice_nb">rand_choice_nb</h3>
+<blockquote class="blockquote">
+<pre><code> rand_choice_nb (arr, prob)</code></pre>
+</blockquote>
+<p><em>:param arr: A 1D numpy array of values to sample from. :param prob: A 1D numpy array of probabilities for the given samples. :return: A random sample from the given array with a given probability.</em></p>
+</section>
+</section>
+</section>
+<section id="forager" class="level1">
+<h1>Forager</h1>
+<hr>
+<p><a href="https://github.com/gorkamunoz/rl_opts/blob/master/rl_opts/rl_framework_numba.py#L1427" target="_blank" style="float:right; font-size:smaller">source</a></p>
+<section id="forager-1" class="level3">
+<h3 class="anchored" data-anchor-id="forager-1">Forager</h3>
+<blockquote class="blockquote">
+<pre><code> Forager (*args, **kwargs)</code></pre>
+</blockquote>
+<p>*This class defines a Forager agent, able to perform actions and learn from rewards based on the PS paradigm.</p>
+<p>This is an updated version from the one used in the original paper (https://doi.org/10.1088/1367-2630/ad19a8), taking into account the improvements made to the H and G matrices proposed by Michele Caraglio in our paper (https://doi.org/10.1039/D3SM01680C).*</p>
+</section>
+</section>
+<section id="parallel-training-launchers" class="level1">
+<h1>Parallel training launchers</h1>
+<section id="for-resetenv" class="level2">
+<h2 class="anchored" data-anchor-id="for-resetenv">For ResetEnv</h2>
+<section id="search-loop" class="level3">
+<h3 class="anchored" data-anchor-id="search-loop">Search loop</h3>
+<hr>
+<p><a href="https://github.com/gorkamunoz/rl_opts/blob/master/rl_opts/rl_framework_numba.py#L2661" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="train_loop_reset" class="level3">
+<h3 class="anchored" data-anchor-id="train_loop_reset">train_loop_reset</h3>
+<blockquote class="blockquote">
+<pre><code> train_loop_reset (episodes, time_ep, agent, env, h_mat_allT=False,
+                   when_save_h_mat=1, reset_after_reward=True)</code></pre>
+</blockquote>
+</section>
+<section id="launchers" class="level3">
+<h3 class="anchored" data-anchor-id="launchers">Launchers</h3>
+<blockquote class="blockquote">
+<p>Note: we have to separate the launchers in 1D and 2D because of <code>numba</code> compilation, which would give errors due to the enviroments asking for different inputs.</p>
+</blockquote>
+<section id="d" class="level4">
+<h4 class="anchored" data-anchor-id="d">1D</h4>
+<hr>
+<p><a href="https://github.com/gorkamunoz/rl_opts/blob/master/rl_opts/rl_framework/numba/agents.py#L380" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+</section>
+<section id="run_agents_reset_1d" class="level3">
+<h3 class="anchored" data-anchor-id="run_agents_reset_1d">run_agents_reset_1D</h3>
+<blockquote class="blockquote">
+<pre><code> run_agents_reset_1D (episodes, time_ep, N_agents, D=0.5, L=10.0,
+                      num_actions=2, size_state_space=array([100]),
+                      gamma_damping=1e-05, eta_glow_damping=0.1,
+                      g_update='s', initial_prob_distr=array([], shape=(2,
+                      0), dtype=float64), policy_type='standard',
+                      beta_softmax=3, fixed_policy=array([], shape=(2, 0),
+                      dtype=float64), max_no_H_update=1000,
+                      h_mat_allT=False, reset_after_reward=True,
+                      num_runs=None)</code></pre>
+</blockquote>
+<table class="table">
+<colgroup>
+<col style="width: 6%">
+<col style="width: 25%">
+<col style="width: 34%">
+<col style="width: 34%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th><strong>Type</strong></th>
+<th><strong>Default</strong></th>
+<th><strong>Details</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>episodes</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td>time_ep</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>N_agents</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td>D</td>
+<td>float</td>
+<td>0.5</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>L</td>
+<td>float</td>
+<td>10.0</td>
+<td>Environment props</td>
+</tr>
+<tr class="even">
+<td>num_actions</td>
+<td>int</td>
+<td>2</td>
+<td>Agent props</td>
+</tr>
+<tr class="odd">
+<td>size_state_space</td>
+<td>ndarray</td>
+<td>[100]</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>gamma_damping</td>
+<td>float</td>
+<td>1e-05</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>eta_glow_damping</td>
+<td>float</td>
+<td>0.1</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>g_update</td>
+<td>str</td>
+<td>s</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>initial_prob_distr</td>
+<td></td>
+<td>[]</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>policy_type</td>
+<td>str</td>
+<td>standard</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>beta_softmax</td>
+<td>int</td>
+<td>3</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>fixed_policy</td>
+<td></td>
+<td>[]</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>max_no_H_update</td>
+<td>int</td>
+<td>1000</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>h_mat_allT</td>
+<td>bool</td>
+<td>False</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>reset_after_reward</td>
+<td>bool</td>
+<td>True</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>num_runs</td>
+<td>NoneType</td>
+<td>None</td>
+<td>When we want N_agent != number of max cores, we use this to make few runs<br>over the selected number of cores, given by N_agents.</td>
+</tr>
+</tbody>
+</table>
+<section id="d-1" class="level4">
+<h4 class="anchored" data-anchor-id="d-1">2D</h4>
+<hr>
+<p><a href="https://github.com/gorkamunoz/rl_opts/blob/master/rl_opts/rl_framework_numba.py#L2788" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+</section>
+<section id="run_agents_reset_2d" class="level3">
+<h3 class="anchored" data-anchor-id="run_agents_reset_2d">run_agents_reset_2D</h3>
+<blockquote class="blockquote">
+<pre><code> run_agents_reset_2D (episodes, time_ep, N_agents, dist_target=10.0,
+                      radius_target=1.0, D=0.5, num_actions=2,
+                      size_state_space=array([100]), gamma_damping=1e-05,
+                      eta_glow_damping=0.1, initial_prob_distr=array([],
+                      shape=(2, 0), dtype=float64),
+                      policy_type='standard', beta_softmax=3,
+                      fixed_policy=array([], shape=(2, 0), dtype=float64),
+                      max_no_H_update=1000, h_mat_allT=False,
+                      when_save_h_mat=1, reset_after_reward=True,
+                      g_update='s', num_runs=None)</code></pre>
+</blockquote>
+<table class="table">
+<colgroup>
+<col style="width: 6%">
+<col style="width: 25%">
+<col style="width: 34%">
+<col style="width: 34%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th><strong>Type</strong></th>
+<th><strong>Default</strong></th>
+<th><strong>Details</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>episodes</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td>time_ep</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>N_agents</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td>dist_target</td>
+<td>float</td>
+<td>10.0</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>radius_target</td>
+<td>float</td>
+<td>1.0</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>D</td>
+<td>float</td>
+<td>0.5</td>
+<td>Environment props</td>
+</tr>
+<tr class="odd">
+<td>num_actions</td>
+<td>int</td>
+<td>2</td>
+<td>Agent props</td>
+</tr>
+<tr class="even">
+<td>size_state_space</td>
+<td>ndarray</td>
+<td>[100]</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>gamma_damping</td>
+<td>float</td>
+<td>1e-05</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>eta_glow_damping</td>
+<td>float</td>
+<td>0.1</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>initial_prob_distr</td>
+<td></td>
+<td>[]</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>policy_type</td>
+<td>str</td>
+<td>standard</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>beta_softmax</td>
+<td>int</td>
+<td>3</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>fixed_policy</td>
+<td></td>
+<td>[]</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>max_no_H_update</td>
+<td>int</td>
+<td>1000</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>h_mat_allT</td>
+<td>bool</td>
+<td>False</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>when_save_h_mat</td>
+<td>int</td>
+<td>1</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>reset_after_reward</td>
+<td>bool</td>
+<td>True</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>g_update</td>
+<td>str</td>
+<td>s</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>num_runs</td>
+<td>NoneType</td>
+<td>None</td>
+<td>When we want N_agent != number of max cores, we use this to make few runs<br>over the selected number of cores, given by N_agents.</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+</section>
+<section id="nbdev" class="level1">
+<h1>nbdev</h1>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
