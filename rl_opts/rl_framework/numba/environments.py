@@ -56,10 +56,17 @@ def isBetween_c_Vec_numba(a, b, c, r):
         #exclude the targets that are beyond the step.
         for i3 in np.argwhere(dotproduct > squaredlengthba):
             mask[i3] = False
+
+        # Include that the b can be inside c + radius
+        diff = b - c 
+        dist2 = np.sum(diff * diff, axis=1)
+        dist2 <= r * r
+        for i4 in np.argwhere(dist2 <= r * r).flatten():
+            mask[i4] = True
             
         return mask
 
-# %% ../../../nbs/lib_nbs/11_environments_numba.ipynb 14
+# %% ../../../nbs/lib_nbs/11_environments_numba.ipynb 15
 @njit
 def pareto_sample(alpha, xm, size=1):
     samples = np.zeros(size)
@@ -69,7 +76,7 @@ def pareto_sample(alpha, xm, size=1):
         samples[ii] = x
     return samples
 
-# %% ../../../nbs/lib_nbs/11_environments_numba.ipynb 16
+# %% ../../../nbs/lib_nbs/11_environments_numba.ipynb 17
 @njit
 def rand_choice_nb(arr, prob):
     """
@@ -79,7 +86,7 @@ def rand_choice_nb(arr, prob):
     """
     return arr[np.searchsorted(np.cumsum(prob), np.random.random(), side="right")]
 
-# %% ../../../nbs/lib_nbs/11_environments_numba.ipynb 18
+# %% ../../../nbs/lib_nbs/11_environments_numba.ipynb 19
 @jitclass([("target_positions", float64[:,:]) ,
            ("current_rewards", float64[:]) ,
            ("kicked", float64[:]) ,
@@ -196,7 +203,9 @@ class TargetEnv():
         """       
         
         encounters = isBetween_c_Vec_numba(self.previous_pos[agent_index], self.positions[agent_index], self.target_positions, self.r)
-        
+
+
+        ''' This first condition only considers that the agent CROSSES the arc of the target '''
         if sum(encounters) > 0: 
             
             #if there is more than 1 encounter, pick the closest to the agent.
@@ -237,6 +246,7 @@ class TargetEnv():
             return 1
         
         else: 
+            
             self.kicked[agent_index] = 0
             self.current_rewards[agent_index] = 0
             return 0   
@@ -250,7 +260,7 @@ class TargetEnv():
         self.positions[agent_index] = (self.positions[agent_index])%self.L
     
 
-# %% ../../../nbs/lib_nbs/11_environments_numba.ipynb 26
+# %% ../../../nbs/lib_nbs/11_environments_numba.ipynb 27
 @njit
 def reset_search_loop(T, # Number of steps 
                       reset_policy, # Reset policy
@@ -278,7 +288,7 @@ def reset_search_loop(T, # Number of steps
     return rewards
 
 
-# %% ../../../nbs/lib_nbs/11_environments_numba.ipynb 28
+# %% ../../../nbs/lib_nbs/11_environments_numba.ipynb 29
 @jitclass
 class ResetEnv_1D():
     L : float
@@ -310,7 +320,7 @@ class ResetEnv_1D():
             return 1
         else: return 0
 
-# %% ../../../nbs/lib_nbs/11_environments_numba.ipynb 30
+# %% ../../../nbs/lib_nbs/11_environments_numba.ipynb 31
 @njit(parallel = True)
 def parallel_Reset1D_sharp(T, resets, L, D):
     '''
@@ -342,7 +352,7 @@ def parallel_Reset1D_exp(T, rates, L, D):
         rews_rate[idxr] = reset_search_loop(T = T, reset_policy = reset_policy, env = env)
     return rews_rate
 
-# %% ../../../nbs/lib_nbs/11_environments_numba.ipynb 34
+# %% ../../../nbs/lib_nbs/11_environments_numba.ipynb 35
 @jitclass([("position", float64[:]),
            ("target_position", float64[:,:]),
            ("previous_pos", float64[:])
@@ -401,7 +411,7 @@ class ResetEnv_2D():
             
         
 
-# %% ../../../nbs/lib_nbs/11_environments_numba.ipynb 36
+# %% ../../../nbs/lib_nbs/11_environments_numba.ipynb 37
 @njit(parallel = True)
 def parallel_Reset2D_sharp(T, resets, dist_target, radius_target, D):
     rews_reset = np.zeros_like(resets)
@@ -442,7 +452,7 @@ def parallel_Reset2D_policies(T, reset_policies, dist_target, radius_target, D):
         
     return rews_rate
 
-# %% ../../../nbs/lib_nbs/11_environments_numba.ipynb 39
+# %% ../../../nbs/lib_nbs/11_environments_numba.ipynb 40
 @jitclass([("position", float64[:]),
            ("target_position", float64[:,:]),
            ("previous_pos", float64[:])
@@ -518,7 +528,7 @@ class TurnResetEnv_2D():
                 self.previous_pos = self.position.copy()
                 return 0
 
-# %% ../../../nbs/lib_nbs/11_environments_numba.ipynb 41
+# %% ../../../nbs/lib_nbs/11_environments_numba.ipynb 42
 def search_loop_turn_reset_sharp(T, reset, turn, env):
     """
     Runs a search loop of T steps. There is a single counter that works as follows:
