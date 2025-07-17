@@ -21,11 +21,11 @@ class virtual_ABM:
                  max_counter : int = 500, # Maximum number for the agent's phase counter (i.e. what it gets as station)
                  gamma_damping : float = 0.001, # Gamma of PS
                  eta_glow_damping : float = 0.001, # Glow of PS                 
-                 max_no_H_update : int = int(1e4) # maximum number of steps before an update of H and G matrices.
+                 max_no_H_update : int = int(1e4), # maximum number of steps before an update of H and G matrices.
+                 Nt :int = 1 # Number of targets
                  ):
         
         # Arguments for TargetEnv
-        Nt = 1 # Number of targets
         destructive = True
         lc = np.array([[1.0],[1]]) # Won't enter into effect if destructive = True
         lc_distribution = 'constant' # Won't enter into effect if destructive = True
@@ -67,6 +67,8 @@ class virtual_ABM:
             self.epoch = -1 # we start at -1 because init_epoch will sum one and set it at zero.
             self.init_epoch()
 
+        self.done = False
+
     def init_virtual_env(self):
         # Current phase is: 0 for passive, 1 for active
         self.current_phase = 0 # Starting always in the passive phase
@@ -101,7 +103,7 @@ class virtual_ABM:
 
         # Checking boundary conditions
         self.env.check_bc()
-            
+         
         # Learn
         # Now that we collected the reward, we have s,a,R and can learn        
         # First we update the H update counter
@@ -129,7 +131,10 @@ class virtual_ABM:
         if self.num_episodes:
             self.t_ep += 1
             if self.t_ep == self.time_ep:
-                self.init_epoch()
+                self.done = True
+                # self.init_epoch()
+        if reward != 0:
+            self.done = True
             
 
         if return_reward:
@@ -139,13 +144,15 @@ class virtual_ABM:
         
 
 # %% ../nbs/lib_nbs/20_ABM.ipynb 7
-def get_ABM_motion(x, y, theta, phi, vdt, sigma, sigma_theta, L):
+def get_ABM_motion(x, y, theta, phi, vdt, sigma, sigma_theta, L, bc_periodic=None):
        
-    x += phi * vdt * np.cos(theta) + sigma * np.random.randn() 
-    x = x % L
+    x += phi * vdt * np.cos(theta) + sigma * np.random.randn()     
+    if bc_periodic is not None:
+          x = x % L
 
     y += phi * vdt * np.sin(theta) + sigma * np.random.randn() 
-    y = y % L
+    if bc_periodic is not None:
+        y = y % L
 
     theta += sigma_theta * np.random.randn() 
     return x, y, theta
