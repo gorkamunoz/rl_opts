@@ -22,7 +22,8 @@ class virtual_ABM:
                  gamma_damping : float = 0.001, # Gamma of PS
                  eta_glow_damping : float = 0.001, # Glow of PS                 
                  max_no_H_update : int = int(1e4), # maximum number of steps before an update of H and G matrices.
-                 Nt :int = 1 # Number of targets
+                 Nt :int = 1, # Number of targets
+                 g_update : str = 's' # How to update the G matrix. Either 's' for sum or 'r' for replace
                  ):
         
         # Arguments for TargetEnv
@@ -46,7 +47,9 @@ class virtual_ABM:
         
         self.agent = Forager(num_actions,size_state_space,gamma_damping,
                              eta_glow_damping,policy_type,beta_softmax,
-                             initial_prob_distr,fixed_policy,max_no_H_update)       
+                             initial_prob_distr,fixed_policy,max_no_H_update, g_update) 
+
+    
         
         self.num_episodes = num_episodes
         self.time_ep = time_ep
@@ -107,7 +110,8 @@ class virtual_ABM:
         # Learn
         # Now that we collected the reward, we have s,a,R and can learn        
         # First we update the H update counter
-        self.agent.N_upd_H += 1        
+        self.agent.N_upd_H += 1  
+        self.agent.N_upd_G += 1       
         # If the rewards are not zero or we reach the maximum no upd counters, we update
         if (reward != 0) or (self.agent.N_upd_H == self.agent.max_no_H_update-1):
             self.agent._learn_post_reward(reward)

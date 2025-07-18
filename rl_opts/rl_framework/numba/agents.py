@@ -150,12 +150,17 @@ class Forager():
         
     def _G_upd_single_percept(self, percept, action):
         '''Given a percept-action tuple, updates that element of the G-matrix. Updates the last_upd_G
-        to keep track of when was the matrix updated.'''
-        
+        to keep track of when was the matrix updated.''' 
+
         if self.g_update == 's': # For the current (a,s) tuple, we damp and sum one
-            self.g_matrix[action, percept] = (1 - self.eta_glow_damping)**(self.N_upd_G - self.last_upd_G[action, percept])*self.g_matrix[action, percept] + 1
+            if self.eta_glow_damping == 1:
+                # We do this because below we would have 0**0 = 1
+                self.g_matrix[action, percept] = 1
+            else:
+                self.g_matrix[action, percept] = (1 - self.eta_glow_damping)**(self.N_upd_G - self.last_upd_G[action, percept])*self.g_matrix[action, percept] + 1
         elif self.g_update == 'r':
             self.g_matrix[action, percept] = 1
+        
         
         # Then update the last_upd matrix
         self.last_upd_G[action, percept] = self.N_upd_G
