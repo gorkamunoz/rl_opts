@@ -440,7 +440,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <section id="didactic-implementation-training-a-single-agent" class="level3">
 <h3 class="anchored" data-anchor-id="didactic-implementation-training-a-single-agent">Didactic implementation: training a single agent</h3>
 <p>Here we will focus on implementing all steps of a training loop in a didactic way.</p>
-<p>We start by defining the RL agent. We use the <a href="https://gorkamunoz.github.io/rl_opts/lib_nbs/dev_rl_framework_numba.html#forager"><code>Forager</code></a> provided by the library:</p>
+<p>We start by defining the RL agent. We use the <a href="https://gorkamunoz.github.io/rl_opts/lib_nbs/agents_numba.html#forager"><code>Forager</code></a> provided by the library:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> rl_opts.rl_framework.numba.agents <span class="im">import</span> Forager</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -838,7 +838,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </section>
 <section id="didactic-example-training-a-single-agent" class="level2">
 <h2 class="anchored" data-anchor-id="didactic-example-training-a-single-agent">Didactic example: training a single agent</h2>
-<p>As before, let’s start with the basics! We will first define the new environment and agent. For the later, it is actually the same agent <a href="https://gorkamunoz.github.io/rl_opts/lib_nbs/dev_rl_framework_numba.html#forager"><code>Forager</code></a>, but with now 3 actions:</p>
+<p>As before, let’s start with the basics! We will first define the new environment and agent. For the later, it is actually the same agent <a href="https://gorkamunoz.github.io/rl_opts/lib_nbs/agents_numba.html#forager"><code>Forager</code></a>, but with now 3 actions:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Number of actions of the agent, 3: continue, turn and reset.</span></span>
 <span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>num_actions <span class="op">=</span> <span class="dv">3</span></span>
