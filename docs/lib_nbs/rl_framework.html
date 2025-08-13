@@ -337,20 +337,20 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </div>
 <hr>
-<p><a href="https://github.com/gorkamunoz/rl_opts/blob/master/rl_opts/rl_framework_numba.py#L102" target="_blank" style="float:right; font-size:smaller">source</a></p>
+<p><a href="https://github.com/gorkamunoz/rl_opts/blob/master/rl_opts/rl_framework/numba/environments.py#L92" target="_blank" style="float:right; font-size:smaller">source</a></p>
 <section id="targetenv" class="level3">
 <h3 class="anchored" data-anchor-id="targetenv">TargetEnv</h3>
 <blockquote class="blockquote">
 <pre><code> TargetEnv (Nt, L, r, lc, agent_step=1, boundary_condition='periodic',
             num_agents=1, high_den=5, destructive=False)</code></pre>
 </blockquote>
-<p>Class defining the foraging environment. It includes the methods needed to place several agents to the world.</p>
+<p><em>Class defining the foraging environment. It includes the methods needed to place several agents to the world.</em></p>
 </section>
 </section>
 <section id="projective-simulation-agent" class="level1">
 <h1>Projective Simulation agent</h1>
 <hr>
-<p><a href="https://github.com/gorkamunoz/rl_opts/blob/master/rl_opts/rl_framework_numba.py#L1237" target="_blank" style="float:right; font-size:smaller">source</a></p>
+<p><a href="https://github.com/gorkamunoz/rl_opts/blob/master/rl_opts/rl_framework/legacy.py#L232" target="_blank" style="float:right; font-size:smaller">source</a></p>
 <section id="psagent" class="level3">
 <h3 class="anchored" data-anchor-id="psagent">PSAgent</h3>
 <blockquote class="blockquote">
@@ -358,7 +358,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           eta_glow_damping=0.0, policy_type='standard', beta_softmax=3,
           initial_prob_distr=None, fixed_policy=None)</code></pre>
 </blockquote>
-<p>Base class of a Reinforcement Learning agent based on Projective Simulation, with two-layered network. This class has been adapted from https://github.com/qic-ibk/projectivesimulation</p>
+<p><em>Base class of a Reinforcement Learning agent based on Projective Simulation, with two-layered network. This class has been adapted from https://github.com/qic-ibk/projectivesimulation</em></p>
 <table class="table">
 <colgroup>
 <col style="width: 6%">
@@ -430,14 +430,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <section id="general-forager-agent" class="level1">
 <h1>General forager agent</h1>
 <hr>
-<p><a href="https://github.com/gorkamunoz/rl_opts/blob/master/rl_opts/rl_framework_numba.py#L1429" target="_blank" style="float:right; font-size:smaller">source</a></p>
+<p><a href="https://github.com/gorkamunoz/rl_opts/blob/master/rl_opts/rl_framework/numba/agents.py#L32" target="_blank" style="float:right; font-size:smaller">source</a></p>
 <section id="forager" class="level3">
 <h3 class="anchored" data-anchor-id="forager">Forager</h3>
 <blockquote class="blockquote">
 <pre><code> Forager (state_space, num_actions, visual_cone=3.141592653589793,
           visual_radius=1.0, **kwargs)</code></pre>
 </blockquote>
-<p>This class extends the general <a href="https://gorkamunoz.github.io/rl_opts/lib_nbs/rl_framework_numba.html#psagent"><code>PSAgent</code></a> class and adapts it to the foraging scenario·</p>
+<p><em>This class extends the general <a href="https://gorkamunoz.github.io/rl_opts/lib_nbs/rl_framework.html#psagent"><code>PSAgent</code></a> class and adapts it to the foraging scenario·</em></p>
 <table class="table">
 <colgroup>
 <col style="width: 6%">
@@ -480,7 +480,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </tr>
 <tr class="odd">
 <td>kwargs</td>
-<td></td>
+<td>VAR_KEYWORD</td>
 <td></td>
 <td></td>
 </tr>
