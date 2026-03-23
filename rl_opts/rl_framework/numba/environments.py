@@ -56,6 +56,13 @@ def isBetween_c_Vec_numba(a, b, c, r):
         #exclude the targets that are beyond the step.
         for i3 in np.argwhere(dotproduct > squaredlengthba):
             mask[i3] = False
+
+        # Include that the b can be inside c + radius
+        diff = b - c 
+        dist2 = np.sum(diff * diff, axis=1)
+        dist2 <= r * r
+        for i4 in np.argwhere(dist2 <= r * r).flatten():
+            mask[i4] = True
             
         return mask
 
