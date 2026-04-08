@@ -2,7 +2,7 @@
 
 # %% auto 0
 __all__ = ['isBetween_c_Vec', 'coord_mod', 'isBetween_c_Vec_nAgents', 'get_encounters', 'isBetween_c_Vec_numba', 'pareto_sample',
-           'rand_choice_nb', 'get_config', 'get_policy', 'get_performance', 'get_opt']
+           'rand_choice_nb', 'rand_choice_vectorized', 'get_config', 'get_policy', 'get_performance', 'get_opt']
 
 # %% ../nbs/lib_nbs/00_utils.ipynb 3
 import numpy as np
@@ -230,12 +230,45 @@ def rand_choice_nb(arr, prob):
     """
     return arr[np.searchsorted(np.cumsum(prob), np.random.random(), side="right")]
 
-# %% ../nbs/lib_nbs/00_utils.ipynb 21
+# %% ../nbs/lib_nbs/00_utils.ipynb 20
+@njit
+def rand_choice_vectorized(probs):
+    """
+    Vectorized random choice for multiple agents.
+
+    Parameters
+    ----------
+    probs : np.array
+        A 2D numpy array of shape (num_agents, num_actions) where each row contains
+        the probability distribution for an agent.
+
+    Returns
+    -------
+    actions : np.array
+        A 1D numpy array of sampled actions for each agent.
+    """
+    num_agents, num_actions = probs.shape
+    actions = np.empty(num_agents, dtype=np.int32)
+    
+    # Compute cumulative probabilities manually for each agent
+    for i in range(num_agents):
+        cum_probs = np.zeros(num_actions)
+        cum_probs[0] = probs[i, 0]
+        for j in range(1, num_actions):
+            cum_probs[j] = cum_probs[j - 1] + probs[i, j]
+        
+        # Generate a random number and find the corresponding action
+        random_value = np.random.random()
+        actions[i] = np.searchsorted(cum_probs, random_value, side="right")
+    
+    return actions
+
+# %% ../nbs/lib_nbs/00_utils.ipynb 22
 import yaml
 import numpy as np
 import pandas as pd
 
-# %% ../nbs/lib_nbs/00_utils.ipynb 22
+# %% ../nbs/lib_nbs/00_utils.ipynb 23
 def get_config(config, config_path = 'configurations/learning/'):
     """
     
@@ -261,7 +294,7 @@ def get_config(config, config_path = 'configurations/learning/'):
         config_dict = yaml.safe_load(f)
     return config_dict
 
-# %% ../nbs/lib_nbs/00_utils.ipynb 23
+# %% ../nbs/lib_nbs/00_utils.ipynb 24
 def get_policy(results_path, agent, episode):
     """
     Gets the policy of an agent at a given episode.
@@ -291,7 +324,7 @@ def get_policy(results_path, agent, episode):
     return y
 
 
-# %% ../nbs/lib_nbs/00_utils.ipynb 24
+# %% ../nbs/lib_nbs/00_utils.ipynb 25
 def get_performance(results_path, agent_list, episode_list):
     """
     Extract data with the efficiencies obtained in the postlearning analysis.
@@ -324,7 +357,7 @@ def get_performance(results_path, agent_list, episode_list):
             
     return post_training_performance, sem
 
-# %% ../nbs/lib_nbs/00_utils.ipynb 25
+# %% ../nbs/lib_nbs/00_utils.ipynb 26
 def get_opt(path, df):
     """
     Get the highest efficiency obtained by the benchmark models and the corresponding parameters.
