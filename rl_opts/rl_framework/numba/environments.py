@@ -4,7 +4,7 @@
 __all__ = ['TargetEnv', 'TargetEnv_timedelay', 'reset_search_loop', 'ResetEnv_1D', 'parallel_Reset1D_sharp',
            'parallel_Reset1D_exp', 'ResetEnv_2D', 'parallel_Reset2D_sharp', 'parallel_Reset2D_exp',
            'parallel_Reset2D_policies', 'TurnResetEnv_2D', 'search_loop_turn_reset_sharp', 'check_collective_encounter',
-           'multi_agents_in_cone', 'CollectiveEnv']
+           'multi_agents_in_cone', 'plot_multi_agents_in_cone', 'CollectiveEnv']
 
 # %% ../../../nbs/lib_nbs/11_environments_numba.ipynb 4
 import numpy as np
@@ -752,7 +752,76 @@ def multi_agents_in_cone(positions, directions, k, theta, return_idx=False):
     
     return counts, agent_indices_in_cone
 
-# %% ../../../nbs/lib_nbs/11_environments_numba.ipynb 44
+# %% ../../../nbs/lib_nbs/11_environments_numba.ipynb 42
+def plot_multi_agents_in_cone(positions, directions, k, theta):
+
+    import matplotlib.pyplot as plt
+
+    """
+    Visual test for the multi_agents_in_cone function. Plots the agents, their cones of vision, and highlights agents in each cone.
+
+    Parameters:
+    - positions: np.ndarray of shape (num_agents, 2), positions of all agents.
+    - directions: np.ndarray of shape (num_agents,), directions of all agents in radians.
+    - k: float, visual length of the cone.
+    - theta: float, visual angle of the cone in radians.
+    """
+    num_agents = positions.shape[0]
+
+    # Create the plot
+    plt.figure(figsize=(10, 10))
+    plt.scatter(positions[:, 0], positions[:, 1], label="Agents", color="blue", zorder=5)
+
+    for i in range(num_agents):
+        agent_pos = positions[i]
+        agent_dir = directions[i]
+
+        # Highlight the current agent
+        plt.scatter(agent_pos[0], agent_pos[1], color="red", zorder=6)
+
+        # Draw the cone for the current agent
+        cone_left = agent_dir - theta / 2
+        cone_right = agent_dir + theta / 2
+        cone_x = [agent_pos[0], agent_pos[0] + k * np.cos(cone_left), agent_pos[0] + k * np.cos(cone_right)]
+        cone_y = [agent_pos[1], agent_pos[1] + k * np.sin(cone_left), agent_pos[1] + k * np.sin(cone_right)]
+        plt.fill(cone_x, cone_y, color="orange", alpha=0.2, zorder=4)
+
+        # Check which agents are in the cone
+        for j in range(num_agents):
+            if i == j:
+                continue
+
+            # Compute the relative position
+            relative_pos = positions[j] - agent_pos
+            distance = np.sqrt(relative_pos[0]**2 + relative_pos[1]**2)
+
+            if distance <= k:
+                angle = np.arctan2(relative_pos[1], relative_pos[0])
+                angle_diff = np.abs((angle - agent_dir + np.pi) % (2 * np.pi) - np.pi)
+
+                if angle_diff <= theta / 2:
+                    # Highlight agents in the cone
+                    plt.scatter(positions[j, 0], positions[j, 1], color="green", zorder=7)
+
+    # Set plot limits and labels
+    plt.xlim(positions[:, 0].min() - k, positions[:, 0].max() + k)
+    plt.ylim(positions[:, 1].min() - k, positions[:, 1].max() + k)
+    plt.gca().set_aspect('equal', adjustable='box')
+    plt.legend(["Agents", "Selected Agent", "In Cone"])
+    plt.title("Multi-Agent Cones of Vision")
+    plt.xlabel("X Position")
+    plt.ylabel("Y Position")
+    plt.grid()
+    plt.show()
+
+# Example usage
+# positions = np.array([[0, 0], [1, 1], [2.2, 0], [0, 2], [-1, -1]])
+# directions = np.array([0, np.pi/4, np.pi, -np.pi/2, np.pi/2])  # Directions for each agent
+# k = 2.0
+# theta = np.pi / 2  # 90 degrees
+#plot_multi_agents_in_cone(positions, directions, k, theta)
+
+# %% ../../../nbs/lib_nbs/11_environments_numba.ipynb 45
 @jitclass([("target_positions", float64[:,:]),
            ("current_directions", float64[:]) ,
            ("positions", float64[:,:]),

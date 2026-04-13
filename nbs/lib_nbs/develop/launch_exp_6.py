@@ -24,8 +24,8 @@ eta_glow_damping = 0.1
 # State space: [counter, any_agent_in_cone (0/1), rewarded_agent_in_cone (0/1)]
 state_space = np.array([max_counter, 2, 2])
 
-time_ep = 5#5000
-episodes = 5#2000
+time_ep = 5000
+episodes = 2000
 
 out_dir = "/home/gorka/github/rl_opts/nbs/lib_nbs/develop/results/exp_6"
 os.makedirs(out_dir, exist_ok=True)
@@ -57,8 +57,8 @@ for shared_depletion in [True, False]:
                                     )
         
 
-        rewards_path = os.path.join(out_dir, f"rewards_shared_{shared_depletion}_visual_{visual_activated}.npy.npy")
-        h_matrix_path = os.path.join(out_dir, f"h_matrix_shared_{shared_depletion}_visual_{visual_activated}.npy.npy")
+        rewards_path = os.path.join(out_dir, f"rewards_shared_{shared_depletion}_visual_{visual_activated}.npy")
+        h_matrix_path = os.path.join(out_dir, f"h_matrix_shared_{shared_depletion}_visual_{visual_activated}.npy")
 
         np.save(rewards_path, rews)
         np.save(h_matrix_path, mats)
