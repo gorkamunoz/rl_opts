@@ -143,6 +143,15 @@ checklink/cookies.txt
 
 *.pdf
 
+# Office / presentation files (personal progress reports, not part of codebase)
+*.pptx
+*.ppt
+# Office temp/lock files (created when a file is open)
+~$*
+
+# Temporary runtime data directories
+nbs/tutorials/tmp/
+
 data_step_distr_plot/
 nbs/results_fpt/
 nbs/scalings_mfpt/

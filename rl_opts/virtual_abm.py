@@ -54,6 +54,9 @@ class virtual_ABM:
         self.num_episodes = num_episodes
         self.time_ep = time_ep
 
+        #I added this line
+        self.done = False
+
         self.init_training()
         
 
@@ -91,31 +94,43 @@ class virtual_ABM:
         self.epoch += 1
         self.t_ep = 0
 
-    def step(self, disp, return_reward = False):
+        # I added this line
+        if self.done ==True:
+            self.done = False
+
+    def step(self, disp, return_reward = False, learn = True):
         ''' Makes a step in the virtual environment and subsequently learns'''
 
         # Given the new displacement, update the environment and get the reward
-        self.env.update_pos_disp(disp)        
-             
+        self.env.update_pos_disp(disp)
+
         # If we are in the passive phase, we check encounters with targets
         if self.current_phase == 0:
-            reward = self.env.check_encounter()         
+            crossed = self.env.check_encounter()
+            # This part is edited
+            inside = self.env.check_inside_target()
+            if crossed or inside:
+                reward = 1
+            else:
+                reward = 0
         # If in active phase, we can't get targets hence reward is 0
         else:
             reward = 0
 
         # Checking boundary conditions
         self.env.check_bc()
-         
-        # Learn
-        # Now that we collected the reward, we have s,a,R and can learn        
-        # First we update the H update counter
-        self.agent.N_upd_H += 1  
-        self.agent.N_upd_G += 1       
-        # If the rewards are not zero or we reach the maximum no upd counters, we update
-        if (reward != 0) or (self.agent.N_upd_H == self.agent.max_no_H_update-1):
-            self.agent._learn_post_reward(reward)
-        
+
+        ### This part is edited
+        if learn:
+            # Learn
+            # Now that we collected the reward, we have s,a,R and can learn
+            # First we update the H update counter
+            self.agent.N_upd_H += 1
+            self.agent.N_upd_G += 1
+            # If the rewards are not zero or we reach the maximum no upd counters, we update
+            if (reward != 0) or (self.agent.N_upd_H == self.agent.max_no_H_update-1):
+                self.agent._learn_post_reward(reward)
+            
         
         # Acting
         # Create a state based on current phase and agent state
@@ -134,11 +149,11 @@ class virtual_ABM:
 
         if self.num_episodes:
             self.t_ep += 1
-            if self.t_ep == self.time_ep:
+            if self.t_ep == self.time_ep:   # I modified this line
                 self.done = True
                 # self.init_epoch()
-        if reward != 0:
-            self.done = True
+        # if reward != 0:           # I added a comment to this line
+        #     self.done = True
             
 
         if return_reward:
@@ -148,15 +163,15 @@ class virtual_ABM:
         
 
 # %% ../nbs/lib_nbs/20_ABM.ipynb 7
-def get_ABM_motion(x, y, theta, phi, vdt, sigma, sigma_theta, L, bc_periodic=None):
-       
-    x += phi * vdt * np.cos(theta) + sigma * np.random.randn()     
-    if bc_periodic is not None:
-          x = x % L
+def get_ABM_motion(x, y, theta, phi, vdt, sigma, sigma_theta, L, bc_periodic=True):
 
-    y += phi * vdt * np.sin(theta) + sigma * np.random.randn() 
-    if bc_periodic is not None:
+    x += phi * vdt * np.cos(theta) + sigma * np.random.randn()
+    if bc_periodic is True:
+        x = x % L
+
+    y += phi * vdt * np.sin(theta) + sigma * np.random.randn()
+    if bc_periodic is True:
         y = y % L
 
-    theta += sigma_theta * np.random.randn() 
+    theta += sigma_theta * np.random.randn()
     return x, y, theta
