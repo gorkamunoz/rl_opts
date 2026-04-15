@@ -923,7 +923,7 @@ class CollectiveEnv():
         for i in range(self.num_agents):
             if self._reward_steps_remaining[i] != -1:
                 self._reward_steps_remaining[i] += 1
-                if self._reward_steps_remaining[i] == self.tau_reward:
+                if self._reward_steps_remaining[i] > self.tau_reward:
                     self.rewarded_agents[i] = 0
                     self._reward_steps_remaining[i] = -1
         

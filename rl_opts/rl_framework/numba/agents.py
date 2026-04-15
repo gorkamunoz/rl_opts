@@ -1134,7 +1134,7 @@ def run_collective(episodes, time_ep, runs,
         rews, mat = train_loop_collective(episodes, time_ep, env, agents, state_space[0], visual_activated)
 
         for t in range(episodes):
-            save_rewards[n_run, :, t] = rews[:, t].mean()
+            save_rewards[n_run, :, t] = rews[:, t]
         save_h_matrix[n_run] = mat
 
     return save_rewards, save_h_matrix
