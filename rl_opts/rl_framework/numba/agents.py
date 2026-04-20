@@ -1035,8 +1035,9 @@ def train_loop_collective(episodes, time_ep, env, agents, max_counter, visual_ac
             counters = np.minimum(agents.get_state().copy(), np.int64(max_counter - 1))
 
             # 2) Cone features
-            _, agents_spot = env.agents_in_cone()
-            # agents_spot is (num_agents, num_agents) with 1 if j is in i's cone
+            if visual_activated:
+                _, agents_spot = env.agents_in_cone()
+                # agents_spot is (num_agents, num_agents) with 1 if j is in i's cone
 
             # any_agent_in_cone: 1 if row sum > 0
             any_in_cone = np.zeros(agents.num_agents, dtype=np.float64)
