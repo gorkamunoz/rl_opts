@@ -647,13 +647,18 @@ def search_loop_turn_reset_sharp(T, reset, turn, env):
 
 # %% ../../../nbs/lib_nbs/11_environments_numba.ipynb 37
 @njit
-def check_collective_encounter(positions, target_positions, r):
-
+def check_collective_encounter(positions, target_positions, r, shared_depletion = True):
     '''
-    Given the positions of agents and targets, and a radius r, this function checks which agents are within radius r of each target. 
-    If multiple agents are within the radius of the same target, it randomly selects one of them to be assigned to that target. 
-    The output is an array where each element corresponds to an agent and contains the index of the target it is assigned to (or -1 if it is not assigned to any target). 
-    Each agent can only be assigned to one target, and each target can only have one agent assigned to it.
+    Given the positions of agents and targets, and a radius r, this function checks which agents are within radius r of each target.
+
+    If shared_depletion=True (default): at most one agent is assigned per target (random selection among
+    those within radius), preserving competition — targets are globally depleted so only one reward per target per step.
+
+    If shared_depletion=False: each agent is independently assigned to its nearest target within radius,
+    with no competition — multiple agents can encounter the same target in the same step.
+
+    Each agent is assigned to at most one target.
+    Returns an array agent_to_target where agent_to_target[i] is the target index for agent i, or -1 if none.
     '''
 
     # Compute pairwise distances manually (since np.linalg.norm with axis is not supported in Numba)
@@ -664,42 +669,47 @@ def check_collective_encounter(positions, target_positions, r):
     # Boolean mask: agents within each target's radius
     within_radius = distances <= r
 
-    # For each target, get the indices of agents within radius
-    agent_indices = np.arange(len(positions))
-    valid_agents_per_target = [
-        agent_indices[within_radius[:, t]] for t in range(len(target_positions))
-    ]
-
-    # Randomly select one agent per target (if any)
-    selected_agents = []
-    for agents in valid_agents_per_target:
-        if len(agents) > 0:
-            selected = np.random.choice(agents)
-            selected_agents.append(selected)
-        else:
-            selected_agents.append(-1)
-
-    # Ensure uniqueness: only keep the first assignment for each agent (No Numba-friendly way to do this with np.unique, so we do it manually)
-    # _, unique_indices = np.unique(selected_agents, return_index=True)
-    # unique_selected_agents = -1 * np.ones(len(target_positions), dtype=int)
-    # unique_selected_agents[unique_indices] = np.array(selected_agents)[unique_indices]
-
-    # Ensure uniqueness manually
-    unique_selected_agents = -1 * np.ones(len(target_positions), dtype=np.int64)
-    seen_agents = set()
-    for i, agent in enumerate(selected_agents):
-        if agent != -1 and agent not in seen_agents:
-            unique_selected_agents[i] = agent
-            seen_agents.add(agent)
-
-    # Map back to agent_to_target
     agent_to_target = -1 * np.ones(len(positions), dtype=np.int64)
-    for t, a in enumerate(unique_selected_agents):
-        if a != -1:
-            agent_to_target[a] = t
+
+    if shared_depletion:
+        # For each target, get the indices of agents within radius
+        agent_indices = np.arange(len(positions))
+        valid_agents_per_target = [
+            agent_indices[within_radius[:, t]] for t in range(len(target_positions))
+        ]
+
+        # Randomly select one agent per target (if any)
+        selected_agents = []
+        for agents in valid_agents_per_target:
+            if len(agents) > 0:
+                selected = np.random.choice(agents)
+                selected_agents.append(selected)
+            else:
+                selected_agents.append(-1)
+
+        # Ensure uniqueness manually
+        unique_selected_agents = -1 * np.ones(len(target_positions), dtype=np.int64)
+        seen_agents = set()
+        for i, agent in enumerate(selected_agents):
+            if agent != -1 and agent not in seen_agents:
+                unique_selected_agents[i] = agent
+                seen_agents.add(agent)
+
+        # Map back to agent_to_target
+        for t, a in enumerate(unique_selected_agents):
+            if a != -1:
+                agent_to_target[a] = t
+
+    else:
+        # No competition: each agent independently finds its nearest target within radius.
+        # Multiple agents can be assigned to the same target (per-agent depletion handles exclusion).
+        for a in range(len(positions)):
+            targets_near = np.where(within_radius[a, :])[0]
+            if len(targets_near) > 0:
+                min_idx = np.argmin(distances[a, targets_near])
+                agent_to_target[a] = targets_near[min_idx]
 
     return agent_to_target
-
 
 # %% ../../../nbs/lib_nbs/11_environments_numba.ipynb 40
 @njit
