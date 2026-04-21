@@ -976,7 +976,7 @@ class CollectiveEnv():
         current_rewards = np.zeros(self.num_agents)
 
         # Check encounters for all agents
-        encounters = check_collective_encounter(self.positions, self.target_positions, self.r)
+        encounters = check_collective_encounter(self.positions, self.target_positions, self.r, self.shared_depletion)
 
         # Find indices of agents with valid encounters (target_idx != -1)
         valid_encounters_mask = encounters != -1
