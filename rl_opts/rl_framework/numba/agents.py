@@ -530,7 +530,7 @@ class Foragers():
         ''' Returns the counter of all agents in the form of arra'''
         return self.agent_states
 
-# %% ../../../nbs/lib_nbs/12_agents_numba.ipynb 14
+# %% ../../../nbs/lib_nbs/12_agents_numba.ipynb 13
 @jitclass([("agent_states", int64[:]),
            ("size_state_space", int64[:]),
            ("h_matrix", float64[:,:,:]),
@@ -805,7 +805,7 @@ class Foragers_efficient():
         """Same as Foragers.get_state."""
         return self.agent_states
 
-# %% ../../../nbs/lib_nbs/12_agents_numba.ipynb 21
+# %% ../../../nbs/lib_nbs/12_agents_numba.ipynb 20
 @njit
 def train_loop_reset(episodes, time_ep, agent, env, h_mat_allT = False, when_save_h_mat = 1, reset_after_reward = True):  
 
@@ -857,7 +857,7 @@ def train_loop_reset(episodes, time_ep, agent, env, h_mat_allT = False, when_sav
       
     return (save_rewards/time_ep, policy_t) if h_mat_allT else (save_rewards/time_ep, agent.h_matrix)
 
-# %% ../../../nbs/lib_nbs/12_agents_numba.ipynb 25
+# %% ../../../nbs/lib_nbs/12_agents_numba.ipynb 24
 from .environments import ResetEnv_1D
 
 
@@ -936,7 +936,7 @@ def run_agents_reset_1D(episodes, time_ep, N_agents,
         
     return save_rewards, save_h_matrix
 
-# %% ../../../nbs/lib_nbs/12_agents_numba.ipynb 28
+# %% ../../../nbs/lib_nbs/12_agents_numba.ipynb 27
 from .environments import ResetEnv_2D
 
 
@@ -1010,7 +1010,7 @@ def run_agents_reset_2D(episodes, time_ep, N_agents,
         
     return save_rewards, save_h_matrix
 
-# %% ../../../nbs/lib_nbs/12_agents_numba.ipynb 31
+# %% ../../../nbs/lib_nbs/12_agents_numba.ipynb 30
 @njit
 def train_loop_collective(episodes, time_ep, env, agents, max_counter, visual_activated = False):
     """
@@ -1085,7 +1085,7 @@ def train_loop_collective(episodes, time_ep, env, agents, max_counter, visual_ac
 
     return save_rewards, agents.h_matrix
 
-# %% ../../../nbs/lib_nbs/12_agents_numba.ipynb 32
+# %% ../../../nbs/lib_nbs/12_agents_numba.ipynb 31
 from .environments import CollectiveEnv
 
 @njit(parallel=True)
@@ -1113,6 +1113,8 @@ def run_collective(episodes, time_ep, runs,
              policy_type='standard',
              beta_softmax=3,
              max_no_H_update=int(1e3),
+             upd_pos_method = 'RND', # Method to update position. 'RND' for random angle turns, 'LR' for left/right turns.
+             turn_angle = np.pi/4 # Angle for left/right turns if upd_pos_method is 'LR'.
              ):
     """
     Parallel launcher for collective training, where visual features are 
@@ -1130,7 +1132,7 @@ def run_collective(episodes, time_ep, runs,
             initial_h_0, h_0, g_update, max_no_H_update,
         )
         env = CollectiveEnv(num_agents, Nt, L, r, tau, agent_step,
-                            visual_range, visual_angle, shared_depletion, tau_reward)
+                            visual_range, visual_angle, shared_depletion, tau_reward, upd_pos_method, turn_angle)
 
         rews, mat = train_loop_collective(episodes, time_ep, env, agents, state_space[0], visual_activated)
 
