@@ -857,6 +857,8 @@ class CollectiveEnv():
     visual_range : float
     visual_angle : float
     shared_depletion : bool
+    upd_pos_method : str
+    turn_angle : float
     
     
     def __init__(self,                 
@@ -869,7 +871,9 @@ class CollectiveEnv():
                 visual_range = 2.0, # Visual range up to which one agent can see another.
                 visual_angle = np.pi/2, # Visual angle within which one agent can see another.
                 shared_depletion = True, # If True, targets are depleted for all agents when one agent finds it. If False, targets are depleted only for the agent that finds it. The default is True.
-                tau_reward = 1 # Number of update_pos calls after which rewarded_agents falls back to zero.
+                tau_reward = 1, # Number of update_pos calls after which rewarded_agents falls back to zero.
+                upd_pos_method = 'RND', # Method to update position. 'RND' for random angle turns, 'LR' for left/right turns.
+                turn_angle = np.pi/4 # Angle for left/right turns if upd_pos_method is 'LR'.
                 ):
         
         """
@@ -892,7 +896,15 @@ class CollectiveEnv():
         self.shared_depletion = shared_depletion
 
         self.init_env()
-        
+
+        # Defines the way the agents will move. Two options:
+        # RND: if the agent decides to turn, it turns by a random angle.
+        # LR: if the agent decides to turn, it turns either left or right by a fixed angle (defined by self.turn_angle).
+        self.upd_pos_method = upd_pos_method
+
+        # Define turn angles for left and right turns
+        self.turn_angle = turn_angle
+
     def init_env(self):
         """
         Environment initialization.
@@ -939,18 +951,41 @@ class CollectiveEnv():
         
 
     def update_pos(self, 
-                   change_direction, # Whether the agent decided to turn or not.
+                   actions, # Whether the agent decided to turn or not.
                   ):        
         """
-        Updates information of the agent depending on its decision.            
-        """
+        Updates information of the agent depending on its decision.  
+                                            """
                 
-        # If agents decided to change direction, we update it by a random angle.
+        if self.upd_pos_method == 'LR':
+            self._upd_pos_left_right(actions)
+        elif self.upd_pos_method == 'RND':
+            self._upd_pos_random(actions) 
+
+    def _upd_pos_left_right(self, action):
+        """
+        Updates position considering three actions: continue in the same direction, turn left or turn right.
+        """
+
+        # Update directions based on actions
+        self.current_directions[action == 1] += self.turn_angle  # Turn left
+        self.current_directions[action == 2] -= self.turn_angle  # Turn right
+
+        # Update position
+        self.positions[:, 0] = self.positions[:, 0] + self.agent_step * np.cos(self.current_directions)
+        self.positions[:, 1] = self.positions[:, 1] + self.agent_step * np.sin(self.current_directions)
+    
+    
+    def _upd_pos_random(self, change_direction):  
+
+        "Updates position considering two actions, either to continue in the same direction or to turn by a random angle"
+
+         # If agents decided to change direction, we update it by a random angle.
         self.current_directions[change_direction] = np.random.rand(sum(change_direction))*2*np.pi
         
         #Update position
         self.positions[:, 0] = self.positions[:, 0] + self.agent_step*np.cos(self.current_directions)
-        self.positions[:, 1] = self.positions[:, 1] + self.agent_step*np.sin(self.current_directions)        
+        self.positions[:, 1] = self.positions[:, 1] + self.agent_step*np.sin(self.current_directions)     
 
     
     def step(self,
