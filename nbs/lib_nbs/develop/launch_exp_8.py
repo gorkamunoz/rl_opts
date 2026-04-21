@@ -27,12 +27,29 @@ state_space = np.array([max_counter, 2, 2])
 time_ep = 5000
 episodes = 2000
 
+# Saving data
+if os.getlogin() == "gorka":
+    out_dir = "/media/gorka/DATA/rl_opts_data/results_learning/collective/"
+elif os.getlogin() == "c7051165":
+    out_dir = "/scratch/c7051165/github/rl_opts/nbs/lib_nbs/develop/results/"
 
-out_dir = "/scratch/c7051165/github/rl_opts/nbs/lib_nbs/develop/results/exp_8"
+filename = os.path.basename(__file__)  
+exp = filename.replace("launch_exp_", "").replace(".py", "")
+out_dir = os.path.join(out_dir, f"exp_{exp}")
 os.makedirs(out_dir, exist_ok=True)
+print(out_dir)
 
 test_save = os.path.join(out_dir, 'test_save.npy')
 np.save(test_save, np.arange(10))
+
+# Wait three hours
+import time
+# Create progress bar for waiting
+for i in range(3 * 3600):
+    if i % 60 == 0:
+        print(f"Waiting... {i//60} minutes passed")
+    time.sleep(1)
+print("Done waiting, starting experiments")
 
 shared_depletion = False
 for tau in taus:

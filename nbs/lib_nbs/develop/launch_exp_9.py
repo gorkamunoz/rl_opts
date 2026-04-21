@@ -28,7 +28,15 @@ state_space = np.array([max_counter, 2, 2])
 time_ep = 5000
 episodes = 2000
 
-out_dir = "/scratch/c7051165/github/rl_opts/nbs/lib_nbs/develop/results/exp_9"
+# Saving data
+if os.getlogin() == "gorka":
+    out_dir = "/media/gorka/DATA/rl_opts_data/results_learning/collective/"
+elif os.getlogin() == "c7051165":
+    out_dir = "/scratch/c7051165/github/rl_opts/nbs/lib_nbs/develop/results/"
+
+filename = os.path.basename(__file__)  
+exp = filename.replace("launch_exp_", "").replace(".py", "")
+out_dir = os.path.join(out_dir, f"exp_{exp}")
 os.makedirs(out_dir, exist_ok=True)
 
 for tau in taus:
