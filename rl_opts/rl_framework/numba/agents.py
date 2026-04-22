@@ -1012,7 +1012,7 @@ def run_agents_reset_2D(episodes, time_ep, N_agents,
 
 # %% ../../../nbs/lib_nbs/12_agents_numba.ipynb 30
 @njit
-def train_loop_collective(episodes, time_ep, env, agents, max_counter, visual_activated = False):
+def train_loop_collective(episodes, time_ep, env, agents, max_counter, visual_activated = False, upd_pos_method = 'RND'):
     """
     EXP 5: Target-finding reward with 3D state = [counter, any_agent_in_cone, rewarded_agent_in_cone].
 
@@ -1026,6 +1026,9 @@ def train_loop_collective(episodes, time_ep, env, agents, max_counter, visual_ac
         env.init_env()
         agents.agent_states = np.zeros_like(agents.agent_states)
         agents.reset_g()
+        
+        # Debugging
+        # positions = np.zeros((time_ep, env.num_agents, 2))
 
         for t in range(time_ep):
             agents.increment_counters()
@@ -1070,7 +1073,10 @@ def train_loop_collective(episodes, time_ep, env, agents, max_counter, visual_ac
             agents.act(actions)
 
             # Environment step
-            env.update_pos(actions == 1)
+            if upd_pos_method == 'RND':
+                env.update_pos(actions == 1)
+            elif upd_pos_method == 'LR':
+                env.update_pos(actions)                
             env.check_bc()
             env.update_target_state()
             env.update_rewarded_agents()
@@ -1082,6 +1088,12 @@ def train_loop_collective(episodes, time_ep, env, agents, max_counter, visual_ac
             agents._learn_post_reward(rewards)
 
             agents_rewarded = rewards == 1
+        
+        # Debugging
+        #     positions[t] = env.positions
+        # for p in positions.transpose(1, 0, 2):
+        #     plt.plot(p[:, 0], p[:, 1], '-')
+        # plt.show()
 
     return save_rewards, agents.h_matrix
 
@@ -1134,7 +1146,7 @@ def run_collective(episodes, time_ep, runs,
         env = CollectiveEnv(num_agents, Nt, L, r, tau, agent_step,
                             visual_range, visual_angle, shared_depletion, tau_reward, upd_pos_method, turn_angle)
 
-        rews, mat = train_loop_collective(episodes, time_ep, env, agents, state_space[0], visual_activated)
+        rews, mat = train_loop_collective(episodes, time_ep, env, agents, state_space[0], visual_activated, upd_pos_method)
 
         for t in range(episodes):
             save_rewards[n_run, :, t] = rews[:, t]
