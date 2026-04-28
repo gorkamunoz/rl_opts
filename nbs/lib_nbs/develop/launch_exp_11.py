@@ -3,6 +3,7 @@ from rl_opts.rl_framework.numba.environments import CollectiveEnv
 import numba
 import os
 import numpy as np
+import socket
 
 num_agents = 50
 max_counter = 50
@@ -29,7 +30,10 @@ episodes = 2000
 
 # Saving data
 if os.getlogin() == "gorka":
-    out_dir = "/media/gorka/DATA/rl_opts_data/results_learning/collective/"
+    if socket.gethostname() == "gpu-qic":
+        out_dir = "/media/gorka/DATA/rl_opts_data/results_learning/collective/"
+    elif socket.gethostname() == "gpu-ada-qic":
+        out_dir = "/home/gorka/rl_opts/nbs/lib_nbs/develop/results/"
 elif os.getlogin() == "c7051165":
     out_dir = "/scratch/c7051165/github/rl_opts/nbs/lib_nbs/develop/results/"
 
