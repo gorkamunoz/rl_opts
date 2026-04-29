@@ -30,7 +30,7 @@ eta_glow_damping = 0.1
 state_space = np.array([max_counter, 2, 2])
 
 time_ep = 5000
-episodes = 500
+episodes = 2000
 
 # Saving data
 if os.getlogin() == "gorka":
@@ -48,12 +48,20 @@ os.makedirs(out_dir, exist_ok=True)
 # Test save
 np.save(os.path.join(out_dir, 'test_save.npy'), np.arange(10))
 
+import time
+# Create progress bar for waiting
+for i in range(2 * 3600):
+    if i % 60 == 0:
+        print(f"Waiting... {i//60} minutes passed")
+    time.sleep(1)
+print("Done waiting, starting experiments")
+
 shared_depletion = False
 
 for tau_reward in taus_reward:
     for visual_angle in visual_angles:
 
-        file_name = f"_shared_{shared_depletion}_tau_reward_{tau_reward}_visual_angle_{visual_angle}.npy"
+        file_name = f"_shared_{shared_depletion}_tau_reward_{tau_reward}_visual_angle_{visual_angle}_episodes_{episodes}.npy"
         rewards_path = os.path.join(out_dir, 
                                     "rewards"+file_name)
         h_matrix_path = os.path.join(out_dir, 
@@ -81,7 +89,7 @@ for tau_reward in taus_reward:
                                     shared_depletion=shared_depletion,
                                     visual_activated = visual_activated,
                                     # Agent props
-                                    num_actions = 2, s
+                                    num_actions = 2, 
                                     state_space=state_space,
                                     gamma_damping=gamma_damping,
                                     eta_glow_damping=eta_glow_damping,

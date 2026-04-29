@@ -7,7 +7,7 @@ import socket
 
 num_agents = 50
 max_counter = 50
-runs = 5
+runs = 1
 
 Nt = 100; 
 L = 100; # Change wrt EXP 8
@@ -26,7 +26,7 @@ state_space = np.array([max_counter, 2, 2])
 # agents = Foragers_efficient(num_agents, 2, state_space)
 
 time_ep = 5000
-episodes = 2000
+episodes = 200
 
 # Saving data
 if os.getlogin() == "gorka":

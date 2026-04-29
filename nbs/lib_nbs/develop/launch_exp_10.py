@@ -34,7 +34,7 @@ if os.getlogin() == "gorka":
     if socket.gethostname() == "gpu-qic":
         out_dir = "/media/gorka/DATA/rl_opts_data/results_learning/collective/"
     elif socket.gethostname() == "gpu-ada-qic":
-        out_dir = "~/rl_opts/nbs/lib_nbs/develop/results/"
+        out_dir = "/home/gorka/rl_opts/nbs/lib_nbs/develop/results/"
 elif os.getlogin() == "c7051165":
     out_dir = "/scratch/c7051165/github/rl_opts/nbs/lib_nbs/develop/results/"
 
@@ -44,6 +44,9 @@ out_dir = os.path.join(out_dir, f"exp_{exp}")
 os.makedirs(out_dir, exist_ok=True)
 # Test save
 np.save(os.path.join(out_dir, 'test_save.npy'), np.arange(10))
+
+# import time
+# time.sleep(2 * 3600) # Wait three hours
 
 for tau in taus:
     for shared_depletion in [True, False]:
