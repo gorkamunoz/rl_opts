@@ -23,7 +23,8 @@ class virtual_ABM:
                  eta_glow_damping : float = 0.001, # Glow of PS                 
                  max_no_H_update : int = int(1e4), # maximum number of steps before an update of H and G matrices.
                  Nt :int = 1, # Number of targets
-                 g_update : str = 's' # How to update the G matrix. Either 's' for sum or 'r' for replace
+                 g_update : str = 's', # How to update the G matrix. Either 's' for sum or 'r' for replace
+                 initial_prob_distr = np.array([[],[]]) # Initial h-matrix
                  ):
         
         # Arguments for TargetEnv
@@ -42,7 +43,6 @@ class virtual_ABM:
         size_state_space = np.array([2, self.max_counter]) # first is phase (either active or passive). Second is the counter till last change
         policy_type='standard' # Sampling of policy
         beta_softmax=3 # Parameters if policy is softmax
-        initial_prob_distr = np.array([[],[]]) # Initial h-matrix
         fixed_policy=np.array([[],[]]) # If considering a fixed policy
         
         self.agent = Forager(num_actions,size_state_space,gamma_damping,
@@ -53,6 +53,8 @@ class virtual_ABM:
         
         self.num_episodes = num_episodes
         self.time_ep = time_ep
+
+        self.done = False
 
         self.init_training()
         
@@ -91,7 +93,10 @@ class virtual_ABM:
         self.epoch += 1
         self.t_ep = 0
 
-    def step(self, disp, return_reward = False):
+        if self.done:
+            self.done = False
+
+    def step(self, disp, return_reward = False, learn = True):
         ''' Makes a step in the virtual environment and subsequently learns'''
 
         # Given the new displacement, update the environment and get the reward
@@ -107,14 +112,15 @@ class virtual_ABM:
         # Checking boundary conditions
         self.env.check_bc()
          
-        # Learn
-        # Now that we collected the reward, we have s,a,R and can learn        
-        # First we update the H update counter
-        self.agent.N_upd_H += 1  
-        self.agent.N_upd_G += 1       
-        # If the rewards are not zero or we reach the maximum no upd counters, we update
-        if (reward != 0) or (self.agent.N_upd_H == self.agent.max_no_H_update-1):
-            self.agent._learn_post_reward(reward)
+        if learn:
+            # Learn
+            # Now that we collected the reward, we have s,a,R and can learn        
+            # First we update the H update counter
+            self.agent.N_upd_H += 1  
+            self.agent.N_upd_G += 1       
+            # If the rewards are not zero or we reach the maximum no upd counters, we update
+            if (reward != 0) or (self.agent.N_upd_H == self.agent.max_no_H_update-1):
+                self.agent._learn_post_reward(reward)
         
         
         # Acting
@@ -135,9 +141,8 @@ class virtual_ABM:
         if self.num_episodes:
             self.t_ep += 1
             if self.t_ep == self.time_ep:
-                self.done = True
-                # self.init_epoch()
-        if reward != 0:
+                self.done = True        
+        if reward != 0 and self.env.Nt == 1: # If we have a reward and only one target, we are done with the episode
             self.done = True
             
 
@@ -148,14 +153,14 @@ class virtual_ABM:
         
 
 # %% ../nbs/lib_nbs/20_ABM.ipynb 7
-def get_ABM_motion(x, y, theta, phi, vdt, sigma, sigma_theta, L, bc_periodic=None):
+def get_ABM_motion(x, y, theta, phi, vdt, sigma, sigma_theta, L, bc_periodic=True):
        
     x += phi * vdt * np.cos(theta) + sigma * np.random.randn()     
-    if bc_periodic is not None:
+    if bc_periodic is True:
           x = x % L
 
     y += phi * vdt * np.sin(theta) + sigma * np.random.randn() 
-    if bc_periodic is not None:
+    if bc_periodic is True:
         y = y % L
 
     theta += sigma_theta * np.random.randn() 
