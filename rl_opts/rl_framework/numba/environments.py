@@ -139,6 +139,7 @@ class TargetEnv():
         self.num_agents = num_agents
         self.destructive_targets = destructive
         self.lc_distribution = lc_distribution
+        
 
         self.init_env()
         
@@ -157,7 +158,8 @@ class TargetEnv():
         #set positions and directions of the agents
         self.current_directions = np.random.rand(self.num_agents)*2*np.pi
         self.positions = np.random.rand(self.num_agents, 2)*self.L
-        self.previous_pos = self.positions.copy()
+        self.previous_pos = self.positions.copy()       
+
         
 
     def update_pos(self, 
@@ -238,40 +240,16 @@ class TargetEnv():
                     self.positions[agent_index][1] = self.target_positions[idx_first, 1] + current_lc*np.sin(kick_direction)
                 self.kicked[agent_index] = 1
                 #------------
-
+                
             #...and we add the information that this agent got to the target
-            self.current_rewards[agent_index] = 1
+            self.current_rewards[agent_index] = 1              
             return 1
         
         else: 
             
             self.kicked[agent_index] = 0
             self.current_rewards[agent_index] = 0
-            return 0 
-        
-    # I added this function
-    # def check_inside_target(self, agent_index = 0):
-    #     inside_target = np.linalg.norm(self.positions[agent_index]-self.target_positions) <= self.r
-    #     return inside_target
-    # I added this function
-    # def check_inside_target(self, agent_index = 0):
-    #     if self.Nt > 1:
-    #         inside_target = np.linalg.norm(self.positions[agent_index]-self.target_positions, axis = 1) <= self.r
-    #         return inside_target.any()
-    #     else:
-    #         inside_target = np.linalg.norm(self.positions[agent_index]-self.target_positions) <= self.r
-    #         return inside_target
-
-    # This part is edited
-    def check_inside_target(self, agent_index=0):
-        diff = self.positions[agent_index] - self.target_positions  # shape (Nt, 2)
-        if self.Nt > 1:
-            dists = np.sqrt(diff[:, 0]**2 + diff[:, 1]**2)         # manual row-wise norm
-            inside_target = dists <= self.r
-            return inside_target.any()
-        else:
-            inside_target = np.sqrt(diff[0, 0]**2 + diff[0, 1]**2) <= self.r
-            return inside_target
+            return 0   
         
     def check_bc(self):
         """
