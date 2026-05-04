@@ -66,7 +66,7 @@ def isBetween_c_Vec_numba(a, b, c, r):
             
         return mask
 
-# %% ../../../nbs/lib_nbs/11_environments_numba.ipynb 15
+# %% ../../../nbs/lib_nbs/11_environments_numba.ipynb 14
 @njit
 def pareto_sample(alpha, xm, size=1):
     samples = np.zeros(size)
@@ -76,7 +76,7 @@ def pareto_sample(alpha, xm, size=1):
         samples[ii] = x
     return samples
 
-# %% ../../../nbs/lib_nbs/11_environments_numba.ipynb 17
+# %% ../../../nbs/lib_nbs/11_environments_numba.ipynb 16
 @njit
 def rand_choice_nb(arr, prob):
     """
@@ -86,7 +86,7 @@ def rand_choice_nb(arr, prob):
     """
     return arr[np.searchsorted(np.cumsum(prob), np.random.random(), side="right")]
 
-# %% ../../../nbs/lib_nbs/11_environments_numba.ipynb 19
+# %% ../../../nbs/lib_nbs/11_environments_numba.ipynb 18
 @jitclass([("target_positions", float64[:,:]) ,
            ("current_rewards", float64[:]) ,
            ("kicked", float64[:]) ,
@@ -260,7 +260,7 @@ class TargetEnv():
         self.positions[agent_index] = (self.positions[agent_index])%self.L
     
 
-# %% ../../../nbs/lib_nbs/11_environments_numba.ipynb 27
+# %% ../../../nbs/lib_nbs/11_environments_numba.ipynb 28
 @njit
 def reset_search_loop(T, # Number of steps 
                       reset_policy, # Reset policy
@@ -288,7 +288,7 @@ def reset_search_loop(T, # Number of steps
     return rewards
 
 
-# %% ../../../nbs/lib_nbs/11_environments_numba.ipynb 29
+# %% ../../../nbs/lib_nbs/11_environments_numba.ipynb 30
 @jitclass
 class ResetEnv_1D():
     L : float
@@ -320,7 +320,7 @@ class ResetEnv_1D():
             return 1
         else: return 0
 
-# %% ../../../nbs/lib_nbs/11_environments_numba.ipynb 31
+# %% ../../../nbs/lib_nbs/11_environments_numba.ipynb 32
 @njit(parallel = True)
 def parallel_Reset1D_sharp(T, resets, L, D):
     '''
@@ -352,7 +352,7 @@ def parallel_Reset1D_exp(T, rates, L, D):
         rews_rate[idxr] = reset_search_loop(T = T, reset_policy = reset_policy, env = env)
     return rews_rate
 
-# %% ../../../nbs/lib_nbs/11_environments_numba.ipynb 35
+# %% ../../../nbs/lib_nbs/11_environments_numba.ipynb 36
 @jitclass([("position", float64[:]),
            ("target_position", float64[:,:]),
            ("previous_pos", float64[:])
@@ -411,7 +411,7 @@ class ResetEnv_2D():
             
         
 
-# %% ../../../nbs/lib_nbs/11_environments_numba.ipynb 37
+# %% ../../../nbs/lib_nbs/11_environments_numba.ipynb 38
 @njit(parallel = True)
 def parallel_Reset2D_sharp(T, resets, dist_target, radius_target, D):
     rews_reset = np.zeros_like(resets)
@@ -452,7 +452,7 @@ def parallel_Reset2D_policies(T, reset_policies, dist_target, radius_target, D):
         
     return rews_rate
 
-# %% ../../../nbs/lib_nbs/11_environments_numba.ipynb 40
+# %% ../../../nbs/lib_nbs/11_environments_numba.ipynb 41
 @jitclass([("position", float64[:]),
            ("target_position", float64[:,:]),
            ("previous_pos", float64[:])
@@ -528,7 +528,7 @@ class TurnResetEnv_2D():
                 self.previous_pos = self.position.copy()
                 return 0
 
-# %% ../../../nbs/lib_nbs/11_environments_numba.ipynb 42
+# %% ../../../nbs/lib_nbs/11_environments_numba.ipynb 43
 def search_loop_turn_reset_sharp(T, reset, turn, env):
     """
     Runs a search loop of T steps. There is a single counter that works as follows:
