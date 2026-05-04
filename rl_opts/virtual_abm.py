@@ -93,10 +93,10 @@ class virtual_ABM:
         self.epoch += 1
         self.t_ep = 0
 
-        if self.done ==True:
+        if self.done:
             self.done = False
 
-    def step(self, disp, return_reward = False):
+    def step(self, disp, return_reward = False, learn = True):
         ''' Makes a step in the virtual environment and subsequently learns'''
 
         # Given the new displacement, update the environment and get the reward
@@ -112,14 +112,15 @@ class virtual_ABM:
         # Checking boundary conditions
         self.env.check_bc()
          
-        # Learn
-        # Now that we collected the reward, we have s,a,R and can learn        
-        # First we update the H update counter
-        self.agent.N_upd_H += 1  
-        self.agent.N_upd_G += 1       
-        # If the rewards are not zero or we reach the maximum no upd counters, we update
-        if (reward != 0) or (self.agent.N_upd_H == self.agent.max_no_H_update-1):
-            self.agent._learn_post_reward(reward)
+        if learn:
+            # Learn
+            # Now that we collected the reward, we have s,a,R and can learn        
+            # First we update the H update counter
+            self.agent.N_upd_H += 1  
+            self.agent.N_upd_G += 1       
+            # If the rewards are not zero or we reach the maximum no upd counters, we update
+            if (reward != 0) or (self.agent.N_upd_H == self.agent.max_no_H_update-1):
+                self.agent._learn_post_reward(reward)
         
         
         # Acting
