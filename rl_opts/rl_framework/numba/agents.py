@@ -1193,7 +1193,7 @@ def train_loop_collective_directions(episodes, time_ep, env, agents, max_counter
             # 1) Counter (clipped)
             counters = np.minimum(agents.get_state().copy(), np.int64(max_counter - 1))
 
-            # 2) Cone index (Task 2) and direction slots (Task 1)
+            # 2) Cone index and direction slots 
             cone_index = np.zeros(agents.num_agents, dtype=np.float64)
             directions_obs = np.zeros((agents.num_agents, max_agents_directions), dtype=np.float64)
 
@@ -1270,7 +1270,9 @@ def train_loop_collective_directions(episodes, time_ep, env, agents, max_counter
 from .environments import CollectiveDirectionsEnv
 
 @njit(parallel=True)
-def run_collective_directions(episodes, time_ep, runs,
+def run_collective_directions(episodes, time_ep,
+             parallel_runs=4,      # number of runs executed in parallel via prange
+             num_parallel_runs=1,  # number of times the parallel loop is repeated sequentially
              # Environment props
              Nt=100,
              L=100,
@@ -1309,6 +1311,9 @@ def run_collective_directions(episodes, time_ep, runs,
     state_space is built internally:
         [max_counter, 3, num_vals_directions+1, ..., num_vals_directions+1]
         with max_agents_directions repetitions of (num_vals_directions+1).
+
+    Total runs = parallel_runs * num_parallel_runs.
+    The outer loop (num_parallel_runs) is sequential; the inner loop (parallel_runs) runs in parallel.
     """
     # Build state_space from parameters
     state_space = np.empty(2 + max_agents_directions, dtype=np.int64)
@@ -1317,28 +1322,31 @@ def run_collective_directions(episodes, time_ep, runs,
     for k in range(max_agents_directions):
         state_space[2 + k] = num_vals_directions + 1
 
-    save_h_matrix = np.zeros((runs, num_agents, num_actions, state_space.prod()))
-    save_rewards = np.zeros((runs, num_agents, episodes))
+    total_runs = parallel_runs * num_parallel_runs
+    save_h_matrix = np.zeros((total_runs, num_agents, num_actions, state_space.prod()))
+    save_rewards = np.zeros((total_runs, num_agents, episodes))
 
-    for n_run in prange(runs):
-        agents = Foragers_efficient(
-            num_agents, num_actions, state_space,
-            gamma_damping, eta_glow_damping, policy_type, beta_softmax,
-            initial_h_0, h_0, g_update, max_no_H_update,
-        )
-        env = CollectiveDirectionsEnv(num_agents, Nt, L, r, tau, agent_step,
-                                      visual_range, visual_angle, shared_depletion,
-                                      tau_reward, upd_pos_method, turn_angle)
+    for outer in range(num_parallel_runs):
+        for rep in prange(parallel_runs):
+            n_run = outer * parallel_runs + rep
+            agents = Foragers_efficient(
+                num_agents, num_actions, state_space,
+                gamma_damping, eta_glow_damping, policy_type, beta_softmax,
+                initial_h_0, h_0, g_update, max_no_H_update,
+            )
+            env = CollectiveDirectionsEnv(num_agents, Nt, L, r, tau, agent_step,
+                                          visual_range, visual_angle, shared_depletion,
+                                          tau_reward, upd_pos_method, turn_angle)
 
-        rews, mat = train_loop_collective_directions(
-            episodes, time_ep, env, agents, max_counter,
-            max_agents_directions, num_vals_directions,
-            visual_activated, upd_pos_method
-        )
+            rews, mat = train_loop_collective_directions(
+                episodes, time_ep, env, agents, max_counter,
+                max_agents_directions, num_vals_directions,
+                visual_activated, upd_pos_method
+            )
 
-        for t in range(episodes):
-            save_rewards[n_run, :, t] = rews[:, t]
-        save_h_matrix[n_run] = mat
+            for t in range(episodes):
+                save_rewards[n_run, :, t] = rews[:, t]
+            save_h_matrix[n_run] = mat
 
     return save_rewards, save_h_matrix
 
