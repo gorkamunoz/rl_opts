@@ -1,0 +1,34 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "rl_opts"
+dynamic = ["version"]
+description = "Reinforcement Learning of Optimal Search strategies"
+readme = "README.md"
+requires-python = ">=3.8"
+license = {text = "Apache-2.0"}
+authors = [{name = "Gorka Muñoz-Gil", email = "munoz.gil.gorka@gmail.com"}]
+keywords = ['Reiforcement', 'learning,', 'optimal', 'search,', 'foraging,', 'Physics']
+classifiers = ["Natural Language :: English", "Intended Audience :: Developers", "Development Status :: 2 - Pre-Alpha", "Programming Language :: Python :: 3", "Programming Language :: Python :: 3 :: Only"]
+dependencies = ['numpy', 'scipy', 'matplotlib', 'tqdm', 'pandas', 'numba', 'joblib']
+
+[project.urls]
+Repository = "https://github.com/gorkamunoz/rl_opts/"
+Documentation = "https://gorkamunoz.github.io/rl_opts/"
+
+[project.entry-points.nbdev]
+rl_opts = "rl_opts._modidx:d"
+
+[tool.setuptools.dynamic]
+version = {attr = "rl_opts.__version__"}
+
+[tool.setuptools.packages.find]
+include = ["rl_opts"]
+
+[tool.nbdev]
+doc_path = 'docs'
+branch = 'master'
+custom_sidebar = true
+title = 'rl_opts'
