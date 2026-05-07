@@ -1156,23 +1156,35 @@ def run_collective(episodes, time_ep, runs,
 
 # %% ../../../nbs/lib_nbs/12_agents_numba.ipynb #54bdabfe
 @njit
-def train_loop_collective_directions(episodes, time_ep, env, agents, max_counter, visual_activated = False, upd_pos_method = 'RND'):
+def train_loop_collective_directions(episodes, time_ep, env, agents, max_counter,
+                                      max_agents_directions, num_vals_directions,
+                                      visual_activated=False, upd_pos_method='RND'):
     """
-    EXP 5: Target-finding reward with 3D state = [counter, any_agent_in_cone, rewarded_agent_in_cone].
+    EXP 6: Target-finding reward with (2 + max_agents_directions)-dimensional state.
 
-    Uses Foragers_efficient with lazy G updates.
-    state_space should be np.array([max_counter, 2, 2]).
+    State = [counter, cone_index, dir_slot_0, ..., dir_slot_{max_agents_directions-1}]
+    - counter: clipped step counter in [0, max_counter)
+    - cone_index: 0 if no agent in cone, 1 if agents but none rewarded, 2 if rewarded agent in cone
+    - dir_slot_k: 0 if no k-th closest agent in cone, else 1..num_vals_directions (discretized
+                  relative direction with symmetric bins centered at 0, 2pi/n, 4pi/n, ...)
+
+    Uses CollectiveDirectionsEnv (has get_directions_cone, agent_distances,
+    upd_relative_directions, upd_agent_distances).
+    state_space should be np.array([max_counter, 3] + [num_vals_directions+1]*max_agents_directions).
     """
+    obs_size = 2 + max_agents_directions
     save_rewards = np.zeros((agents.num_agents, episodes))
     agents_rewarded = np.zeros(agents.num_agents, dtype=np.bool_)
+
+    # Fixed-size buffers for in-cone agent collection (max size = num_agents)
+    cone_buf_idx = np.empty(agents.num_agents, dtype=np.int64)
+    cone_buf_dist = np.empty(agents.num_agents, dtype=np.float64)
+    taken = np.zeros(agents.num_agents, dtype=np.bool_)
 
     for ep in range(episodes):
         env.init_env()
         agents.agent_states = np.zeros_like(agents.agent_states)
         agents.reset_g()
-        
-        # Debugging
-        # positions = np.zeros((time_ep, env.num_agents, 2))
 
         for t in range(time_ep):
             agents.increment_counters()
@@ -1181,32 +1193,54 @@ def train_loop_collective_directions(episodes, time_ep, env, agents, max_counter
             # 1) Counter (clipped)
             counters = np.minimum(agents.get_state().copy(), np.int64(max_counter - 1))
 
-            # 2) Cone features
-            if visual_activated:
-                _, agents_spot = env.agents_in_cone()
-                # agents_spot is (num_agents, num_agents) with 1 if j is in i's cone
+            # 2) Cone index (Task 2) and direction slots (Task 1)
+            cone_index = np.zeros(agents.num_agents, dtype=np.float64)
+            directions_obs = np.zeros((agents.num_agents, max_agents_directions), dtype=np.float64)
 
-            # any_agent_in_cone: 1 if row sum > 0
-            any_in_cone = np.zeros(agents.num_agents, dtype=np.float64)
             if visual_activated:
-                for i in range(agents.num_agents):
-                    if agents_spot[i].sum() > 0:
-                        any_in_cone[i] = 1.0
+                directions_in_cone = env.get_directions_cone()  # (num_agents, num_agents), -1 if not in cone
 
-            # rewarded_agent_in_cone: 1 if any agent with rewarded_agents==1 is in cone
-            rewarded_in_cone = np.zeros(agents.num_agents, dtype=np.float64)
-            if visual_activated: 
                 for i in range(agents.num_agents):
+                    # Collect agents in cone into fixed buffers
+                    num_in_cone = 0
                     for j in range(agents.num_agents):
-                        if agents_spot[i, j] == 1 and env.rewarded_agents[j] == 1:
-                            rewarded_in_cone[i] = 1.0
-                            break
+                        if directions_in_cone[i, j] != -1.0:
+                            cone_buf_idx[num_in_cone] = j
+                            cone_buf_dist[num_in_cone] = env.agent_distances[i, j]
+                            num_in_cone += 1
 
-            # observations shape: (num_agents, 3)
-            observations = np.empty((agents.num_agents, 3), dtype=np.float64)
+                    if num_in_cone > 0:
+                        # cone_index: 1 if agents in cone, 2 if at least one is rewarded
+                        has_rewarded = False
+                        for k in range(num_in_cone):
+                            if env.rewarded_agents[cone_buf_idx[k]] == 1:
+                                has_rewarded = True
+                                break
+                        cone_index[i] = 2.0 if has_rewarded else 1.0
+
+                        # Select closest max_agents_directions agents (partial selection sort)
+                        num_take = num_in_cone if num_in_cone < max_agents_directions else max_agents_directions
+                        for k in range(num_in_cone):
+                            taken[k] = False
+                        for s in range(num_take):
+                            min_dist = 1e18
+                            min_k = 0
+                            for k in range(num_in_cone):
+                                if not taken[k] and cone_buf_dist[k] < min_dist:
+                                    min_dist = cone_buf_dist[k]
+                                    min_k = k
+                            taken[min_k] = True
+                            j = cone_buf_idx[min_k]
+                            # Symmetric bins: bin k covers [(2k-1)pi/n, (2k+1)pi/n], centered at 2k*pi/n
+                            angle = directions_in_cone[i, j]
+                            bin_idx = int(np.floor(angle * num_vals_directions / (2.0 * np.pi) + 0.5)) % num_vals_directions
+                            directions_obs[i, s] = float(bin_idx + 1)  # +1: 0 reserved for "no agent"
+
+            # observations shape: (num_agents, 2 + max_agents_directions)
+            observations = np.empty((agents.num_agents, obs_size), dtype=np.float64)
             observations[:, 0] = counters.astype(np.float64)
-            observations[:, 1] = any_in_cone
-            observations[:, 2] = rewarded_in_cone
+            observations[:, 1] = cone_index
+            observations[:, 2:] = directions_obs
 
             actions = agents.deliberate(observations)
 
@@ -1218,31 +1252,22 @@ def train_loop_collective_directions(episodes, time_ep, env, agents, max_counter
 
             # Environment step
             if upd_pos_method == 'RND':
-                env.update_pos(actions == 1)
+                rewards = env.step(actions == 1)
             elif upd_pos_method == 'LR':
-                env.update_pos(actions)                
-            env.check_bc()
-            env.update_target_state()
-            env.update_rewarded_agents()
+                rewards = env.step(actions)
 
-            rewards = env.check_encounter()
             rewards[agents_rewarded] = 0  # suppress double reward
 
             save_rewards[:, ep] += rewards
             agents._learn_post_reward(rewards)
 
             agents_rewarded = rewards == 1
-        
-        # Debugging
-        #     positions[t] = env.positions
-        # for p in positions.transpose(1, 0, 2):
-        #     plt.plot(p[:, 0], p[:, 1], '-')
-        # plt.show()
 
     return save_rewards, agents.h_matrix
 
+
 # %% ../../../nbs/lib_nbs/12_agents_numba.ipynb #70e90cb8
-from .environments import CollectiveEnv
+from .environments import CollectiveDirectionsEnv
 
 @njit(parallel=True)
 def run_collective_directions(episodes, time_ep, runs,
@@ -1257,10 +1282,10 @@ def run_collective_directions(episodes, time_ep, runs,
              visual_range=2.0,
              visual_angle=np.pi / 2,
              shared_depletion=True,
-             visual_activated = True,
+             visual_activated=True,
              # Agent props
              num_actions=2,
-             state_space=np.array([50, 2, 2]),
+             max_counter=50,
              gamma_damping=0.00001,
              eta_glow_damping=0.1,
              initial_h_0=False,
@@ -1269,15 +1294,29 @@ def run_collective_directions(episodes, time_ep, runs,
              policy_type='standard',
              beta_softmax=3,
              max_no_H_update=int(1e3),
-             upd_pos_method = 'RND', # Method to update position. 'RND' for random angle turns, 'LR' for left/right turns.
-             turn_angle = np.pi/4 # Angle for left/right turns if upd_pos_method is 'LR'.
+             upd_pos_method='RND',
+             turn_angle=np.pi/4,
+             max_agents_directions=2,
+             num_vals_directions=4,
              ):
     """
-    Parallel launcher for collective training, where visual features are 
-    if yes/no seeing an agent in front and if yes/no seeing a rewarded agent in front:
-    
-    state_space = np.array([max_counter, 2, 2])
+    Parallel launcher for collective training with direction observations.
+
+    Observation = [counter, cone_index, dir_slot_0, ..., dir_slot_{max_agents_directions-1}]
+    - cone_index: 0=no agent in cone, 1=agents but none rewarded, 2=rewarded agent in cone
+    - dir_slot_k: 0=no k-th closest agent in cone, 1..num_vals_directions=discretized relative direction
+
+    state_space is built internally:
+        [max_counter, 3, num_vals_directions+1, ..., num_vals_directions+1]
+        with max_agents_directions repetitions of (num_vals_directions+1).
     """
+    # Build state_space from parameters
+    state_space = np.empty(2 + max_agents_directions, dtype=np.int64)
+    state_space[0] = max_counter
+    state_space[1] = 3
+    for k in range(max_agents_directions):
+        state_space[2 + k] = num_vals_directions + 1
+
     save_h_matrix = np.zeros((runs, num_agents, num_actions, state_space.prod()))
     save_rewards = np.zeros((runs, num_agents, episodes))
 
@@ -1287,13 +1326,19 @@ def run_collective_directions(episodes, time_ep, runs,
             gamma_damping, eta_glow_damping, policy_type, beta_softmax,
             initial_h_0, h_0, g_update, max_no_H_update,
         )
-        env = CollectiveEnv(num_agents, Nt, L, r, tau, agent_step,
-                            visual_range, visual_angle, shared_depletion, tau_reward, upd_pos_method, turn_angle)
+        env = CollectiveDirectionsEnv(num_agents, Nt, L, r, tau, agent_step,
+                                      visual_range, visual_angle, shared_depletion,
+                                      tau_reward, upd_pos_method, turn_angle)
 
-        rews, mat = train_loop_collective(episodes, time_ep, env, agents, state_space[0], visual_activated, upd_pos_method)
+        rews, mat = train_loop_collective_directions(
+            episodes, time_ep, env, agents, max_counter,
+            max_agents_directions, num_vals_directions,
+            visual_activated, upd_pos_method
+        )
 
         for t in range(episodes):
             save_rewards[n_run, :, t] = rews[:, t]
         save_h_matrix[n_run] = mat
 
     return save_rewards, save_h_matrix
+
