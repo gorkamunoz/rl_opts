@@ -31,7 +31,7 @@ eta_glow_damping = 0.1
 # [max_counter, 3, num_vals_directions+1, ..., num_vals_directions+1]
 
 time_ep = 5000
-episodes = 1000
+episodes = 1500
 
 # Saving data
 if os.getlogin() == "gorka":
@@ -52,8 +52,9 @@ np.save(os.path.join(out_dir, 'test_save.npy'), np.arange(10))
 # import time
 # time.sleep(2 * 3600) # Wait three hours
 
+shared_depletion = False
+
 for visual_range in visual_ranges:
-    for shared_depletion in [True, False]:
 
         file_name = f"_shared_{shared_depletion}_VR_{visual_range}_epi_{episodes}.npy"
         rewards_path = os.path.join(out_dir, 
