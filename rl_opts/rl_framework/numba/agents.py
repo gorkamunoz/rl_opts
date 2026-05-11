@@ -1385,6 +1385,8 @@ def train_loop_follow_directions(episodes, time_ep, env, agents,
         agents.reset_g()
 
         for t in range(time_ep):
+            agents.increment_counters()  # required by Foragers_efficient for lazy H/G updates
+
             # --- Build observations (direction slots only; no counter, no cone_index) ---
             cone_index = np.zeros(agents.num_agents, dtype=np.float64)
             directions_obs = np.zeros((agents.num_agents, max_agents_directions), dtype=np.float64)
