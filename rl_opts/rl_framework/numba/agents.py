@@ -2,7 +2,8 @@
 
 # %% auto #0
 __all__ = ['Forager', 'Foragers', 'Foragers_efficient', 'train_loop_reset', 'run_agents_reset_1D', 'run_agents_reset_2D',
-           'train_loop_collective', 'run_collective', 'train_loop_collective_directions', 'run_collective_directions']
+           'train_loop_collective', 'run_collective', 'train_loop_collective_directions', 'run_collective_directions',
+           'train_loop_follow_directions', 'run_follow_directions']
 
 # %% ../../../nbs/lib_nbs/12_agents_numba.ipynb #af595e2e
 import numpy as np
@@ -1350,3 +1351,186 @@ def run_collective_directions(episodes, time_ep,
 
     return save_rewards, save_h_matrix
 
+
+# %% ../../../nbs/lib_nbs/12_agents_numba.ipynb #8153a6fc
+@njit
+def train_loop_follow_directions(episodes, time_ep, env, agents,
+                                  max_agents_directions, num_vals_directions,
+                                  visual_activated=False, upd_pos_method='RND'):
+    """
+    Follow-the-neighbor reward with max_agents_directions-dimensional state.
+
+    State = [dir_slot_0, ..., dir_slot_{max_agents_directions-1}]
+    - dir_slot_k: 0 if no k-th closest agent in cone, else 1..num_vals_directions
+      (discretized relative direction, symmetric bins centered at 0, 2pi/n, 4pi/n, ...)
+
+    Reward = 1 if any agent is in the visual cone (cone_index >= 1), 0 otherwise.
+    Incentivizes agents to keep others in their visual cone, i.e., to follow each other.
+
+    Uses CollectiveDirectionsEnv (get_directions_cone, agent_distances).
+    state_space should be np.array([num_vals_directions+1]*max_agents_directions).
+    """
+    obs_size = max_agents_directions
+    save_rewards = np.zeros((agents.num_agents, episodes))
+    agents_rewarded = np.zeros(agents.num_agents, dtype=np.bool_)
+
+    # Fixed-size buffers for in-cone agent collection (max size = num_agents)
+    cone_buf_idx = np.empty(agents.num_agents, dtype=np.int64)
+    cone_buf_dist = np.empty(agents.num_agents, dtype=np.float64)
+    taken = np.zeros(agents.num_agents, dtype=np.bool_)
+
+    for ep in range(episodes):
+        env.init_env()
+        agents.agent_states = np.zeros_like(agents.agent_states)
+        agents.reset_g()
+
+        for t in range(time_ep):
+            # --- Build observations (direction slots only; no counter, no cone_index) ---
+            cone_index = np.zeros(agents.num_agents, dtype=np.float64)
+            directions_obs = np.zeros((agents.num_agents, max_agents_directions), dtype=np.float64)
+
+            if visual_activated:
+                directions_in_cone = env.get_directions_cone()  # (num_agents, num_agents), -1 if not in cone
+
+                for i in range(agents.num_agents):
+                    num_in_cone = 0
+                    for j in range(agents.num_agents):
+                        if directions_in_cone[i, j] != -1.0:
+                            cone_buf_idx[num_in_cone] = j
+                            cone_buf_dist[num_in_cone] = env.agent_distances[i, j]
+                            num_in_cone += 1
+
+                    if num_in_cone > 0:
+                        # cone_index still computed (used for reward below)
+                        has_rewarded = False
+                        for k in range(num_in_cone):
+                            if env.rewarded_agents[cone_buf_idx[k]] == 1:
+                                has_rewarded = True
+                                break
+                        cone_index[i] = 2.0 if has_rewarded else 1.0
+
+                        # Select closest max_agents_directions agents (partial selection sort)
+                        num_take = num_in_cone if num_in_cone < max_agents_directions else max_agents_directions
+                        for k in range(num_in_cone):
+                            taken[k] = False
+                        for s in range(num_take):
+                            min_dist = 1e18
+                            min_k = 0
+                            for k in range(num_in_cone):
+                                if not taken[k] and cone_buf_dist[k] < min_dist:
+                                    min_dist = cone_buf_dist[k]
+                                    min_k = k
+                            taken[min_k] = True
+                            j = cone_buf_idx[min_k]
+                            # Symmetric bins: bin k covers [(2k-1)pi/n, (2k+1)pi/n], centered at 2k*pi/n
+                            angle = directions_in_cone[i, j]
+                            bin_idx = int(np.floor(angle * num_vals_directions / (2.0 * np.pi) + 0.5)) % num_vals_directions
+                            directions_obs[i, s] = float(bin_idx + 1)  # +1: 0 reserved for "no agent"
+
+            # observations: direction slots only
+            observations = np.empty((agents.num_agents, obs_size), dtype=np.float64)
+            observations[:, :] = directions_obs
+
+            actions = agents.deliberate(observations)
+
+            # Post-reward step: force turn + reset state BEFORE act
+            actions[agents_rewarded] = 1
+            agents.agent_states[agents_rewarded] = 0
+
+            agents.act(actions)
+
+            # Environment step (updates positions; its return value is discarded)
+            if upd_pos_method == 'RND':
+                env.step(actions == 1)
+            elif upd_pos_method == 'LR':
+                env.step(actions)
+
+            # Reward: 1 if any other agent is in the visual cone (cone_index 1 or 2)
+            rewards = np.where(cone_index >= 1.0, 1.0, 0.0)
+            rewards[agents_rewarded] = 0  # suppress double reward
+
+            save_rewards[:, ep] += rewards
+            agents._learn_post_reward(rewards)
+
+            agents_rewarded = rewards == 1
+
+    return save_rewards, agents.h_matrix
+
+# %% ../../../nbs/lib_nbs/12_agents_numba.ipynb #8d2c2990
+from .environments import CollectiveDirectionsEnv
+
+@njit(parallel=True)
+def run_follow_directions(episodes, time_ep,
+             parallel_runs=4,      # number of runs executed in parallel via prange
+             num_parallel_runs=1,  # number of times the parallel loop is repeated sequentially
+             # Environment props
+             Nt=100,
+             L=100,
+             r=0.5,
+             tau=5,
+             tau_reward=1,
+             num_agents=10,
+             agent_step=1,
+             visual_range=2.0,
+             visual_angle=np.pi / 2,
+             shared_depletion=True,
+             visual_activated=True,
+             # Agent props
+             num_actions=2,
+             gamma_damping=0.00001,
+             eta_glow_damping=0.1,
+             initial_h_0=False,
+             h_0=np.zeros((1, 2, 200)),
+             g_update='s',
+             policy_type='standard',
+             beta_softmax=3,
+             max_no_H_update=int(1e3),
+             upd_pos_method='RND',
+             turn_angle=np.pi/4,
+             max_agents_directions=2,
+             num_vals_directions=4,
+             ):
+    """
+    Parallel launcher for follow-the-neighbor training with direction-only observations.
+
+    Observation = [dir_slot_0, ..., dir_slot_{max_agents_directions-1}]
+    Reward = 1 if any agent is in the visual cone (cone_index 1 or 2).
+
+    state_space is built internally:
+        [num_vals_directions+1, ..., num_vals_directions+1]  (max_agents_directions entries)
+
+    Total runs = parallel_runs * num_parallel_runs.
+    The outer loop (num_parallel_runs) is sequential; the inner loop (parallel_runs) runs in parallel.
+    """
+    # Build state_space from parameters (no counter, no cone_index dimension)
+    state_space = np.empty(max_agents_directions, dtype=np.int64)
+    for k in range(max_agents_directions):
+        state_space[k] = num_vals_directions + 1
+
+    total_runs = parallel_runs * num_parallel_runs
+    save_h_matrix = np.zeros((total_runs, num_agents, num_actions, state_space.prod()))
+    save_rewards = np.zeros((total_runs, num_agents, episodes))
+
+    for outer in range(num_parallel_runs):
+        for rep in prange(parallel_runs):
+            n_run = outer * parallel_runs + rep
+            agents = Foragers_efficient(
+                num_agents, num_actions, state_space,
+                gamma_damping, eta_glow_damping, policy_type, beta_softmax,
+                initial_h_0, h_0, g_update, max_no_H_update,
+            )
+            env = CollectiveDirectionsEnv(num_agents, Nt, L, r, tau, agent_step,
+                                          visual_range, visual_angle, shared_depletion,
+                                          tau_reward, upd_pos_method, turn_angle)
+
+            rews, mat = train_loop_follow_directions(
+                episodes, time_ep, env, agents,
+                max_agents_directions, num_vals_directions,
+                visual_activated, upd_pos_method
+            )
+
+            for t in range(episodes):
+                save_rewards[n_run, :, t] = rews[:, t]
+            save_h_matrix[n_run] = mat
+
+    return save_rewards, save_h_matrix
