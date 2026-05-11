@@ -7,7 +7,7 @@ import socket
 
 num_agents = 50
 max_counter = 50
-parallel_runs = numba.get_num_threads()
+parallel_runs = 30
 num_parallel_runs = 1
 
 Nt = 100
@@ -56,7 +56,7 @@ np.save(os.path.join(out_dir, 'test_save.npy'), np.arange(10))
 for tau in taus:
     for shared_depletion in [True, False]:
 
-        file_name = f"_shared_{shared_depletion}_tau_{tau}.npy"
+        file_name = f"_shared_{shared_depletion}_tau_{tau}_tauR_{tau_reward}.npy"
         rewards_path = os.path.join(out_dir, 
                                     "rewards"+file_name)
         h_matrix_path = os.path.join(out_dir, 
