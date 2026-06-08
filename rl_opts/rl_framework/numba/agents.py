@@ -2,8 +2,8 @@
 
 # %% auto #0
 __all__ = ['Forager', 'Foragers', 'Foragers_efficient', 'train_loop_reset', 'run_agents_reset_1D', 'run_agents_reset_2D',
-           'train_loop_collective', 'run_collective', 'train_loop_collective_directions', 'run_collective_directions',
-           'train_loop_follow_directions', 'run_follow_directions']
+           'train_loop_collective', 'run_collective', 'run_collective_dict', 'train_loop_collective_directions',
+           'run_collective_directions', 'train_loop_follow_directions', 'run_follow_directions']
 
 # %% ../../../nbs/lib_nbs/12_agents_numba.ipynb #af595e2e
 import numpy as np
@@ -1154,6 +1154,113 @@ def run_collective(episodes, time_ep, runs,
         save_h_matrix[n_run] = mat
 
     return save_rewards, save_h_matrix
+
+# %% ../../../nbs/lib_nbs/12_agents_numba.ipynb #827ec705
+from .environments import CollectiveEnv
+
+@njit(parallel=True)
+def run_collective_dict(episodes, time_ep,
+             # Environment props — pass as 1-D arrays; use length-1 arrays for fixed values.
+             # At most 2 of the array-valued parameters should have length > 1 (parameter sweep).
+             Nt=np.array([100]),
+             L=np.array([100.0]),
+             r=np.array([0.5]),
+             tau=np.array([5]),
+             tau_reward=np.array([1]),
+             num_agents=10,
+             agent_step=1,
+             visual_range=2.0,
+             visual_angle=np.pi / 2,
+             shared_depletion=True,
+             visual_activated=True,
+             # Agent props
+             num_actions=2,
+             state_space=np.array([50, 2, 2]),
+             gamma_damping=np.array([0.00001]),
+             eta_glow_damping=np.array([0.1]),
+             initial_h_0=False,
+             h_0=np.zeros((1, 2, 200)),
+             g_update='s',
+             policy_type='standard',
+             beta_softmax=3,
+             max_no_H_update=int(1e3),
+             upd_pos_method='RND',
+             turn_angle=np.array([np.pi / 4]),
+             ):
+    """
+    Parallel launcher for collective training sweeping over parameter combinations.
+
+    Up to 2 of the array-valued parameters (Nt, L, r, tau, tau_reward,
+    gamma_damping, eta_glow_damping, turn_angle) may have length > 1; prange
+    iterates over all Cartesian-product combinations.  Fixed parameters should
+    be passed as length-1 arrays (e.g. np.array([0.5]) for r).
+
+    state_space = np.array([max_counter, 2, 2])
+
+    Returns
+    -------
+    save_rewards  : (total_combos, num_agents, episodes)
+    save_h_matrix : (total_combos, num_agents, num_actions, state_space.prod())
+
+    The flat combo index follows the ordering:
+        combo = i_Nt + n_Nt*(i_L + n_L*(i_r + n_r*(i_tau + n_tau*(
+                  i_tau_reward + n_tau_reward*(i_gamma + n_gamma*(
+                    i_eta + n_eta*i_turn))))))
+    """
+    n_Nt         = len(Nt)
+    n_L          = len(L)
+    n_r          = len(r)
+    n_tau        = len(tau)
+    n_tau_reward = len(tau_reward)
+    n_gamma      = len(gamma_damping)
+    n_eta        = len(eta_glow_damping)
+    n_turn       = len(turn_angle)
+    n_VR         = len(visual_range)
+
+    total_combos = n_Nt * n_L * n_r * n_tau * n_tau_reward * n_gamma * n_eta * n_turn * n_VR
+
+    save_h_matrix = np.zeros((total_combos, num_agents, num_actions, state_space.prod()))
+    save_rewards  = np.zeros((total_combos, num_agents, episodes))
+
+    # Precompute cumulative strides for index decomposition
+    stride_L    = n_Nt
+    stride_r    = stride_L    * n_L
+    stride_tau  = stride_r    * n_r
+    stride_tr   = stride_tau  * n_tau
+    stride_gam  = stride_tr   * n_tau_reward
+    stride_eta  = stride_gam  * n_gamma
+    stride_turn = stride_eta  * n_eta
+    stride_VR   = stride_turn * n_turn
+
+    for combo_idx in prange(total_combos):
+        i_Nt         =  combo_idx                % n_Nt
+        i_L          = (combo_idx // stride_L)   % n_L
+        i_r          = (combo_idx // stride_r)   % n_r
+        i_tau        = (combo_idx // stride_tau)  % n_tau
+        i_tau_reward = (combo_idx // stride_tr)  % n_tau_reward
+        i_gamma      = (combo_idx // stride_gam) % n_gamma
+        i_eta        = (combo_idx // stride_eta) % n_eta
+        i_turn       = (combo_idx // stride_turn) % n_turn
+        i_VR         = (combo_idx // stride_VR) % n_VR
+
+        agents = Foragers_efficient(
+            num_agents, num_actions, state_space,
+            gamma_damping[i_gamma], eta_glow_damping[i_eta], policy_type, beta_softmax,
+            initial_h_0, h_0, g_update, max_no_H_update,
+        )
+        env = CollectiveEnv(num_agents, Nt[i_Nt], L[i_L], r[i_r], tau[i_tau], agent_step,
+                            visual_range[i_VR], visual_angle, shared_depletion,
+                            tau_reward[i_tau_reward], upd_pos_method, turn_angle[i_turn])
+
+        rews, mat = train_loop_collective(episodes, time_ep, env, agents, state_space[0],
+                                          visual_activated, upd_pos_method)
+
+        for t in range(episodes):
+            save_rewards[combo_idx, :, t] = rews[:, t]
+        save_h_matrix[combo_idx] = mat
+
+    return save_rewards, save_h_matrix
+
 
 # %% ../../../nbs/lib_nbs/12_agents_numba.ipynb #54bdabfe
 @njit
