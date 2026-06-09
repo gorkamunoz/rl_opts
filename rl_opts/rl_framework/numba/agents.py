@@ -1186,6 +1186,7 @@ def run_collective_dict(episodes, time_ep,
              max_no_H_update=int(1e3),
              upd_pos_method='RND',
              turn_angle=np.array([np.pi / 4]),
+             n_run=1,
              ):
     """
     Parallel launcher for collective training sweeping over parameter combinations.
@@ -1195,12 +1196,15 @@ def run_collective_dict(episodes, time_ep,
     iterates over all Cartesian-product combinations.  Fixed parameters should
     be passed as length-1 arrays (e.g. np.array([0.5]) for r).
 
+    n_run controls how many independent repetitions are run per parameter combo.
+    All repetitions across all combos are executed in parallel via a single prange.
+
     state_space = np.array([max_counter, 2, 2])
 
     Returns
     -------
-    save_rewards  : (total_combos, num_agents, episodes)
-    save_h_matrix : (total_combos, num_agents, num_actions, state_space.prod())
+    save_rewards  : (n_run, total_combos, num_agents, episodes)
+    save_h_matrix : (n_run, total_combos, num_agents, num_actions, state_space.prod())
 
     The flat combo index follows the ordering:
         combo = i_Nt + n_Nt*(i_L + n_L*(i_r + n_r*(i_tau + n_tau*(
@@ -1218,11 +1222,12 @@ def run_collective_dict(episodes, time_ep,
     n_VR         = len(visual_range)
 
     total_combos = n_Nt * n_L * n_r * n_tau * n_tau_reward * n_gamma * n_eta * n_turn * n_VR
+    total_iters  = total_combos * n_run
 
-    save_h_matrix = np.zeros((total_combos, num_agents, num_actions, state_space.prod()))
-    save_rewards  = np.zeros((total_combos, num_agents, episodes))
+    save_h_matrix = np.zeros((n_run, total_combos, num_agents, num_actions, state_space.prod()))
+    save_rewards  = np.zeros((n_run, total_combos, num_agents, episodes))
 
-    # Precompute cumulative strides for index decomposition
+    # Precompute cumulative strides for combo index decomposition
     stride_L    = n_Nt
     stride_r    = stride_L    * n_L
     stride_tau  = stride_r    * n_r
@@ -1232,7 +1237,10 @@ def run_collective_dict(episodes, time_ep,
     stride_turn = stride_eta  * n_eta
     stride_VR   = stride_turn * n_turn
 
-    for combo_idx in prange(total_combos):
+    for flat_idx in prange(total_iters):
+        run_idx   = flat_idx // total_combos
+        combo_idx = flat_idx  % total_combos
+
         i_Nt         =  combo_idx                % n_Nt
         i_L          = (combo_idx // stride_L)   % n_L
         i_r          = (combo_idx // stride_r)   % n_r
@@ -1256,8 +1264,8 @@ def run_collective_dict(episodes, time_ep,
                                           visual_activated, upd_pos_method)
 
         for t in range(episodes):
-            save_rewards[combo_idx, :, t] = rews[:, t]
-        save_h_matrix[combo_idx] = mat
+            save_rewards[run_idx, combo_idx, :, t] = rews[:, t]
+        save_h_matrix[run_idx, combo_idx] = mat
 
     return save_rewards, save_h_matrix
 
