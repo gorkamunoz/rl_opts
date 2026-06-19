@@ -1013,12 +1013,29 @@ def run_agents_reset_2D(episodes, time_ep, N_agents,
 
 # %% ../../../nbs/lib_nbs/12_agents_numba.ipynb #441c899b
 @njit
-def train_loop_collective(episodes, time_ep, env, agents, max_counter, visual_activated = False, upd_pos_method = 'RND'):
+def train_loop_collective(episodes, time_ep, env, agents, max_counter, visual_activated = False, upd_pos_method = 'RND', ablation = None):
     """
-    EXP 5: Target-finding reward with 3D state = [counter, any_agent_in_cone, rewarded_agent_in_cone].
+    Training loop for multiple agents in a 2D environment with collective behavior.
 
-    Uses Foragers_efficient with lazy G updates.
-    state_space should be np.array([max_counter, 2, 2]).
+    Parameters
+    ----------
+    episodes : int
+        Number of episodes to run.
+    time_ep : int
+        Number of time steps per episode.
+    env : ResetEnv_2D
+        The environment in which the agents operate.
+    agents : Foragers_efficient
+        The agents that will interact with the environment.
+    max_counter : int
+        The maximum value for the agents' counters.
+    visual_activated : bool, optional
+        Whether visual perception is activated for the agents. Default is False.
+    upd_pos_method : str, optional
+        The method for updating agent positions ('RND' or 'LR'). Default is 'RND'.
+    ablation : str, optional
+        If 'non_r', the non-rewarded agent state is always kept at 0. If 'r', the rewarded agent state is always kept at 0. Default is None.
+
     """
     save_rewards = np.zeros((agents.num_agents, episodes))
     agents_rewarded = np.zeros(agents.num_agents, dtype=np.bool_)
@@ -1045,14 +1062,14 @@ def train_loop_collective(episodes, time_ep, env, agents, max_counter, visual_ac
 
             # any_agent_in_cone: 1 if row sum > 0
             any_in_cone = np.zeros(agents.num_agents, dtype=np.float64)
-            if visual_activated:
+            if visual_activated and ablation != 'non_r':
                 for i in range(agents.num_agents):
                     if agents_spot[i].sum() > 0:
                         any_in_cone[i] = 1.0
 
             # rewarded_agent_in_cone: 1 if any agent with rewarded_agents==1 is in cone
             rewarded_in_cone = np.zeros(agents.num_agents, dtype=np.float64)
-            if visual_activated: 
+            if visual_activated and ablation != 'r':
                 for i in range(agents.num_agents):
                     for j in range(agents.num_agents):
                         if agents_spot[i, j] == 1 and env.rewarded_agents[j] == 1:
@@ -1127,7 +1144,8 @@ def run_collective(episodes, time_ep, runs,
              beta_softmax=3,
              max_no_H_update=int(1e3),
              upd_pos_method = 'RND', # Method to update position. 'RND' for random angle turns, 'LR' for left/right turns.
-             turn_angle = np.pi/4 # Angle for left/right turns if upd_pos_method is 'LR'.
+             turn_angle = np.pi/4, # Angle for left/right turns if upd_pos_method is 'LR'.
+             ablation = None
              ):
     """
     Parallel launcher for collective training, where visual features are 
@@ -1147,7 +1165,7 @@ def run_collective(episodes, time_ep, runs,
         env = CollectiveEnv(num_agents, Nt, L, r, tau, agent_step,
                             visual_range, visual_angle, shared_depletion, tau_reward, upd_pos_method, turn_angle)
 
-        rews, mat = train_loop_collective(episodes, time_ep, env, agents, state_space[0], visual_activated, upd_pos_method)
+        rews, mat = train_loop_collective(episodes, time_ep, env, agents, state_space[0], visual_activated, upd_pos_method, ablation)
 
         for t in range(episodes):
             save_rewards[n_run, :, t] = rews[:, t]
