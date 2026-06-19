@@ -6,25 +6,30 @@ __all__ = ['simul_loop_collective', 'run_simul_collective']
 # %% ../nbs/lib_nbs/develop/clustering_analysis.ipynb #e9c17eb4
 @njit
 def simul_loop_collective(episodes, time_ep, env, agents, max_counter, visual_activated = False, upd_pos_method = 'RND',
-                          save_position_from_ep = None):
+                          save_position_from_ep = 0, target_positions = None):
     """
     EXP 5: Target-finding reward with 3D state = [counter, any_agent_in_cone, rewarded_agent_in_cone].
 
     Uses Foragers_efficient with lazy G updates.
     state_space should be np.array([max_counter, 2, 2]).
     """
-    save_rewards = np.zeros((agents.num_agents, episodes))
-    agents_rewarded = np.zeros(agents.num_agents, dtype=np.bool_)
+    save_rewards = np.zeros((agents.num_agents, episodes))    
     positions = np.zeros((episodes,time_ep-save_position_from_ep, env.num_agents, 2))
+    directions = np.zeros((episodes,time_ep-save_position_from_ep, env.num_agents))
 
     for ep in range(episodes):
         env.init_env()
         agents.agent_states = np.zeros_like(agents.agent_states)
         agents.reset_g()
         
+        # if target_positions is not None:
+        #     env.target_positions = target_positions
+
         save_pos_idx = 0
         # Debugging
         # positions = np.zeros((time_ep, env.num_agents, 2))
+
+        agents_rewarded = np.zeros(agents.num_agents, dtype=np.bool_)
 
         for t in range(time_ep):
             agents.increment_counters()
@@ -79,6 +84,7 @@ def simul_loop_collective(episodes, time_ep, env, agents, max_counter, visual_ac
 
             if t >= save_position_from_ep:                
                 positions[ep, save_pos_idx] = env.positions
+                directions[ep, save_pos_idx] = env.current_directions
                 save_pos_idx += 1
 
             rewards = env.check_encounter()
@@ -89,7 +95,7 @@ def simul_loop_collective(episodes, time_ep, env, agents, max_counter, visual_ac
             agents_rewarded = rewards == 1
 
 
-    return save_rewards, positions
+    return save_rewards, positions, directions
 
 # %% ../nbs/lib_nbs/develop/clustering_analysis.ipynb #c2c881a3
 from .rl_framework.numba.environments import CollectiveEnv
@@ -132,10 +138,14 @@ def run_simul_collective(episodes, time_ep, runs,
     """
     save_rewards = np.zeros((runs, num_agents, episodes))
     positions = np.zeros((runs, episodes,time_ep-save_position_from_ep, num_agents, 2))
+    directions = np.zeros((runs, episodes,time_ep-save_position_from_ep, num_agents))
 
     for n_run in prange(runs):
 
-        h_0_run = h_0[n_run]
+        if runs > h_0.shape[0]:
+            h_0_run = h_0[np.random.randint(h_0.shape[0])]
+        else:
+            h_0_run = h_0[n_run]
 
         agents = Foragers_efficient(
             num_agents, num_actions, state_space,
@@ -145,9 +155,10 @@ def run_simul_collective(episodes, time_ep, runs,
         env = CollectiveEnv(num_agents, Nt, L, r, tau, agent_step,
                             visual_range, visual_angle, shared_depletion, tau_reward, upd_pos_method, turn_angle)
 
-        rews, mat = simul_loop_collective(episodes, time_ep, env, agents, state_space[0], visual_activated, upd_pos_method, save_position_from_ep)
+        rews, pos, dirs = simul_loop_collective(episodes, time_ep, env, agents, state_space[0], visual_activated, upd_pos_method, save_position_from_ep)
 
         save_rewards[n_run] = rews
-        positions[n_run] = mat
+        positions[n_run] = pos
+        directions[n_run] = dirs
 
-    return save_rewards, positions
+    return save_rewards, positions, directions
