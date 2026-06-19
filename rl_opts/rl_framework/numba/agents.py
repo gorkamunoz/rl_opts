@@ -1205,6 +1205,7 @@ def run_collective_dict(episodes, time_ep,
              upd_pos_method='RND',
              turn_angle=np.array([np.pi / 4]),
              n_run=1,
+             ablation = None
              ):
     """
     Parallel launcher for collective training sweeping over parameter combinations.
@@ -1278,8 +1279,7 @@ def run_collective_dict(episodes, time_ep,
                             visual_range[i_VR], visual_angle, shared_depletion,
                             tau_reward[i_tau_reward], upd_pos_method, turn_angle[i_turn])
 
-        rews, mat = train_loop_collective(episodes, time_ep, env, agents, state_space[0],
-                                          visual_activated, upd_pos_method)
+        rews, mat = train_loop_collective(episodes, time_ep, env, agents, state_space[0], visual_activated, upd_pos_method, ablation)
 
         for t in range(episodes):
             save_rewards[run_idx, combo_idx, :, t] = rews[:, t]
