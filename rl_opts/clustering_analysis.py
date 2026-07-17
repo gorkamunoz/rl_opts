@@ -21,6 +21,7 @@ def simul_loop_collective(episodes, time_ep, env, agents, max_counter, visual_ac
         env.init_env()
         agents.agent_states = np.zeros_like(agents.agent_states)
         agents.reset_g()
+        agents.increment_counters()
         
         # if target_positions is not None:
         #     env.target_positions = target_positions
@@ -32,7 +33,7 @@ def simul_loop_collective(episodes, time_ep, env, agents, max_counter, visual_ac
         agents_rewarded = np.zeros(agents.num_agents, dtype=np.bool_)
 
         for t in range(time_ep):
-            agents.increment_counters()
+            
 
             # --- Build observations ---
             # 1) Counter (clipped)
@@ -125,7 +126,7 @@ def run_simul_collective(episodes, time_ep, runs,
              g_update='s',
              policy_type='standard',
              beta_softmax=3,
-             max_no_H_update=int(1e3),
+             max_no_H_update=int(1e2),
              upd_pos_method = 'RND', # Method to update position. 'RND' for random angle turns, 'LR' for left/right turns.
              turn_angle = np.pi/4, # Angle for left/right turns if upd_pos_method is 'LR'.
              save_position_from_ep = 0 # Episode from which to start saving positions (to skip initial transient episodes

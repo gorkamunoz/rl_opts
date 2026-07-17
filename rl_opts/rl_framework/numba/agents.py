@@ -3,7 +3,8 @@
 # %% auto #0
 __all__ = ['Forager', 'Foragers', 'Foragers_efficient', 'train_loop_reset', 'run_agents_reset_1D', 'run_agents_reset_2D',
            'train_loop_collective', 'run_collective', 'run_collective_dict', 'train_loop_collective_directions',
-           'run_collective_directions', 'train_loop_follow_directions', 'run_follow_directions']
+           'run_collective_directions', 'train_loop_follow_directions', 'run_follow_directions',
+           'run_collective_target_visual']
 
 # %% ../../../nbs/lib_nbs/12_agents_numba.ipynb #af595e2e
 import numpy as np
@@ -1013,7 +1014,8 @@ def run_agents_reset_2D(episodes, time_ep, N_agents,
 
 # %% ../../../nbs/lib_nbs/12_agents_numba.ipynb #441c899b
 @njit
-def train_loop_collective(episodes, time_ep, env, agents, max_counter, visual_activated = False, upd_pos_method = 'RND', ablation = None):
+def train_loop_collective(episodes, time_ep, env, agents, max_counter, visual_activated = False, upd_pos_method = 'RND', ablation = None,
+             no_learning = False):
     """
     Training loop for multiple agents in a 2D environment with collective behavior.
 
@@ -1035,6 +1037,8 @@ def train_loop_collective(episodes, time_ep, env, agents, max_counter, visual_ac
         The method for updating agent positions ('RND' or 'LR'). Default is 'RND'.
     ablation : str, optional
         If 'non_r', the non-rewarded agent state is always kept at 0. If 'r', the rewarded agent state is always kept at 0. Default is None.
+    no_learning : bool, optional
+        If True, agents will not learn from rewards. Default is False.
 
     """
     save_rewards = np.zeros((agents.num_agents, episodes))
@@ -1103,7 +1107,8 @@ def train_loop_collective(episodes, time_ep, env, agents, max_counter, visual_ac
             rewards[agents_rewarded] = 0  # suppress double reward
 
             save_rewards[:, ep] += rewards
-            agents._learn_post_reward(rewards)
+            if not no_learning:
+                agents._learn_post_reward(rewards)
 
             agents_rewarded = rewards == 1
         
@@ -1145,7 +1150,8 @@ def run_collective(episodes, time_ep, runs,
              max_no_H_update=int(1e3),
              upd_pos_method = 'RND', # Method to update position. 'RND' for random angle turns, 'LR' for left/right turns.
              turn_angle = np.pi/4, # Angle for left/right turns if upd_pos_method is 'LR'.
-             ablation = None
+             ablation = None,
+             no_learning = False
              ):
     """
     Parallel launcher for collective training, where visual features are 
@@ -1165,7 +1171,7 @@ def run_collective(episodes, time_ep, runs,
         env = CollectiveEnv(num_agents, Nt, L, r, tau, agent_step,
                             visual_range, visual_angle, shared_depletion, tau_reward, upd_pos_method, turn_angle)
 
-        rews, mat = train_loop_collective(episodes, time_ep, env, agents, state_space[0], visual_activated, upd_pos_method, ablation)
+        rews, mat = train_loop_collective(episodes, time_ep, env, agents, state_space[0], visual_activated, upd_pos_method, ablation, no_learning)
 
         for t in range(episodes):
             save_rewards[n_run, :, t] = rews[:, t]
@@ -1667,5 +1673,68 @@ def run_follow_directions(episodes, time_ep,
             for t in range(episodes):
                 save_rewards[n_run, :, t] = rews[:, t]
             save_h_matrix[n_run] = mat
+
+    return save_rewards, save_h_matrix
+
+# %% ../../../nbs/lib_nbs/12_agents_numba.ipynb #7a605064
+from .environments import CollectiveEnv_target_visual
+
+@njit(parallel=True)
+def run_collective_target_visual(episodes, time_ep, runs,
+             # Environment props
+             Nt=100,
+             L=100,
+             r=0.5,
+             tau=5,
+             tau_reward=1,
+             num_agents=1,
+             agent_step=1,
+             visual_range=2.0,
+             visual_angle=np.pi / 2,
+             shared_depletion=True,
+             visual_activated = True,
+             # Agent props
+             num_actions=2,
+             state_space=np.array([50, 2, 2]),
+             gamma_damping=0.00001,
+             eta_glow_damping=0.1,
+             initial_h_0=False,
+             h_0=np.zeros((1, 2, 200)),
+             g_update='s',
+             policy_type='standard',
+             beta_softmax=3,
+             max_no_H_update=int(1e3),
+             upd_pos_method = 'RND', # Method to update position. 'RND' for random angle turns, 'LR' for left/right turns.
+             turn_angle = np.pi/4, # Angle for left/right turns if upd_pos_method is 'LR'.
+             ablation = None,
+             no_learning = False
+             ):
+    """
+    Parallel launcher for collective training, where visual features are 
+    if yes/no seeing an agent in front and if yes/no seeing a rewarded agent in front:
+    
+    state_space = np.array([max_counter, 2, 2])
+    """
+
+    assert num_agents == 1, "CollectiveEnv_target_visual is designed for a single agent (num_agents=1)."
+
+    save_h_matrix = np.zeros((runs, num_agents, num_actions, state_space.prod()))
+    save_rewards = np.zeros((runs, num_agents, episodes))
+
+    for n_run in prange(runs):
+        agents = Foragers_efficient(
+            num_agents, num_actions, state_space,
+            gamma_damping, eta_glow_damping, policy_type, beta_softmax,
+            initial_h_0, h_0, g_update, max_no_H_update,
+        )
+        env = CollectiveEnv_target_visual(num_agents, Nt, L, r, tau, agent_step,
+                                          visual_range, visual_angle, shared_depletion, 
+                                          tau_reward, upd_pos_method, turn_angle)
+
+        rews, mat = train_loop_collective(episodes, time_ep, env, agents, state_space[0], visual_activated, upd_pos_method, ablation, no_learning)
+
+        for t in range(episodes):
+            save_rewards[n_run, :, t] = rews[:, t]
+        save_h_matrix[n_run] = mat
 
     return save_rewards, save_h_matrix

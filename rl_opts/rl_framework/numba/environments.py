@@ -5,7 +5,7 @@ __all__ = ['TargetEnv', 'TargetEnv_timedelay', 'reset_search_loop', 'ResetEnv_1D
            'parallel_Reset1D_exp', 'ResetEnv_2D', 'parallel_Reset2D_sharp', 'parallel_Reset2D_exp',
            'parallel_Reset2D_policies', 'TurnResetEnv_2D', 'search_loop_turn_reset_sharp',
            'check_collective_encounter_og', 'check_collective_encounter', 'multi_agents_in_cone',
-           'plot_multi_agents_in_cone', 'CollectiveEnv', 'CollectiveDirectionsEnv']
+           'plot_multi_agents_in_cone', 'CollectiveEnv', 'CollectiveDirectionsEnv', 'CollectiveEnv_target_visual']
 
 # %% ../../../nbs/lib_nbs/11_environments_numba.ipynb #cc944947-aef5-4f8f-bc02-54b4abda36dc
 import numpy as np
@@ -1396,4 +1396,253 @@ class CollectiveDirectionsEnv():
 
     def agents_in_cone(self):
         return multi_agents_in_cone(self.positions, self.current_directions, self.visual_range, self.visual_angle)
+    
+
+# %% ../../../nbs/lib_nbs/11_environments_numba.ipynb #9ab0bb1b
+@jitclass([("target_positions", float64[:,:]),
+           ("current_directions", float64[:]) ,
+           ("positions", float64[:,:]),
+           ("target_state", float64[:]),
+           ("target_agent_state", float64[:,:]),
+           ("rewarded_agents", float64[:]),
+           ("_reward_steps_remaining", float64[:])])
+class CollectiveEnv_target_visual():
+    num_agents : int
+    Nt : int
+    L : float
+    r : float
+    tau : float
+    tau_reward : int
+    agent_step : float
+    target_positions : np.ndarray
+    current_directions : np.array
+    positions : np.array
+    target_state : np.array
+    target_agent_state : np.array
+    rewarded_agents : np.array
+    _reward_steps_remaining : np.array
+    visual_range : float
+    visual_angle : float
+    shared_depletion : bool
+    upd_pos_method : str
+    turn_angle : float
+    num_ancilla : int
+    total_agents : int
+    
+    
+    def __init__(self,                 
+                num_agents = 5, # Number of moving agents.
+                Nt = 10, # Number of targets.
+                L = 1.3, #  Size of the (squared) world.
+                r = 1.5, # Radius with center the target position. It defines the area in which agent detects the target.
+                tau = 5, # Time it takes for the targets to replenish. 
+                agent_step = 1, # Displacement of one step. The default is 1.
+                visual_range = 2.0, # Visual range up to which one agent can see another.
+                visual_angle = np.pi/2, # Visual angle within which one agent can see another.
+                shared_depletion = True, # If True, targets are depleted for all moving agents when one agent finds it.
+                tau_reward = 1, # Number of update_pos calls after which rewarded_agents falls back to zero.
+                upd_pos_method = 'RND', # Method to update position. 'RND' for random angle turns, 'LR' for left/right turns.
+                turn_angle = np.pi/4 # Angle for left/right turns if upd_pos_method is 'LR'.
+                ):
+        
+        """
+        Class defining a foraging environment with moving agents plus Nt ancilla agents
+        fixed at target positions. Ancilla are always rewarded and are only used for visual cones.
+        """
+        
+        self.num_agents = num_agents
+        self.Nt = Nt        
+        self.L = L
+        self.r = r
+        self.tau = tau
+        self.tau_reward = tau_reward
+        self.agent_step = agent_step 
+
+        self.num_ancilla = self.Nt
+        self.total_agents = self.num_agents + self.num_ancilla
+
+        self.visual_range = visual_range 
+        self.visual_angle = visual_angle
+
+        self.shared_depletion = shared_depletion
+
+        self.init_env()
+
+        # Defines the way the moving agents will move. Two options:
+        # RND: if the agent decides to turn, it turns by a random angle.
+        # LR: if the agent decides to turn, it turns either left or right by a fixed angle (defined by self.turn_angle).
+        self.upd_pos_method = upd_pos_method
+
+        # Define turn angles for left and right turns
+        self.turn_angle = turn_angle
+
+    def init_env(self):
+        """
+        Environment initialization.
+        """
+        self.target_positions = np.random.rand(self.Nt, 2)*self.L        
+                
+        # Signal whether a target is currently available.
+        if self.shared_depletion:
+            self.target_state = -np.ones(self.Nt) # -1 if target is available, else if target is depleted
+        else:
+            self.target_agent_state = -np.ones((self.Nt, self.num_agents)) # only moving agents
+        
+        # Set positions and directions of all agents (moving + ancilla).
+        self.current_directions = np.random.rand(self.total_agents)*2*np.pi
+        self.positions = np.zeros((self.total_agents, 2))
+        self.positions[:self.num_agents] = np.random.rand(self.num_agents, 2)*self.L
+        self.positions[self.num_agents:] = self.target_positions
+
+        # Reward tracking: ancilla are always rewarded.
+        self.rewarded_agents = np.zeros(self.total_agents)
+        self.rewarded_agents[self.num_agents:] = 1
+        self._reward_steps_remaining = -np.ones(self.total_agents)
+
+    def update_target_state(self):
+        """
+        Updates the state of the targets (available or depleted) depending on the time since last encounter.
+        """
+        if self.shared_depletion:
+            self.target_state[self.target_state != -1] += 1
+            self.target_state[self.target_state > self.tau] = -1   
+        else:
+            for i in range(self.target_agent_state.shape[0]):  # Loop over targets
+                for j in range(self.target_agent_state.shape[1]):  # Loop over moving agents
+                    if self.target_agent_state[i, j] != -1:
+                        self.target_agent_state[i, j] += 1
+                        if self.target_agent_state[i, j] > self.tau:
+                            self.target_agent_state[i, j] = -1
+
+    def update_rewarded_agents(self):
+        # Decrement reward countdown and reset moving rewarded_agents when expired
+        for i in range(self.num_agents):
+            if self._reward_steps_remaining[i] != -1:
+                self._reward_steps_remaining[i] += 1
+                if self._reward_steps_remaining[i] > self.tau_reward:
+                    self.rewarded_agents[i] = 0
+                    self._reward_steps_remaining[i] = -1
+
+        # Ancilla agents are always rewarded
+        self.rewarded_agents[self.num_agents:] = 1
+        
+
+    def update_pos(self, 
+                   actions, # Whether the moving agent decided to turn or not.
+                  ):        
+        """
+        Updates information of the moving agents depending on their decisions.
+        """
+                
+        if self.upd_pos_method == 'LR':
+            self._upd_pos_left_right(actions)
+        elif self.upd_pos_method == 'RND':
+            self._upd_pos_random(actions) 
+
+    def _upd_pos_left_right(self, action):
+        """
+        Updates moving positions considering three actions: continue, turn left or turn right.
+        """
+
+        # Update directions based on actions (moving agents only)
+        for i in range(self.num_agents):
+            if action[i] == 1:
+                self.current_directions[i] += self.turn_angle
+            elif action[i] == 2:
+                self.current_directions[i] -= self.turn_angle
+
+        # Update moving positions
+        self.positions[:self.num_agents, 0] = self.positions[:self.num_agents, 0] + self.agent_step * np.cos(self.current_directions[:self.num_agents])
+        self.positions[:self.num_agents, 1] = self.positions[:self.num_agents, 1] + self.agent_step * np.sin(self.current_directions[:self.num_agents])
+    
+    
+    def _upd_pos_random(self, change_direction):  
+
+        "Updates moving positions considering two actions, either continue direction or turn randomly"
+
+        # If moving agents decided to change direction, update by a random angle.
+        for i in range(self.num_agents):
+            if change_direction[i]:
+                self.current_directions[i] = np.random.rand()*2*np.pi
+        
+        # Update moving positions
+        self.positions[:self.num_agents, 0] = self.positions[:self.num_agents, 0] + self.agent_step*np.cos(self.current_directions[:self.num_agents])
+        self.positions[:self.num_agents, 1] = self.positions[:self.num_agents, 1] + self.agent_step*np.sin(self.current_directions[:self.num_agents])     
+
+    
+    def step(self,
+             change_direction # Whether each moving agent decided to turn or not.
+                 ):
+        """
+        Executes a step of the environment: updates moving positions, target states and rewarded agents.
+        """
+        self.update_pos(change_direction)
+        self.check_bc()
+        self.update_target_state()
+        self.update_rewarded_agents()
+        rewards = self.check_encounter()
+        return rewards
+        
+
+       
+    def check_encounter(self): 
+        """
+        Checks whether moving agents found targets, and updates the information accordingly.
+        """       
+        # Store rewards for moving agents only
+        current_rewards = np.zeros(self.num_agents)
+
+        # Check encounters only for moving agents (ancilla excluded for speed)
+        encounters = check_collective_encounter(self.positions[:self.num_agents], self.target_positions, self.r, self.shared_depletion)
+
+        # Find indices of agents with valid encounters (target_idx != -1)
+        valid_encounters_mask = encounters != -1
+        valid_agent_indices = np.where(valid_encounters_mask)[0]
+        valid_target_indices = encounters[valid_encounters_mask]
+
+        if self.shared_depletion:
+            # Find which targets are available (state == -1)
+            available_targets = self.target_state[valid_target_indices] == -1
+
+            # Update rewards for moving agents
+            current_rewards[valid_agent_indices[available_targets]] = 1  
+
+            # Update target states for found targets
+            self.target_state[valid_target_indices[available_targets]] = 0   
+
+        else:
+
+            # Per-moving-agent depletion state
+            for i in range(len(valid_agent_indices)):
+                target_idx = valid_target_indices[i]
+                agent_idx = valid_agent_indices[i]
+
+                if self.target_agent_state[target_idx, agent_idx] == -1:
+                    # Update rewards
+                    current_rewards[agent_idx] = 1
+
+                    # Update target states for this moving agent
+                    self.target_agent_state[target_idx, agent_idx] = 0
+
+        # Update moving rewarded_agents: set to 1 and start countdown
+        for i in range(self.num_agents):
+            if current_rewards[i] == 1:
+                self.rewarded_agents[i] = 1
+                self._reward_steps_remaining[i] = 0
+
+        # Keep ancilla always rewarded
+        self.rewarded_agents[self.num_agents:] = 1
+
+        return current_rewards  
+        
+    def check_bc(self):
+        """
+        Updates moving positions to fulfill periodic boundary conditions.
+        """
+        self.positions[:self.num_agents] = (self.positions[:self.num_agents])%self.L
+
+    def agents_in_cone(self):
+        counts, idx = multi_agents_in_cone(self.positions, self.current_directions, self.visual_range, self.visual_angle)
+        # Only non-ancilla agents are observers; ancilla can still be seen (kept as columns in idx).
+        return counts[:self.num_agents], idx[:self.num_agents]
     
