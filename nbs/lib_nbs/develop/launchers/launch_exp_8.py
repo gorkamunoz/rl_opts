@@ -1,7 +1,7 @@
 from rl_opts.rl_framework.numba.agents import Foragers_efficient, run_collective
 from rl_opts.rl_framework.numba.environments import CollectiveEnv
 import numba
-import os
+import os, socket
 import numpy as np
 
 num_agents = 50
@@ -25,11 +25,14 @@ state_space = np.array([max_counter, 2, 2])
 # agents = Foragers_efficient(num_agents, 2, state_space)
 
 time_ep = 5000
-episodes = 2000
+episodes = 10000
 
 # Saving data
 if os.getlogin() == "gorka":
-    out_dir = "/media/gorka/DATA/rl_opts_data/results_learning/collective/"
+    if socket.gethostname() == "gpu-qic":
+        out_dir = "/media/gorka/DATA/rl_opts_data/results_learning/collective/"
+    elif socket.gethostname() == "gpu-ada-qic":
+        out_dir = "/sata1/gorka/collective/"
 elif os.getlogin() == "c7051165":
     out_dir = "/scratch/c7051165/github/rl_opts/nbs/lib_nbs/develop/results/"
 
