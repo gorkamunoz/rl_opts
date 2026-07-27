@@ -4,7 +4,7 @@
 __all__ = ['Forager', 'Foragers', 'Foragers_efficient', 'train_loop_reset', 'run_agents_reset_1D', 'run_agents_reset_2D',
            'train_loop_collective', 'run_collective', 'run_collective_dict', 'train_loop_collective_directions',
            'run_collective_directions', 'train_loop_follow_directions', 'run_follow_directions',
-           'run_collective_target_visual']
+           'train_loop_collective_target_visual', 'run_collective_target_visual']
 
 # %% ../../../nbs/lib_nbs/12_agents_numba.ipynb #af595e2e
 import numpy as np
@@ -1676,6 +1676,114 @@ def run_follow_directions(episodes, time_ep,
 
     return save_rewards, save_h_matrix
 
+# %% ../../../nbs/lib_nbs/12_agents_numba.ipynb #37aae821
+@njit
+def train_loop_collective_target_visual(episodes, time_ep, env, agents, max_counter, visual_activated = False, upd_pos_method = 'RND', ablation = None,
+             no_learning = False):
+    """
+    Training loop for multiple agents in a 2D environment with collective behavior.
+
+    Parameters
+    ----------
+    episodes : int
+        Number of episodes to run.
+    time_ep : int
+        Number of time steps per episode.
+    env : ResetEnv_2D
+        The environment in which the agents operate.
+    agents : Foragers_efficient
+        The agents that will interact with the environment.
+    max_counter : int
+        The maximum value for the agents' counters.
+    visual_activated : bool, optional
+        Whether visual perception is activated for the agents. Default is False.
+    upd_pos_method : str, optional
+        The method for updating agent positions ('RND' or 'LR'). Default is 'RND'.
+    ablation : str, optional
+        If 'non_r', the non-rewarded agent state is always kept at 0. If 'r', the rewarded agent state is always kept at 0. Default is None.
+    no_learning : bool, optional
+        If True, agents will not learn from rewards. Default is False.
+
+    """
+    save_rewards = np.zeros((agents.num_agents, episodes))
+    agents_rewarded = np.zeros(agents.num_agents, dtype=np.bool_)
+
+    for ep in range(episodes):
+        env.init_env()
+        agents.agent_states = np.zeros_like(agents.agent_states)
+        agents.reset_g()
+        
+        # Debugging
+        # positions = np.zeros((time_ep, env.num_agents, 2))
+
+        for t in range(time_ep):
+            agents.increment_counters()
+
+            # --- Build observations ---
+            # 1) Counter (clipped)
+            counters = np.minimum(agents.get_state().copy(), np.int64(max_counter - 1))
+
+            # 2) Cone features
+            if visual_activated:
+                _, agents_spot = env.agents_in_cone()           
+
+
+            # any_agent_in_cone: 1 if row sum > 0
+            any_in_cone = np.zeros(agents.num_agents, dtype=np.float64)
+            if visual_activated and ablation != 'non_r':
+                for i in range(agents.num_agents):
+                    if agents_spot[i].sum() > 0:
+                        any_in_cone[i] = 1.0
+
+            # rewarded_agent_in_cone: 1 if any agent with rewarded_agents==1 is in cone
+            rewarded_in_cone = np.zeros(agents.num_agents, dtype=np.float64)
+            if visual_activated and ablation != 'r':
+                for i in range(agents.num_agents):
+                    for j in range(env.total_agents):
+                        if agents_spot[i, j] == 1 and env.rewarded_agents[j] == 1:
+                            rewarded_in_cone[i] = 1.0
+                            break
+
+            # observations shape: (num_agents, 3)
+            observations = np.empty((agents.num_agents, 3), dtype=np.float64)
+            observations[:, 0] = counters.astype(np.float64)
+            observations[:, 1] = any_in_cone
+            observations[:, 2] = rewarded_in_cone
+
+            actions = agents.deliberate(observations)
+
+            # Post-reward step: force turn + reset counter BEFORE act
+            actions[agents_rewarded] = 1
+            agents.agent_states[agents_rewarded] = 0
+
+            agents.act(actions)
+
+            # Environment step
+            if upd_pos_method == 'RND':
+                env.update_pos(actions == 1)
+            elif upd_pos_method == 'LR':
+                env.update_pos(actions)                
+            env.check_bc()
+            env.update_target_state()
+            env.update_rewarded_agents()
+
+            rewards = env.check_encounter()
+            rewards[agents_rewarded] = 0  # suppress double reward
+
+            save_rewards[:, ep] += rewards
+            if not no_learning:
+                agents._learn_post_reward(rewards)
+
+            agents_rewarded = rewards == 1
+        
+        # Debugging
+        #     positions[t] = env.positions
+        # for p in positions.transpose(1, 0, 2):
+        #     plt.plot(p[:, 0], p[:, 1], '-')
+        # plt.show()
+
+    return save_rewards, agents.h_matrix
+
 # %% ../../../nbs/lib_nbs/12_agents_numba.ipynb #7a605064
 from .environments import CollectiveEnv_target_visual
 
@@ -1731,7 +1839,8 @@ def run_collective_target_visual(episodes, time_ep, runs,
                                           visual_range, visual_angle, shared_depletion, 
                                           tau_reward, upd_pos_method, turn_angle)
 
-        rews, mat = train_loop_collective(episodes, time_ep, env, agents, state_space[0], visual_activated, upd_pos_method, ablation, no_learning)
+        rews, mat = train_loop_collective_target_visual(episodes, time_ep, env, agents, state_space[0], 
+                                                        visual_activated, upd_pos_method, ablation, no_learning)
 
         for t in range(episodes):
             save_rewards[n_run, :, t] = rews[:, t]

@@ -298,7 +298,7 @@ def average_search_efficiency(config):
     
     #get the mean search efficiency over the walks
     mean_eff = np.mean(efficiencies) 
-    tune.report(mean_eff = mean_eff)
+    tune.report({"mean_eff": mean_eff})
     
     #save results
     if config['results_path']:
