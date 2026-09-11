@@ -23,8 +23,8 @@ def simul_loop_collective(episodes, time_ep, env, agents, max_counter, visual_ac
         agents.reset_g()
         agents.increment_counters()
         
-        # if target_positions is not None:
-        #     env.target_positions = target_positions
+        if target_positions is not None:
+            env.target_positions = target_positions
 
         save_pos_idx = 0
         # Debugging
@@ -129,7 +129,8 @@ def run_simul_collective(episodes, time_ep, runs,
              max_no_H_update=int(1e2),
              upd_pos_method = 'RND', # Method to update position. 'RND' for random angle turns, 'LR' for left/right turns.
              turn_angle = np.pi/4, # Angle for left/right turns if upd_pos_method is 'LR'.
-             save_position_from_ep = 0 # Episode from which to start saving positions (to skip initial transient episodes
+             save_position_from_ep = 0, # Episode from which to start saving positions (to skip initial transient episodes
+             runs_per_run = True # if True and runs > h_0.shape[0], then _n_run is the number of simulation runs per training run
              ):
     """
     Parallel launcher for collective training, where visual features are 
@@ -144,7 +145,11 @@ def run_simul_collective(episodes, time_ep, runs,
     for n_run in prange(runs):
 
         if runs > h_0.shape[0]:
-            h_0_run = h_0[np.random.randint(h_0.shape[0])]
+            if runs_per_run:
+                ii = n_run // (runs // h_0.shape[0])
+                h_0_run = h_0[ii]
+            else:
+                h_0_run = h_0[np.random.randint(h_0.shape[0])]
         else:
             h_0_run = h_0[n_run]
 

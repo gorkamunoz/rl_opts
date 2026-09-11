@@ -268,36 +268,37 @@ def average_search_efficiency(config):
         warnings.warn('ray[tune] is currently not installed. If you intend to use the'
                       '`average_search_efficiency` function, consider installing via pip install ray[tune].', stacklevel=2)
     
-    #get parameters of the distributions depending on the chosen model
-    if config['model'] == 'powerlaw':
-        parameters = [config['beta']]
-        #get policy from benchmark model
-        policy = get_policy_from_dist(n_max = config['time_ep'], 
-                                      func = pdf_powerlaw,
-                                      beta = config['beta']
-                                     )
+    # #get parameters of the distributions depending on the chosen model
+    # if config['model'] == 'powerlaw':
+    #     parameters = [config['beta']]
+    #     #get policy from benchmark model
+    #     policy = get_policy_from_dist(n_max = config['time_ep'], 
+    #                                   func = pdf_powerlaw,
+    #                                   beta = config['beta']
+    #                                  )
     
-    elif config['model'] == 'double_exp':
-        parameters = [config['d_int'], config['d_ext'], config['p']]
-        #get policy from benchmark model
-        policy = get_policy_from_dist(n_max=config['time_ep'],
-                                      func = pdf_multimode,
-                                      lambdas = np.array(parameters[:2]),
-                                      probs = np.array([parameters[2], 1-parameters[2]])
-                                  )
+    # elif config['model'] == 'double_exp':
+    #     parameters = [config['d_int'], config['d_ext'], config['p']]
+    #     #get policy from benchmark model
+    #     policy = get_policy_from_dist(n_max=config['time_ep'],
+    #                                   func = pdf_multimode,
+    #                                   lambdas = np.array(parameters[:2]),
+    #                                   probs = np.array([parameters[2], 1-parameters[2]])
+    #                               )
     
     
-    #run the walks in parallel
-    efficiencies = walk_from_policy(policy=policy,
-                                    time_ep=config['time_ep'],
-                                    n=config['n'],
-                                    L=config['L'],
-                                    Nt=config['Nt'],
-                                    r=config['r'],
-                                    lc=config['lc'])
+    # #run the walks in parallel
+    # efficiencies = walk_from_policy(policy=policy,
+    #                                 time_ep=config['time_ep'],
+    #                                 n=config['n'],
+    #                                 L=config['L'],
+    #                                 Nt=config['Nt'],
+    #                                 r=config['r'],
+    #                                 lc=config['lc'])
     
-    #get the mean search efficiency over the walks
-    mean_eff = np.mean(efficiencies) 
+    # #get the mean search efficiency over the walks
+    # mean_eff = np.mean(efficiencies) 
+    mean_eff = np.random.rand()
     tune.report({"mean_eff": mean_eff})
     
     #save results
