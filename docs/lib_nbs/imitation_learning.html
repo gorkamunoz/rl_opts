@@ -324,7 +324,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <blockquote class="blockquote">
 <pre><code> PS_imitation (num_states:int, eta:float, gamma:float)</code></pre>
 </blockquote>
-<p>Constructs a PS agent with two actions (continue and rotate) that performs imitation learning in the search scenario. Instead of following a full trajectory of action-state tuples, the agent is directly given the reward state (the step length in this case). The agent updates all previous continue actions and the current rotate action.</p>
+<p><em>Constructs a PS agent with two actions (continue and rotate) that performs imitation learning in the search scenario. Instead of following a full trajectory of action-state tuples, the agent is directly given the reward state (the step length in this case). The agent updates all previous continue actions and the current rotate action.</em></p>
 <table class="table">
 <thead>
 <tr class="header">
@@ -359,8 +359,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <blockquote class="blockquote">
 <pre><code> PS_imitation.update (length:int, reward:int=1)</code></pre>
 </blockquote>
-<p>Updates the policy based on the imitation scheme (see paper for detailes)<br>
-NOTE: state is length-1 because counter starts in 0 (but in 0, agent has already performed a step of length 1 – from the previous action “rotate”).</p>
+<p><em>Updates the policy based on the imitation scheme (see paper for detailes)<br>
+NOTE: state is length-1 because counter starts in 0 (but in 0, agent has already performed a step of length 1 – from the previous action “rotate”).</em></p>
 <table class="table">
 <thead>
 <tr class="header">
