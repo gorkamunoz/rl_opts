@@ -28,7 +28,7 @@ version = {attr = "rl_opts.__version__"}
 include = ["rl_opts"]
 
 [tool.nbdev]
-doc_path = 'docs'
+doc_path = '_docs'
 branch = 'master'
 custom_sidebar = true
 title = 'rl_opts'
