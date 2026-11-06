@@ -16,6 +16,7 @@ from numba.experimental import jitclass
 from numba import float64, bool_, prange, njit
 import math
 import random
+import time
 
 from ...utils import isBetween_c_Vec_numba, pareto_sample, rand_choice_nb
 
