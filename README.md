@@ -18,7 +18,7 @@ Projective Simulation and Reinforcement Learning of Optimal Search strategies
 This library builds the necessary tools needed to study, replicate and
 develop Projective Simulation agents for learninng efficient strategies in target search problems, as
 well as a benchmark baselines with which to compare the. This library is
-based in three different publications:
+based in the following publications:
 
 - [“Optimal foraging strategies can be
   learned”](https://arxiv.org/abs/2303.06050) by *G. Muñoz-Gil, A.
@@ -40,7 +40,9 @@ based in three different publications:
   able to reset to the origin, a feature that has revolutionize target
   search problems in the last years.
   
-- [“Run-and-Tumble Particles Learning Chemotaxis”](https://arxiv.org/pdf/2507.23519) by *N. Tovazzi, G. Muñoz-Gil and *M. Caraglio* (2025). In this work we explore the ability of active particles to adapt their run-and-tumble strategy to reach targets, based on their chemotactic response, just as bacteria do in the real world!
+- [“Run-and-Tumble Particles Learning Chemotaxis”](https://arxiv.org/pdf/2507.23519) by *N. Tovazzi, G. Muñoz-Gil* and *M. Caraglio* (2025). In this work we explore the ability of active particles to adapt their run-and-tumble strategy to reach targets, based on their chemotactic response, just as bacteria do in the real world!
+
+- [“Emergent aggregation from collective foraging”](https://arxiv.org/abs/2608.28046) by *G. Muñoz-Gil, A. López-Incera, V. Ramsten, G. Volpe, T. Müller* and *H. J. Briegel* (2026). Here we show that aggregation does not need a direct social drive: it can emerge from an indirect objective, as groups of agents learn to forage collectively.
 
 
 ### Installation
